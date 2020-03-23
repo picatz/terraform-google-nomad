@@ -1,0 +1,17 @@
+[Unit]
+Description="HashiCorp Nomad - A flexible workload orchestrator solution"
+Documentation=https://www.nomadproject.io/docs/
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+User=nomad
+Group=nomad
+ExecStart=/bin/nomad agent -config /nomad/config/agent.hcl
+KillMode=process
+Restart=on-failure
+LimitNOFILE=65536
+
+[Install]
+
+WantedBy=default.target

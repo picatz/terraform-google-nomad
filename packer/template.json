@@ -1,0 +1,154 @@
+{
+    "builders": [
+        {
+            "name": "bastion",
+            "type": "googlecompute",
+            "account_file": "../account.json",
+            "project_id": "my-nomad-cluster",
+            "source_image": "ubuntu-1804-bionic-v20200317",
+            "image_description": "nomad bastion image",
+            "image_name": "nomad-bastion",
+            "disk_size": "10",
+            "machine_type": "n1-standard-1",
+            "state_timeout": "15m",
+            "ssh_username": "ubuntu",
+            "zone": "us-east1-b"
+        },
+        {
+            "name": "server",
+            "type": "googlecompute",
+            "account_file": "../account.json",
+            "project_id": "my-nomad-cluster",
+            "source_image": "ubuntu-1804-bionic-v20200317",
+            "image_description": "nomad server image",
+            "image_name": "nomad-server",
+            "disk_size": "10",
+            "machine_type": "n1-standard-1",
+            "state_timeout": "15m",
+            "ssh_username": "ubuntu",
+            "zone": "us-east1-b"
+        },
+        {
+            "name": "client",
+            "type": "googlecompute",
+            "account_file": "../account.json",
+            "project_id": "my-nomad-cluster",
+            "source_image": "ubuntu-1804-bionic-v20200317",
+            "image_description": "nomad client image",
+            "image_name": "nomad-client",
+            "disk_size": "10",
+            "machine_type": "n1-standard-1",
+            "state_timeout": "15m",
+            "ssh_username": "ubuntu",
+            "zone": "us-east1-b"
+        }
+    ],
+    "provisioners": [
+        {
+            "only": ["server"],
+			"type": "file",
+			"source": "configs/server.hcl",
+			"destination": "/tmp/agent.hcl"
+		},
+        {
+			"type": "file",
+			"source": "certs/nomad-ca.pem",
+			"destination": "/tmp/nomad-ca.pem"
+		},
+        {
+            "only": ["server"],
+			"type": "file",
+			"source": "certs/server.pem",
+			"destination": "/tmp/server.pem"
+		},
+        {
+            "only": ["server"],
+			"type": "file",
+			"source": "certs/server-key.pem",
+			"destination": "/tmp/server-key.pem"
+		},
+        {
+            "only": ["client"],
+			"type": "file",
+			"source": "configs/client.hcl",
+			"destination": "/tmp/agent.hcl"
+		},
+        {
+            "only": ["client"],
+			"type": "file",
+			"source": "certs/client.pem",
+			"destination": "/tmp/client.pem"
+		},
+        {
+            "only": ["client"],
+			"type": "file",
+			"source": "certs/client-key.pem",
+			"destination": "/tmp/client-key.pem"
+		},
+        {
+            "only": ["bastion"],
+			"type": "file",
+			"source": "certs/cli.pem",
+			"destination": "/tmp/cli.pem"
+		},
+        {
+            "only": ["bastion"],
+			"type": "file",
+			"source": "certs/cli-key.pem",
+			"destination": "/tmp/cli-key.pem"
+		},
+		{
+            "only": ["server", "client"],
+			"type": "file",
+			"source": "configs/nomad.service",
+			"destination": "/tmp/nomad.service"
+		},
+		{
+            "only": ["bastion"],
+			"type": "file",
+			"source": "configs/bastion.env",
+			"destination": "/tmp/bastion.env"
+		},
+		{
+			"type": "shell",
+			"scripts": [
+				"scripts/install_required_packages.sh"
+			]
+		},
+		{
+            "only": ["server", "client"],
+			"type": "shell",
+			"scripts": [
+                "scripts/install_nomad.sh"
+			]
+		},
+		{
+            "only": ["client"],
+			"type": "shell",
+			"scripts": [
+				"scripts/install_docker.sh"
+			]
+		},
+		{
+			"type": "shell",
+			"scripts": [
+				"scripts/install_stack_driver_agent.sh"
+			]
+		},
+		{
+            "only": ["bastion"],
+			"type": "shell",
+			"inline": [
+                "curl https://releases.hashicorp.com/nomad/0.10.4/nomad_0.10.4_linux_amd64.zip -o nomad.zip",
+                "unzip nomad.zip",
+                "sudo mv nomad /bin",
+                "rm nomad.zip",
+                "sudo mkdir -p /nomad/config",
+                "sudo mv /tmp/nomad-ca.pem /nomad/config/nomad-ca.pem",
+                "sudo mv /tmp/cli.pem /nomad/config/cli.pem",
+                "sudo mv /tmp/cli-key.pem /nomad/config/cli-key.pem",
+                "sudo mv /tmp/bastion.env /opt/bastion.env"
+            ]
+		}
+    ]
+}
