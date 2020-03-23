@@ -50,4 +50,8 @@ if [ -f /tmp/client-key.pem ]; then
     sudo mv /tmp/client-key.pem /nomad/config/client-key.pem
 fi
 
+if [ -f /tmp/nomad.env]; then
+    sudo mv /tmp/nomad.env /nomad/config/nomad.env
+fi
+
 sudo chown -R nomad:nomad /nomad
