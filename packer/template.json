@@ -104,10 +104,9 @@
 			"destination": "/tmp/nomad.service"
 		},
 		{
-            "only": ["bastion"],
 			"type": "file",
-			"source": "configs/bastion.env",
-			"destination": "/tmp/bastion.env"
+			"source": "configs/nomad.env",
+			"destination": "/tmp/nomad.env"
 		},
 		{
 			"type": "shell",
@@ -147,7 +146,7 @@
                 "sudo mv /tmp/nomad-ca.pem /nomad/config/nomad-ca.pem",
                 "sudo mv /tmp/cli.pem /nomad/config/cli.pem",
                 "sudo mv /tmp/cli-key.pem /nomad/config/cli-key.pem",
-                "sudo mv /tmp/bastion.env /opt/bastion.env"
+                "sudo mv /tmp/nomad.env /opt/nomad.env"
             ]
 		}
     ]
