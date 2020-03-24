@@ -2,6 +2,16 @@ variable "image" {
     type = string
 }
 
+variable "ssh_public_key" {
+    type    = string
+    default = ""
+}
+
+variable "ssh_user" {
+    type    = string
+    default = "ubuntu"
+}
+
 variable "external_ip" {
     type = bool
     default = false

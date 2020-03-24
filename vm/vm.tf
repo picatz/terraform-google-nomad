@@ -30,5 +30,9 @@ resource "google_compute_instance" "vm" {
     scopes = ["https://www.googleapis.com/auth/compute.readonly"]
   }
 
+  metadata = {
+    ssh-keys = format("%s:%s", var.ssh_user, var.ssh_public_key)
+  }
+
   metadata_startup_script = var.metadata_startup_script
 }

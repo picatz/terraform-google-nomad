@@ -32,3 +32,8 @@ variable "client_instances" {
   type    = number
   default = 1
 }
+
+variable "ssh_user" {
+  type    = string
+  default = "ubuntu"
+}

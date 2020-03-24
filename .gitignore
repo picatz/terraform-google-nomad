@@ -3,3 +3,5 @@ account.json
 *tfstate*
 *.pem
 *.csr
+bastion
+bastion.pub

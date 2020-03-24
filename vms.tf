@@ -1,32 +1,37 @@
 module "bastion" {
-    source     = "./vm"
-    name       = "nomad-bastion"
-    image      = "my-nomad-cluster/nomad-bastion"
-    subnetwork = module.nomad-network.subnetwork
-    zone       = var.zone
-    tags       = ["nomad-bastion"]
-
-    external_ip = true
+    source         = "./vm"
+    name           = "nomad-bastion"
+    image          = "my-nomad-cluster/nomad-bastion"
+    subnetwork     = module.nomad-network.subnetwork
+    zone           = var.zone
+    tags           = ["nomad-bastion"]
+    ssh_user       = var.ssh_user
+    ssh_public_key = tls_private_key.ssh_key.public_key_openssh
+    external_ip    = true
 }
 
 module "server" {
-    source     = "./vm"
-    name       = "nomad-server"
-    image      = "my-nomad-cluster/nomad-server"
-    subnetwork = module.nomad-network.subnetwork
-    zone       = var.zone
-    tags       = ["nomad-server"]
+    source         = "./vm"
+    name           = "nomad-server"
+    image          = "my-nomad-cluster/nomad-server"
+    subnetwork     = module.nomad-network.subnetwork
+    zone           = var.zone
+    tags           = ["nomad-server"]
+    ssh_user       = var.ssh_user
+    ssh_public_key = tls_private_key.ssh_key.public_key_openssh
 
     metadata_startup_script = local.nomad_bootstrap_script
 }
 
 module "client" {
-    source     = "./vm"
-    name       = "nomad-client"
-    image      = "my-nomad-cluster/nomad-client"
-    subnetwork = module.nomad-network.subnetwork
-    zone       = var.zone
-    tags       = ["nomad-client"]
+    source         = "./vm"
+    name           = "nomad-client"
+    image          = "my-nomad-cluster/nomad-client"
+    subnetwork     = module.nomad-network.subnetwork
+    zone           = var.zone
+    tags           = ["nomad-client"]
+    ssh_user       = var.ssh_user
+    ssh_public_key = tls_private_key.ssh_key.public_key_openssh
 
     metadata_startup_script = local.nomad_bootstrap_script
 }

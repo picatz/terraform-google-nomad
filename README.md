@@ -35,11 +35,24 @@ $ terraform apply
 ...
 ```
 
-## See the UI
+## SSH Through Bastion to expose mTLS Nomad endpoint on `localhost`
 
 ```console
-$ gcloud compute ssh nomad-bastion -- -N -L 4646:$(gcloud compute instances list | grep "nomad-server" | head -n 1 | awk '{print $4}'):4646
+$ ssh-add -k bastion
+$ export NOMAD_BASTION_IP=$(gcloud compute instances list | grep "nomad-bastion" | head -n 1 | awk '{print $5}')
+$ export NOMAD_SERVER_IP=$(gcloud compute instances list | grep "nomad-server" | head -n 1 | awk '{print $4}')
+$ ssh -N -L 4646:127.0.0.1:4646 -A "ubuntu@${NOMAD_SERVER_IP}" -o "proxycommand ssh -W %h:%p -A ubuntu@${NOMAD_BASTION_IP}"
 ...
-Then go to http://localhost:4646/ui
-...
+```
+
+In another terminal ( that isn't running the SSH tunnel ):
+
+```console
+$ export NOMAD_ADDR=https://localhost:4646
+$ export NOMAD_CACERT=$(realpath ./packer/certs/nomad-ca.pem)
+$ export NOMAD_CLIENT_CERT=$(realpath ./packer/certs/cli.pem)
+$ export NOMAD_CLIENT_KEY=$(realpath ./packer/certs/cli-key.pem)
+$ nomad node status -verbose
+ID                                    DC   Name            Class   Address      Version  Drain  Eligibility  Status
+efdec0c9-adc1-ca7b-71aa-ec593075a410  dc1  nomad-client-0  <none>  192.168.2.2  0.10.4   false  eligible     ready
 ```
