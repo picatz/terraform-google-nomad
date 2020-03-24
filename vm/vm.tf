@@ -17,8 +17,11 @@ resource "google_compute_instance" "vm" {
   network_interface {
     subnetwork = var.subnetwork
 
-    access_config {
+    # https://github.com/hashicorp/terraform/issues/21717#issuecomment-502148701
+    dynamic "access_config" {
+      for_each = var.external_ip ? [{}] : []
       // Ephemeral external IP address
+      content {}
     }
   }
 

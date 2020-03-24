@@ -2,6 +2,11 @@ variable "image" {
     type = string
 }
 
+variable "external_ip" {
+    type = bool
+    default = false
+}
+
 variable "name" {
     type = string
 }

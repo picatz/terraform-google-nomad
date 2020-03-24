@@ -17,3 +17,8 @@ variable "source_tags" {
     type    = list(string)
     default = ["nomad-bastion", "nomad-server", "nomad-client"]
 }
+
+variable "router_asn" {
+  type    = string
+  default = "64514"
+}

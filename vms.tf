@@ -5,6 +5,8 @@ module "bastion" {
     subnetwork = module.nomad-network.subnetwork
     zone       = var.zone
     tags       = ["nomad-bastion"]
+
+    external_ip = true
 }
 
 module "server" {
