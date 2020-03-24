@@ -161,5 +161,4 @@ func main() {
 			go copyConn(nomadWrap, conn)
 		}(conn)
 	}
-
 }
