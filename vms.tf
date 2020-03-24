@@ -20,7 +20,7 @@ module "server" {
     ssh_user       = var.ssh_user
     ssh_public_key = tls_private_key.ssh_key.public_key_openssh
 
-    metadata_startup_script = local.nomad_bootstrap_script
+    metadata_startup_script = local.nomad_server_bootstrap_script
 }
 
 module "client" {
@@ -33,5 +33,5 @@ module "client" {
     ssh_user       = var.ssh_user
     ssh_public_key = tls_private_key.ssh_key.public_key_openssh
 
-    metadata_startup_script = local.nomad_bootstrap_script
+    metadata_startup_script = local.nomad_client_bootstrap_script
 }
