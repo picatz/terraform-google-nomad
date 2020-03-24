@@ -56,3 +56,17 @@ $ nomad node status -verbose
 ID                                    DC   Name            Class   Address      Version  Drain  Eligibility  Status
 efdec0c9-adc1-ca7b-71aa-ec593075a410  dc1  nomad-client-0  <none>  192.168.2.2  0.10.4   false  eligible     ready
 ```
+
+## Use `ssh-mtls-terminating-proxy` to access the Nomad UI on `localhost`
+
+```console
+$ ssh-add -k bastion
+$ export NOMAD_BASTION_IP=$(gcloud compute instances list | grep "nomad-bastion" | head -n 1 | awk '{print $5}')
+$ export NOMAD_SERVER_IP=$(gcloud compute instances list | grep "nomad-server" | head -n 1 | awk '{print $4}')
+$ cd ssh-mtls-terminating-proxy
+$ go run main.go --bastion-ip=$NOMAD_BASTION_IP --server-ip=$NOMAD_SERVER_IP --ca-file=../packer/certs/nomad-ca.pem --cert-file=../packer/certs/cli.pem --key-file=../packer/certs/cli-key.pem
+2020/03/23 23:03:02 Starting local listener on localhost:4646
+...
+```
+
+Then open your browser at `http://localhost:4646/ui/` to see the Nomad UI exposed securley on your localhost.
