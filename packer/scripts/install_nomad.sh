@@ -4,7 +4,7 @@ set -ex
 
 mkdir -p /tmp/build
 cd /tmp/build
-curl https://releases.hashicorp.com/nomad/0.10.4/nomad_0.10.4_linux_amd64.zip -o nomad.zip
+curl https://releases.hashicorp.com/nomad/0.10.5/nomad_0.10.5_linux_amd64.zip -o nomad.zip
 unzip nomad.zip
 sudo mv nomad /bin
 cd /tmp
