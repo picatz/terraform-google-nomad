@@ -57,7 +57,7 @@ ID                                    DC   Name            Class   Address      
 efdec0c9-adc1-ca7b-71aa-ec593075a410  dc1  nomad-client-0  <none>  192.168.2.2  0.10.4   false  eligible     ready
 ```
 
-## Use `ssh-mtls-terminating-proxy` to access the Nomad UI on `localhost`
+## Use `ssh-mtls-terminating-proxy` to access the Nomad UI
 
 ```console
 $ ssh-add -k bastion
