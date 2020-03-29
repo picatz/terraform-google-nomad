@@ -1,6 +1,7 @@
 module "bastion" {
     source         = "./vm"
     name           = "nomad-bastion"
+    machine_type   = "g1-small"
     image          = "my-nomad-cluster/nomad-bastion"
     subnetwork     = module.nomad-network.subnetwork
     zone           = var.zone
@@ -13,6 +14,7 @@ module "bastion" {
 module "server" {
     source         = "./vm"
     name           = "nomad-server"
+    machine_type   = "g1-small"
     image          = "my-nomad-cluster/nomad-server"
     subnetwork     = module.nomad-network.subnetwork
     zone           = var.zone
@@ -26,6 +28,7 @@ module "server" {
 module "client" {
     source         = "./vm"
     name           = "nomad-client"
+    machine_type   = "n1-standard-1"
     image          = "my-nomad-cluster/nomad-client"
     subnetwork     = module.nomad-network.subnetwork
     zone           = var.zone
