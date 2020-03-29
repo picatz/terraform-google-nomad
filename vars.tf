@@ -1,6 +1,5 @@
 variable "project" {
   type    = string
-  default = "my-nomad-cluster"
 }
 
 variable "credentials" {
