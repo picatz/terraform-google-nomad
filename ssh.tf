@@ -3,11 +3,13 @@ resource "tls_private_key" "ssh_key" {
 }
 
 resource "local_file" "ssh_public_key" {
-  content    = tls_private_key.ssh_key.public_key_openssh
-  filename   = "bastion.pub"
+  content         = tls_private_key.ssh_key.public_key_openssh
+  filename        = "bastion.pub"
+  file_permission = "0600"
 }
 
 resource "local_file" "ssh_private_key" {
-  content    = tls_private_key.ssh_key.private_key_pem
-  filename   = "bastion"
+  content         = tls_private_key.ssh_key.private_key_pem
+  filename        = "bastion"
+  file_permission = "0600"
 }
