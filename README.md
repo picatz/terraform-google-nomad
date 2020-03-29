@@ -4,7 +4,7 @@
 
 ## Bootstrap a brand new GCP project using `gcloud`
 
-I created a project named `my-nomad-cluster` using the following command:
+I created a project named `my-nomad-cluster` using the following command (you will need to use a different project name):
 
 ```console
 $ bash setup_gcp.sh my-nomad-cluster
