@@ -54,7 +54,7 @@ $ export NOMAD_CLIENT_CERT=$(realpath ./packer/certs/cli.pem)
 $ export NOMAD_CLIENT_KEY=$(realpath ./packer/certs/cli-key.pem)
 $ nomad node status -verbose
 ID                                    DC   Name            Class   Address      Version  Drain  Eligibility  Status
-efdec0c9-adc1-ca7b-71aa-ec593075a410  dc1  nomad-client-0  <none>  192.168.2.2  0.10.4   false  eligible     ready
+efdec0c9-adc1-ca7b-71aa-ec593075a410  dc1  nomad-client-0  <none>  192.168.2.2  0.10.5   false  eligible     ready
 ```
 
 ## Use `ssh-mtls-terminating-proxy` to access the Nomad UI
