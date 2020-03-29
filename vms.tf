@@ -1,5 +1,5 @@
 module "bastion" {
-    source         = "./vm"
+    source         = "./modules/vm"
     name           = "nomad-bastion"
     machine_type   = "g1-small"
     image          = "my-nomad-cluster/nomad-bastion"
@@ -12,7 +12,7 @@ module "bastion" {
 }
 
 module "server" {
-    source         = "./vm"
+    source         = "./modules/vm"
     name           = "nomad-server"
     machine_type   = "g1-small"
     image          = "my-nomad-cluster/nomad-server"
@@ -26,7 +26,7 @@ module "server" {
 }
 
 module "client" {
-    source         = "./vm"
+    source         = "./modules/vm"
     name           = "nomad-client"
     machine_type   = "n1-standard-1"
     image          = "my-nomad-cluster/nomad-client"
