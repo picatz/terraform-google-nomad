@@ -130,20 +130,23 @@ func main() {
 	for {
 		conn, err := ln.Accept()
 		if err != nil {
-			errorAndExit(err)
+			log.Println(err)
+			continue
 		}
 		log.Printf("Accepted conn %q", conn.RemoteAddr())
 		go func(conn net.Conn) {
 			nomad, err := tclient.Dial("tcp", "0.0.0.0:4646")
 			if err != nil {
-				errorAndExit(err)
+				log.Println(err)
+				return
 			}
 
 			nomadWrap := tls.Client(nomad, tlsClientConfig)
 
 			err = nomadWrap.Handshake()
 			if err != nil {
-				errorAndExit(err)
+				log.Println(err)
+				return
 			}
 
 			copyConn := func(writer, reader net.Conn) {
@@ -152,9 +155,8 @@ func main() {
 
 				_, err := io.Copy(writer, reader)
 				if err != nil {
-					errorAndExit(err)
+					log.Println(err)
 				}
-				log.Printf("Done with conn %q", conn.RemoteAddr())
 			}
 
 			go copyConn(conn, nomadWrap)
