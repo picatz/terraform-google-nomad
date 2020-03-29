@@ -1,38 +1,64 @@
 variable "project" {
-  type    = string
+  type        = string
+  description = "The Google Cloud Platform project to deploy the Nomad cluster to."
 }
 
 variable "credentials" {
-  type    = string
-  default = "./account.json"
+  type        = string
+  default     = "./account.json"
+  description = "The path to the valid Google Cloud Platform credentials file (in JSON format) to use."
 }
 
 variable "region" {
-  type    = string
-  default = "us-east1"
+  type        = string
+  default     = "us-east1"
+  description = "The region to deploy to."
 }
 
 variable "zone" {
-  type    = string
-  default = "c"
+  type        = string
+  default     = "c"
+  description = "The zone to deploy to."
 }
 
 variable "cidr_range" {
-  type    = string
-  default = "192.168.2.0/24"
+  type        = string
+  default     = "192.168.2.0/24"
+  description = "The CIDR to deploy with."
 }
 
 variable "server_instances" {
-  type    = number
-  default = 1
+  type        = number
+  default     = 1
+  description = "The total number of Nomad servers to deploy (use odd numbers)."
+}
+
+variable "server_machine_type" {
+  type        = string
+  default     = "g1-small"
+  description = "The VM machine type for Nomad servers."
 }
 
 variable "client_instances" {
-  type    = number
-  default = 1
+  type        = number
+  default     = 1
+  description = "The total number of Nomad clients to deploy."
+}
+
+variable "client_machine_type" {
+  type        = string
+  default     = "n1-standard-1"
+  description = "The VM machine type for Nomad clients."
+}
+
+variable "bastion_machine_type" {
+  type        = string
+  default     = "g1-small"
+  description = "The VM machine type for the SSH bastion."
 }
 
 variable "ssh_user" {
-  type    = string
-  default = "ubuntu"
+  type        = string
+  default     = "ubuntu"
+  description = "The user to use for SSH."
 }
