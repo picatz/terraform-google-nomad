@@ -115,17 +115,17 @@
 			]
 		},
 		{
-            "only": ["server", "client"],
-			"type": "shell",
-			"scripts": [
-                "scripts/install_nomad.sh"
-			]
-		},
-		{
             "only": ["client"],
 			"type": "shell",
 			"scripts": [
 				"scripts/install_docker.sh"
+			]
+		},
+		{
+            "only": ["server", "client"],
+			"type": "shell",
+			"scripts": [
+                "scripts/install_nomad.sh"
 			]
 		},
 		{
