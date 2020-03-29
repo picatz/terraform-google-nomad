@@ -31,7 +31,9 @@ $ packer build template.json
 ## Build Infrastructure
 
 ```consoel
-$ terraform apply
+$ terraform plan -var="project=my-nomad-cluster"
+...
+$ terraform apply -var="project=my-nomad-cluster"
 ...
 ```
 
