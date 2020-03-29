@@ -1,6 +1,6 @@
 # nomad-cluster
 
-Terraform Module for Nomad clusters on GCP
+[Terraform](https://www.terraform.io/) Module for [Nomad](https://nomadproject.io/) clusters on [GCP](https://cloud.google.com/).
 
 ## Bootstrap a brand new GCP project using `gcloud`
 
