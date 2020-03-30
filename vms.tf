@@ -13,6 +13,7 @@ module "bastion" {
 
 module "server" {
     source         = "./modules/vm"
+    instances      = var.server_instances
     name           = "nomad-server"
     machine_type   = var.server_machine_type
     image          = "my-nomad-cluster/nomad-server"
@@ -27,6 +28,7 @@ module "server" {
 
 module "client" {
     source         = "./modules/vm"
+    instances      = var.client_instances
     name           = "nomad-client"
     machine_type   = var.client_machine_type
     image          = "my-nomad-cluster/nomad-client"
