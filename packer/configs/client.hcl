@@ -22,6 +22,10 @@ client {
   }
 }
 
+acl {
+  enabled = {ACLs-ENABLED}
+}
+
 tls {
   http = true
   rpc  = true

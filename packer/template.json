@@ -51,62 +51,16 @@
 			"destination": "/tmp/agent.hcl"
 		},
         {
-			"type": "file",
-			"source": "certs/nomad-ca.pem",
-			"destination": "/tmp/nomad-ca.pem"
-		},
-        {
-            "only": ["server"],
-			"type": "file",
-			"source": "certs/server.pem",
-			"destination": "/tmp/server.pem"
-		},
-        {
-            "only": ["server"],
-			"type": "file",
-			"source": "certs/server-key.pem",
-			"destination": "/tmp/server-key.pem"
-		},
-        {
             "only": ["client"],
 			"type": "file",
 			"source": "configs/client.hcl",
 			"destination": "/tmp/agent.hcl"
-		},
-        {
-            "only": ["client"],
-			"type": "file",
-			"source": "certs/client.pem",
-			"destination": "/tmp/client.pem"
-		},
-        {
-            "only": ["client"],
-			"type": "file",
-			"source": "certs/client-key.pem",
-			"destination": "/tmp/client-key.pem"
-		},
-        {
-            "only": ["bastion"],
-			"type": "file",
-			"source": "certs/cli.pem",
-			"destination": "/tmp/cli.pem"
-		},
-        {
-            "only": ["bastion"],
-			"type": "file",
-			"source": "certs/cli-key.pem",
-			"destination": "/tmp/cli-key.pem"
 		},
 		{
             "only": ["server", "client"],
 			"type": "file",
 			"source": "configs/nomad.service",
 			"destination": "/tmp/nomad.service"
-		},
-		{
-			"type": "file",
-			"source": "configs/nomad.env",
-			"destination": "/tmp/nomad.env"
 		},
 		{
 			"type": "shell",
@@ -141,12 +95,7 @@
                 "curl https://releases.hashicorp.com/nomad/0.10.4/nomad_0.10.4_linux_amd64.zip -o nomad.zip",
                 "unzip nomad.zip",
                 "sudo mv nomad /bin",
-                "rm nomad.zip",
-                "sudo mkdir -p /nomad/config",
-                "sudo mv /tmp/nomad-ca.pem /nomad/config/nomad-ca.pem",
-                "sudo mv /tmp/cli.pem /nomad/config/cli.pem",
-                "sudo mv /tmp/cli-key.pem /nomad/config/cli-key.pem",
-                "sudo mv /tmp/nomad.env /opt/nomad.env"
+                "rm nomad.zip"
             ]
 		}
     ]

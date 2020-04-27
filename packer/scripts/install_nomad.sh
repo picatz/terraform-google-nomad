@@ -4,7 +4,7 @@ set -ex
 
 mkdir -p /tmp/build
 cd /tmp/build
-curl https://releases.hashicorp.com/nomad/0.10.5/nomad_0.10.5_linux_amd64.zip -o nomad.zip
+curl https://releases.hashicorp.com/nomad/0.11.1/nomad_0.11.1_linux_amd64.zip -o nomad.zip
 unzip nomad.zip
 sudo mv nomad /bin
 cd /tmp
@@ -21,37 +21,8 @@ fi
 sudo touch /etc/systemd/system/nomad.service
 sudo mv /tmp/nomad.service /etc/systemd/system/nomad.service
 sudo systemctl daemon-reload
-# sudo systemctl enable nomad
 
 sudo mkdir -p /nomad/data && sudo mkdir -p /nomad/config
 
 sudo mv /tmp/agent.hcl /nomad/config/agent.hcl
-sudo chown -R nomad:nomad /nomad
-# sudo systemctl start nomad
-# sudo systemctl status nomad
-
-if [ -f /tmp/nomad-ca.pem ]; then
-    sudo mv /tmp/nomad-ca.pem  /nomad/config/nomad-ca.pem
-fi
-
-if [ -f /tmp/server.pem ]; then
-    sudo mv /tmp/server.pem /nomad/config/server.pem
-fi
-
-if [ -f /tmp/server-key.pem ]; then
-    sudo mv /tmp/server-key.pem /nomad/config/server-key.pem
-fi
-
-if [ -f /tmp/client.pem ]; then
-    sudo mv /tmp/client.pem /nomad/config/client.pem
-fi
-
-if [ -f /tmp/client-key.pem ]; then
-    sudo mv /tmp/client-key.pem /nomad/config/client-key.pem
-fi
-
-if [ -f /tmp/nomad.env]; then
-    sudo mv /tmp/nomad.env /nomad/config/nomad.env
-fi
-
 sudo chown -R nomad:nomad /nomad
