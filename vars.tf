@@ -62,3 +62,21 @@ variable "ssh_user" {
   default     = "ubuntu"
   description = "The user to use for SSH."
 }
+
+variable "tls_organization" {
+  type        = string
+  default     = "nomad-dev"
+  description = "The organization name to use the TLS certificates."
+}
+
+variable "save_ssh_keypair_locally" {
+  type        = bool
+  default     = false
+  description = "If the SSH keypair (bastion.pub, bastion) should be saved locally."
+}
+
+variable "acls_enabled" {
+  type        = bool
+  default     = true
+  description = "If ACLs should be enabled for the cluster."
+}
