@@ -19,7 +19,7 @@ EOF
 sudo mv /tmp/client-key.pem /nomad/config/client-key.pem
 
 # Update the {ACLs-ENABLED} ad-hoc template var
-sed -i -e "s/{ACLs-ENABLED}/${acls_enabled}/g" /nomad/config/agent.hc
+sed -i -e "s/{ACLs-ENABLED}/${acls_enabled}/g" /nomad/config/agent.hcl
 
 # Update the {PROJECT-NAME} ad-hoc template var
 sed -i -e "s/{PROJECT-NAME}/${project}/g" /nomad/config/agent.hcl
