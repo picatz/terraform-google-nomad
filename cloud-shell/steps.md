@@ -179,7 +179,7 @@ packer build -force template.json
 >
 > The command will take about 5 minutes to complete.
 
-Once the command completes successfully, change back to the root directory (going back/up one directory) to move onto the next phase:
+Once the command completes successfully, change back to the root directory of the repository (going back/up one directory) to move onto the next phase:
 
 ```console
 cd ..
@@ -187,7 +187,9 @@ cd ..
 
 ## Deploy Infrastructure with Terraform
 
-Now to finally deploy the Nomad cluster!
+🙌🏽 Now to finally deploy the Nomad cluster!
+
+### Initialize Terraform
 
 Change into the `example` directory and initialize Terraform:
 
@@ -196,16 +198,20 @@ cd example
 terraform init
 ```
 
+### Plan Changes
+
 To plan our infrastructure changes, use `terraform plan`:
 
 ```console
 terraform plan -var="project=$GOOGLE_PROJECT" -var="credentials=$GOOGLE_APPLICATION_CREDENTIALS"
 ```
 
+### Apply Changes
+
 To apply the changes, actually creating the cluster:
 
 ```console
-terraform apply -var="project=$GOOGLE_PROJECT" -var="credentials=$GOOGLE_APPLICATION_CREDENTIALS"
+terraform apply -auto-approve -var="project=$GOOGLE_PROJECT" -var="credentials=$GOOGLE_APPLICATION_CREDENTIALS"
 ```
 
 > ℹ️ **Note**
@@ -214,6 +220,56 @@ terraform apply -var="project=$GOOGLE_PROJECT" -var="credentials=$GOOGLE_APPLICA
 
 ### Set Environment Variables
 
+Using the Terraform outputs, we can set the required Nomad environment variables to secrely access to the Nomad cluster API using the TLS certificate, and load balancer created with the previous step:
+
+```console
+export NOMAD_ADDR="https://$(terraform output -json | jq -r .load_balancer_ip.value):4646"
+export NOMAD_CACERT="$(realpath nomad-ca.pem)"
+export NOMAD_CLIENT_CERT="$(realpath nomad-cli-cert.pem)"
+export NOMAD_CLIENT_KEY="$(realpath nomad-cli-key.pem)"
+```
+
+### Bootstrap ACL System
+
+To check access to the Nomad API, run the following command:
+
+```console
+nomad status
+```
+
+You should see the following error:
+
+```plaintext
+Error querying jobs: Unexpected response code: 403 (Permission denied)
+```
+
+> ℹ️ **Note**
+>
+> This is because ACLs haven't yet been bootstrapped for the cluster. The ACL system is essential for production deployments, and is enabled for this Terraform module by default.
+
+To create an administrative management token (only meant to be used by Nomad Administrators), run the following command:
+
+```console
+nomad acl bootstrap
+```
+
+Then we can use the token (Secret ID) in the previous command's output to access the cluster by setting the `NOMAD_TOKEN` environment variable:
+
+```console
+export NOMAD_TOKEN="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+```
+
+To verify access to the Nomad API, run the following command:
+
+```console
+nomad status
+```
+
+Which should output:
+
+```plaintext
+No running jobs
+```
 
 ## Conclusion
 
