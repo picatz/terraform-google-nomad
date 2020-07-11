@@ -5,7 +5,8 @@
         "zone": "{{env `GOOGLE_ZONE`}}",
         "bastion_disk_size_gb": "10",
         "server_disk_size_gb": "50",
-        "client_disk_size_gb": "50"
+        "client_disk_size_gb": "50",
+        "source_image_family": "ubuntu-1804-lts"
     },
     "builders": [
         {
@@ -13,7 +14,7 @@
             "type": "googlecompute",
             "account_file": "{{user `account_file`}}",
             "project_id": "{{user `project`}}",
-            "source_image": "ubuntu-1804-bionic-v20200317",
+            "source_image_family": "{{user `source_image_family`}}",
             "image_description": "nomad bastion image",
             "image_name": "nomad-bastion",
             "disk_size": "{{user `bastion_disk_size_gb`}}",
@@ -27,7 +28,7 @@
             "type": "googlecompute",
             "account_file": "{{user `account_file`}}",
             "project_id": "{{user `project`}}",
-            "source_image": "ubuntu-1804-bionic-v20200317",
+            "source_image_family": "{{user `source_image_family`}}",
             "image_description": "nomad server image",
             "image_name": "nomad-server",
             "disk_size": "{{user `server_disk_size_gb`}}",
@@ -41,7 +42,7 @@
             "type": "googlecompute",
             "account_file": "{{user `account_file`}}",
             "project_id": "{{user `project`}}",
-            "source_image": "ubuntu-1804-bionic-v20200317",
+            "source_image_family": "{{user `source_image_family`}}",
             "image_description": "nomad client image",
             "image_name": "nomad-client",
             "disk_size": "{{user `client_disk_size_gb`}}",
