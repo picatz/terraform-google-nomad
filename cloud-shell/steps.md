@@ -171,8 +171,8 @@ cd packer
 
 And then run the following command which will use the `template.json` file to build the bastion, server, and client images in parallel.
 
-```
-packer build template.json
+```console
+packer build -force template.json
 ```
 
 > ℹ️ **Note**
