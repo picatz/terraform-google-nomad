@@ -178,6 +178,13 @@ cd ..
 
 Now to finally deploy the Nomad cluster!
 
+Change into the `example` directory and initialize Terraform:
+
+```console
+cd example
+terraform init
+```
+
 To plan our infrastructure changes, use `terraform plan`:
 
 ```console
