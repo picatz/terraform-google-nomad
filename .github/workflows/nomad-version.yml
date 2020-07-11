@@ -1,0 +1,38 @@
+name: Update Nomad Version
+
+on:
+  schedule:
+  - cron: "0 9 * * *"
+
+jobs:
+  update_nomad_version:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+      with:
+        persist-credentials: false
+        fetch-depth: 0
+    - name: Update Nomad Version
+      working-directory: ./packer/scripts
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        CURRENT=$(cat install_nomad.sh | grep "NOMAD_VERSION=" | awk -F '"' '{print $2}')
+        LATEST=$(curl --silent https://releases.hashicorp.com/index.json | jq -r '.nomad.versions | keys | .[]' | grep -v "-" | grep -v "+" | sort --version-sort | tail -n 1)
+        if [ "$CURRENT" != "$LATEST" ]; then
+            echo "Nomad version $CURRENT is out-of-date, updating to $LATEST"
+
+            # configure git
+            git config user.name "Nomad Update Bot"
+            git config user.email "picatz@users.noreply.github.com"
+            git remote set-url origin "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY"
+            # update install script
+            sed -i "s/$CURRENT/$LATEST/g" install_nomad.sh
+            # rest of git workflow
+            git add .
+            git commit -m "nomad-update-bot: update version from $CURRENT to $LATEST" || exit 1
+            git status
+            git push origin HEAD:master
+        else
+          echo "Nomad version $CURRENT is already up-to-date"
+        fi

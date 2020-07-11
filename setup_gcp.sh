@@ -20,9 +20,13 @@ if [ -z "$GOOGLE_ORGANIZATION" ]; then
         GOOGLE_ORGANIZATION=`gcloud organizations list | grep -v "DISPLAY_NAME" | awk '{print $2}'`
         echo "Automatically determined organization $GOOGLE_ORGANIZATION"
     else
-        gcloud organizations list
-        echo -e "\nFrom the list above, choose the correct orgnaization ID and set it as the GOOGLE_ORGANIZATION environment variable to continue!\n"
-        exit 1
+        if gcloud organizations list 2>&1  | grep -v "Listed 0 items"; then
+            # if there are no organizations, then don't fail, since it's not possible to correct
+        else
+            gcloud organizations list
+            echo -e "\nFrom the list above, choose the correct orgnaization ID and set it as the GOOGLE_ORGANIZATION environment variable to continue!\n"
+            exit 1
+        fi
     fi
 fi
 

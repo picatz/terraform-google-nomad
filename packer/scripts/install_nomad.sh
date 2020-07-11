@@ -2,9 +2,11 @@
 
 set -ex
 
+NOMAD_VERSION=0.12.0
+
 mkdir -p /tmp/build
 cd /tmp/build
-curl https://releases.hashicorp.com/nomad/0.11.1/nomad_0.11.1_linux_amd64.zip -o nomad.zip
+curl "https://releases.hashicorp.com/nomad/${NOMAD_VERSION}/nomad_${NOMAD_VERSION}_linux_amd64.zip" -o nomad.zip
 unzip nomad.zip
 sudo mv nomad /bin
 cd /tmp
