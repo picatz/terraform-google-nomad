@@ -56,7 +56,7 @@ Before building our infrastructure, we'll need to do a few things:
 To get started, let's create a new GCP project:
 
 ```console
-gcloud project create your-new-project-name
+gcloud projects create your-new-project-name
 ```
 > ℹ️  **Projects within GSuite Organizations**
 >
@@ -78,6 +78,12 @@ Next, let's link a billing account to that project which can now be set as an en
 
 ```console
 export GOOGLE_PROJECT="your-new-project-name"
+```
+
+And then set your `gcloud` config to use that project:
+
+```console
+gcloud config set project $GOOGLE_PROJECT
 ```
 
 To determine what billing accounts are available:
@@ -105,6 +111,10 @@ To deploy VMs to the project, we need to enable the compute API:
 ```console
 gcloud services enable compute.googleapis.com
 ```
+
+> ℹ️  **Note**
+>
+> The command will take a few minutes to complete.
 
 ### Create Terraform Service Account
 
