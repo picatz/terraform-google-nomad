@@ -11,7 +11,7 @@
 3. 📦 Packaging cluster golden images (bastion, server, and client) with `packer`.
 4. ☁️  Deploying a Nomad cluster using `terraform`.
 5. 🔐 Bootstrapping the [ACL system](https://learn.hashicorp.com/nomad/acls/fundamentals), obtaining a administrative management token.
-6. 🐳 Running an example job as a Docker container running [Folding at Home](https://foldingathome.org/) to the cluster, tailing the logs, and then stopping the container.
+6. 🐳 Submitting an example job as a Docker container running [Folding at Home](https://foldingathome.org/) to the cluster, tailing the logs, and then stopping the container.
 
 ## Setup Environment
 
