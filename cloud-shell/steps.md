@@ -175,7 +175,7 @@ And then run the following command which will use the `template.json` file to bu
 packer build template.json
 ```
 
-> ℹ️  **Note**
+> ℹ️ **Note**
 >
 > The command will take about 5 minutes to complete.
 
@@ -207,6 +207,13 @@ To apply the changes, actually creating the cluster:
 ```console
 terraform apply -var="project=$GOOGLE_PROJECT" -var="credentials=$GOOGLE_APPLICATION_CREDENTIALS"
 ```
+
+> ℹ️ **Note**
+>
+> The command will take about 5 minutes to complete.
+
+### Set Environment Variables
+
 
 ## Conclusion
 
