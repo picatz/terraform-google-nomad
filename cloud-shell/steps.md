@@ -10,6 +10,8 @@
 2. ⚙️  Configuring a new GCP project, linking the billing account, and enabling the compute engine API using `gcloud`.
 3. 📦 Packaging cluster golden images (bastion, server, and client) with `packer`.
 4. ☁️  Deploying a Nomad cluster using `terraform`.
+5. 🔐 Bootstrapping the [ACL system](https://learn.hashicorp.com/nomad/acls/fundamentals), obtaining a administrative management token.
+6. 🐳 Running an example job as a Docker container running [Folding at Home](https://foldingathome.org/) to the cluster, tailing the logs, and then stopping the container.
 
 ## Setup Environment
 
@@ -229,23 +231,7 @@ export NOMAD_CLIENT_CERT="$(realpath nomad-cli-cert.pem)"
 export NOMAD_CLIENT_KEY="$(realpath nomad-cli-key.pem)"
 ```
 
-### Bootstrap ACL System
-
-To check access to the Nomad API, run the following command:
-
-```console
-nomad status
-```
-
-You should see the following error:
-
-```plaintext
-Error querying jobs: Unexpected response code: 403 (Permission denied)
-```
-
-> ℹ️ **Note**
->
-> This is because ACLs haven't yet been bootstrapped for the cluster. The ACL system is essential for production deployments, and is enabled for this Terraform module by default.
+## Bootstrap ACL System
 
 To create an administrative management token (only meant to be used by Nomad Administrators), run the following command:
 
@@ -271,13 +257,129 @@ Which should output:
 No running jobs
 ```
 
+### Run Container
+
+Now that we deployed the cluster, let's use it to run an example job, a Docker container that runs Folding at Home:
+
+```hcl
+job "folding-at-home" {
+  datacenters = ["dc1"]
+    group "folding-at-home" {
+      task "folding-at-home" {
+        driver = "docker"
+          config {
+            image  = "kentgruber/fah-client:latest"
+          }
+      }
+    }
+}
+```
+
+To submit the job to the cluster, run the following command using the `jobs/folding-at-home.hcl` job file:
+
+```console
+nomad run jobs/folding-at-home.hcl
+```
+
+Command output will look *something* like this:
+
+```plaintext
+==> Monitoring evaluation "c01bbaa9"
+    Evaluation triggered by job "folding-at-home"
+    Evaluation within deployment: "811df760"
+    Allocation "6311f4ea" created: node "fab91380", group "folding-at-home"
+    Evaluation status changed: "pending" -> "complete"
+==> Evaluation "c01bbaa9" finished with status "complete"
+```
+
+Now check the status of the cluster again:
+
+```console
+nomad status
+```
+
+Output will look *something* like this:
+
+```plaintext
+ID               Type     Priority  Status   Submit Date
+folding-at-home  service  50        running  2020-07-11T19:36:47-04:00
+```
+
+To check the status of the `folding-at-home` job, run the folliwng command:
+
+```console
+nomad status folding-at-home
+```
+
+Output will look *something* like this:
+
+```plaintext
+ID            = folding-at-home
+Name          = folding-at-home
+Submit Date   = 2020-07-11T19:36:47-04:00
+Type          = service
+Priority      = 50
+Datacenters   = dc1
+Namespace     = default
+Status        = running
+Periodic      = false
+Parameterized = false
+
+Summary
+Task Group       Queued  Starting  Running  Failed  Complete  Lost
+folding-at-home  0       0         1        0       0         0
+
+Latest Deployment
+ID          = 811df760
+Status      = successful
+Description = Deployment completed successfully
+
+Deployed
+Task Group       Desired  Placed  Healthy  Unhealthy  Progress Deadline
+folding-at-home  1        1       1        0          2020-07-11T23:47:06Z
+
+Allocations
+ID        Node ID   Task Group       Version  Desired  Status   Created   Modified
+6311f4ea  fab91380  folding-at-home  0        run      running  3m4s ago  2m45s ago
+```
+
+☝🏽We can see in the output from the last command a `Allocations` section with an ID (in this case `6311f4ea`). We can use this allocation ID to interact with the container.
+
+To tail/follow the logs (STDOUT, by default) of the container:
+
+```console
+nomad alloc logs -f 6311f4ea
+```
+
+> ℹ️ **Note**
+>
+> Press [CTRL+C](https://en.wikipedia.org/wiki/Control-C) to quit tailing/following the logs.
+
+### Stop Container
+
+To stop the container, we can stop the `folding-at-home` job:
+
+```console
+nomad job stop folding-at-home
+```
+
+Output will look *something* like this:
+
+```plaintext
+==> Monitoring evaluation "b6144971"
+    Evaluation triggered by job "folding-at-home"
+    Evaluation within deployment: "811df760"
+    Evaluation status changed: "pending" -> "complete"
+==> Evaluation "b6144971" finished with status "complete"
+```
+
 ## Conclusion
 
-👏🏽 You have now deployed a Nomad cluster, yay!
+👏🏽 You have now deployed a Nomad cluster, bootstrapped the ACL system with a management token, and submitted an example job using a Docker container, yay!
 
 ### Destroy Infrastructure
 
-Once you are done playing around with Nomad, and wish to destroy the infrastructure to save costs, run the following command:
+Once you are done [playing around with Nomad](https://learn.hashicorp.com/nomad), and wish to destroy the infrastructure to save costs, run the following command:
 
 ```console
 terraform destroy -var="project=$GOOGLE_PROJECT" -var="credentials=$GOOGLE_APPLICATION_CREDENTIALS"
