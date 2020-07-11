@@ -1,7 +1,11 @@
 {
     "variables": {
         "project": "{{env `GOOGLE_PROJECT`}}",
-        "account_file": "{{env `GOOGLE_APPLICATION_CREDENTIALS`}}"
+        "account_file": "{{env `GOOGLE_APPLICATION_CREDENTIALS`}}",
+        "zone": "{{env `GOOGLE_ZONE`}}",
+        "bastion_disk_size_gb": "10",
+        "server_disk_size_gb": "50",
+        "client_disk_size_gb": "50"
     },
     "builders": [
         {
@@ -12,11 +16,11 @@
             "source_image": "ubuntu-1804-bionic-v20200317",
             "image_description": "nomad bastion image",
             "image_name": "nomad-bastion",
-            "disk_size": "10",
+            "disk_size": "{{user `bastion_disk_size_gb`}}",
             "machine_type": "n1-standard-1",
             "state_timeout": "15m",
             "ssh_username": "ubuntu",
-            "zone": "us-east1-b"
+            "zone": "{{user `zone`}}"
         },
         {
             "name": "server",
@@ -26,11 +30,11 @@
             "source_image": "ubuntu-1804-bionic-v20200317",
             "image_description": "nomad server image",
             "image_name": "nomad-server",
-            "disk_size": "10",
+            "disk_size": "{{user `server_disk_size_gb`}}",
             "machine_type": "n1-standard-1",
             "state_timeout": "15m",
             "ssh_username": "ubuntu",
-            "zone": "us-east1-b"
+            "zone": "{{user `zone`}}"
         },
         {
             "name": "client",
@@ -40,11 +44,11 @@
             "source_image": "ubuntu-1804-bionic-v20200317",
             "image_description": "nomad client image",
             "image_name": "nomad-client",
-            "disk_size": "10",
+            "disk_size": "{{user `client_disk_size_gb`}}",
             "machine_type": "n1-standard-1",
             "state_timeout": "15m",
             "ssh_username": "ubuntu",
-            "zone": "us-east1-b"
+            "zone": "{{user `zone`}}"
         }
     ],
     "provisioners": [
