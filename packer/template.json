@@ -2,7 +2,7 @@
     "variables": {
         "project": "{{env `GOOGLE_PROJECT`}}",
         "account_file": "{{env `GOOGLE_APPLICATION_CREDENTIALS`}}",
-        "zone": "{{env `GOOGLE_ZONE`}}",
+        "zone": "us-east1-b",
         "bastion_disk_size_gb": "10",
         "server_disk_size_gb": "50",
         "client_disk_size_gb": "50",
