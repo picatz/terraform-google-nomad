@@ -4,6 +4,10 @@
 
 [Terraform](https://www.terraform.io/) Module for [Nomad](https://nomadproject.io/) clusters on [GCP](https://cloud.google.com/).
 
+## Cloud Shell Interactive Tutorial
+
+[![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.svg)](https://ssh.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fpicatz%2Fterraform-google-nomad&cloudshell_print=cloud-shell%2Fprint.txt&cloudshell_tutorial=cloud-shell%2Fsteps.md)
+
 ## Bootstrap a brand new GCP project using [`gcloud`](https://cloud.google.com/sdk/gcloud)
 
 Bootstrap a new GCP using the `setup_gcp.sh` shell script:
