@@ -6,7 +6,9 @@
         "bastion_disk_size_gb": "10",
         "server_disk_size_gb": "50",
         "client_disk_size_gb": "50",
-        "source_image_family": "ubuntu-1804-lts"
+        "source_image_family": "ubuntu-1804-lts",
+        "use_iap": "false",
+        "use_preemptible": "false"
     },
     "builders": [
         {
@@ -21,7 +23,9 @@
             "machine_type": "n1-standard-1",
             "state_timeout": "15m",
             "ssh_username": "ubuntu",
-            "zone": "{{user `zone`}}"
+            "zone": "{{user `zone`}}",
+            "use_iap": "{{user `use_iap`}}",
+            "preemptible": "{{user `use_preemptible`}}"
         },
         {
             "name": "server",
@@ -35,7 +39,9 @@
             "machine_type": "n1-standard-1",
             "state_timeout": "15m",
             "ssh_username": "ubuntu",
-            "zone": "{{user `zone`}}"
+            "zone": "{{user `zone`}}",
+            "use_iap": "{{user `use_iap`}}",
+            "preemptible": "{{user `use_preemptible`}}"
         },
         {
             "name": "client",
@@ -49,7 +55,9 @@
             "machine_type": "n1-standard-1",
             "state_timeout": "15m",
             "ssh_username": "ubuntu",
-            "zone": "{{user `zone`}}"
+            "zone": "{{user `zone`}}",
+            "use_iap": "{{user `use_iap`}}",
+            "preemptible": "{{user `use_preemptible`}}"
         }
     ],
     "provisioners": [
