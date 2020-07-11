@@ -4,7 +4,7 @@
 
 [Terraform](https://www.terraform.io/) Module for [Nomad](https://nomadproject.io/) clusters on [GCP](https://cloud.google.com/).
 
-## Bootstrap a brand new GCP project using `gcloud`
+## Bootstrap a brand new GCP project using [`gcloud`](https://cloud.google.com/sdk/gcloud)
 
 Bootstrap a new GCP using the `setup_gcp.sh` shell script:
 
