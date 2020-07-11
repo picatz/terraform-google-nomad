@@ -15,6 +15,17 @@
 
 Before we can deploy our cluster to GCP, we need to first setup our environment with the required tools.
 
+### Download Nomad
+
+Download the latest version of [Nomad](https://www.nomadproject.io/) from HashiCorp's website by copying and pasting this snippet in the terminal:
+
+```console
+curl "https://releases.hashicorp.com/nomad/0.12.0/nomad_0.12.0_linux_amd64.zip" -o nomad.zip
+unzip nomad.zip
+sudo mv nomad /usr/local/bin
+nomad --version
+```
+
 ### Download Packer
 
 Download the latest version of [Packer](https://www.packer.io/) from HashiCorp's website by copying and pasting this snippet in the terminal:
@@ -37,7 +48,7 @@ sudo mv terraform /usr/local/bin
 terraform --version
 ```
 
-🎉 Now we have installed `packer`, and `terraform`!
+🎉 Now we have installed `nomad`, `packer`, and `terraform`!
 
 Next, let's configure out GCP project to ensure it's ready for us to deploy our cluster.
 
