@@ -1,10 +1,14 @@
 {
+    "variables": {
+        "project": "{{env `GOOGLE_PROJECT`}}",
+        "account_file": "{{env `GOOGLE_APPLICATION_CREDENTIALS`}}"
+    },
     "builders": [
         {
             "name": "bastion",
             "type": "googlecompute",
-            "account_file": "../account.json",
-            "project_id": "my-nomad-cluster",
+            "account_file": "{{user `account_file`}}",
+            "project_id": "{{user `project`}}",
             "source_image": "ubuntu-1804-bionic-v20200317",
             "image_description": "nomad bastion image",
             "image_name": "nomad-bastion",
@@ -17,8 +21,8 @@
         {
             "name": "server",
             "type": "googlecompute",
-            "account_file": "../account.json",
-            "project_id": "my-nomad-cluster",
+            "account_file": "{{user `account_file`}}",
+            "project_id": "{{user `project`}}",
             "source_image": "ubuntu-1804-bionic-v20200317",
             "image_description": "nomad server image",
             "image_name": "nomad-server",
@@ -31,8 +35,8 @@
         {
             "name": "client",
             "type": "googlecompute",
-            "account_file": "../account.json",
-            "project_id": "my-nomad-cluster",
+            "account_file": "{{user `account_file`}}",
+            "project_id": "{{user `project`}}",
             "source_image": "ubuntu-1804-bionic-v20200317",
             "image_description": "nomad client image",
             "image_name": "nomad-client",
