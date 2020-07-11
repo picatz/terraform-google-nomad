@@ -4,20 +4,22 @@
 
 ## Bootstrap a brand new GCP project using `gcloud`
 
-I created a project named `my-nomad-cluster` using the following command (you will need to use a different project name):
+Bootstrap a new GCP using the `setup_gcp.sh` shell script:
 
 ```console
-$ bash setup_gcp.sh my-nomad-cluster
+$ bash setup_gcp.sh $YOUR_PROJECT_NAME
 ...
 ```
 
 It will automatically create, link the billing account, and enable the compute API in GCP.
 
-## Use Generated `account.json`
+### Set Environment Variables
+
+Using your GCP project name and new created `account.json` Terraform service account file from the previous step:
 
 ```console
 $ export GOOGLE_APPLICATION_CREDENTIALS=$(realpath account.json)
-$ export GOOGLE_PROJECT="my-nomad-cluster"
+$ export GOOGLE_PROJECT="$YOUR_PROJECT_NAME"
 ```
 
 ## Build the Bastion/Server/Client Images with Packer
@@ -31,9 +33,9 @@ $ packer build template.json
 ## Build Infrastructure
 
 ```console
-$ terraform plan -var="project=my-nomad-cluster"
+$ terraform plan -var="project=$GOOGLE_PROJECT" -var="credentials=$GOOGLE_APPLICATION_CREDENTIALS"
 ...
-$ terraform apply -var="project=my-nomad-cluster"
+$ terraform apply -var="project=$GOOGLE_PROJECT" -var="credentials=$GOOGLE_APPLICATION_CREDENTIALS"
 ...
 ```
 
