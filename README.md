@@ -8,6 +8,9 @@
 
 [![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.svg)](https://ssh.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fpicatz%2Fterraform-google-nomad&cloudshell_print=cloud-shell%2Fprint.txt&cloudshell_tutorial=cloud-shell%2Fsteps.md)
 
+<details><summary>Manual Steps for Development</summary>
+<p>
+
 ## Bootstrap a brand new GCP project using [`gcloud`](https://cloud.google.com/sdk/gcloud)
 
 Bootstrap a new GCP using the `setup_gcp.sh` shell script:
@@ -45,6 +48,10 @@ $ terraform apply -var="project=$GOOGLE_PROJECT" -var="credentials=$GOOGLE_APPLI
 ...
 ```
 
+</p>
+</details>
+
+
 ## Bootstrap ACL Token
 
 If the cluster is started with ACLs enabled, which is the default behavior of this module, you may see this:
@@ -81,6 +88,8 @@ $ ...
 
 ## Use `ssh-mtls-terminating-proxy` to access the Nomad UI
 
+When using the SSH bastion, you can use the `ssh-mtls-terminating-proxy.go` helper script to tunnel a connection from localhost the Nomad server API:
+
 ```console
 $ go run ssh-mtls-terminating-proxy.go
 2020/04/27 01:27:38 Getting Terraform Output
@@ -96,4 +105,4 @@ $ go run ssh-mtls-terminating-proxy.go
 ...
 ```
 
-Then open your browser at `http://localhost:4646/ui/` to see the Nomad UI exposed securley on your localhost.
+Then open your browser at `http://localhost:4646/ui/` to securely access the Nomad UI.
