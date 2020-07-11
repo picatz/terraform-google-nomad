@@ -382,5 +382,5 @@ Output will look *something* like this:
 Once you are done [playing around with Nomad](https://learn.hashicorp.com/nomad), and wish to destroy the infrastructure to save costs, run the following command:
 
 ```console
-terraform destroy -var="project=$GOOGLE_PROJECT" -var="credentials=$GOOGLE_APPLICATION_CREDENTIALS"
+terraform destroy -auto-approve -var="project=$GOOGLE_PROJECT" -var="credentials=$GOOGLE_APPLICATION_CREDENTIALS"
 ```
