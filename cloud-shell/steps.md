@@ -74,20 +74,6 @@ To get started, let's create a new GCP project with the following command:
 gcloud projects create your-new-project-name
 ```
 
-> ℹ️  **Projects within GSuite Organizations**
->
-> If you have any organizations associated with your account, which is likely that case if you're a student or an employee at an organization using GSuite. If you are, then you can probably create a new project within that organization:
->
-> ```console
-> gcloud project create your-new-project-name --organization="$GOOGLE_ORGANIZATION"
-> ```
->
-> To find out what organization display name to use for `GOOGLE_ORGANIZATION`, run the following command:
->
-> ```console
-> gcloud organizations list
-> ```
-
 ### Link Billing Account to Project
 
 Next, let's link a billing account to that project which can now be set as an environment variable:
