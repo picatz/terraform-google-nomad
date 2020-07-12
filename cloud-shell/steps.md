@@ -202,12 +202,17 @@ The `example` directory contains an simple Terraform configuration using the [`p
 > }
 >
 > module "nomad" {
->   source      = "picatz/nomad/google"
->   version     = "1.1.3"
->   project     = var.project
->   credentials = var.credentials
+>   source           = "picatz/nomad/google"
+>   version          = "1.1.4"
+>   project          = var.project
+>   credentials      = var.credentials
+>   bastion_enabled  = false
+>   server_instances = 1
+>   client_instances = 1
 > }
 > ```
+
+The configuration disables the default SSH bastion to the cluster, and runs only one server, and client node to save costs.
 
 ### Initialize Terraform
 
