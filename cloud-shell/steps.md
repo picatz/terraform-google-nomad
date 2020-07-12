@@ -222,7 +222,7 @@ terraform apply -auto-approve -var="project=$GOOGLE_PROJECT" -var="credentials=$
 
 ### Set Environment Variables
 
-Using the Terraform outputs, we can set the required Nomad environment variables to secrely access to the Nomad cluster API using the TLS certificate, and load balancer created with the previous step:
+Using the Terraform outputs, we can set the required Nomad environment variables to securely access to the Nomad cluster API using the TLS information, and load balancer created with the previous step:
 
 ```console
 export NOMAD_ADDR="https://$(terraform output -json | jq -r .load_balancer_ip.value):4646"
