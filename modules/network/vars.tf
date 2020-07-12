@@ -13,9 +13,24 @@ variable "cidr_range" {
   default = "192.168.1.0/24"
 }
 
-variable "source_tags" {
+variable "ssh_source_tags" {
     type    = list(string)
     default = ["nomad-bastion", "nomad-server", "nomad-client"]
+}
+
+variable "http_source_tags" {
+    type    = list(string)
+    default = ["nomad-bastion", "nomad-server", "nomad-client"]
+}
+
+variable "rpc_source_tags" {
+    type    = list(string)
+    default = ["nomad-server", "nomad-client"]
+}
+
+variable "gossip_source_tags" {
+    type    = list(string)
+    default = ["nomad-server"]
 }
 
 variable "router_asn" {

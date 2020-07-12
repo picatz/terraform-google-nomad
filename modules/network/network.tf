@@ -21,11 +21,12 @@ resource "google_compute_firewall" "allow_icmp" {
 }
 
 module "nomad-ssh" {
-    source   = "../open-port"
-    network  = google_compute_network.nomad.name
-    name     = "nomad-ssh"
-    port     = 22
-    protocol = "tcp"
+    source      = "../open-port"
+    network     = google_compute_network.nomad.name
+    name        = "nomad-ssh"
+    port        = 22
+    protocol    = "tcp"
+    source_tags = var.ssh_source_tags
 }
 
 module "nomad-http" {
@@ -34,7 +35,7 @@ module "nomad-http" {
     name        = "nomad-http"
     port        = 4646
     protocol    = "tcp"
-    source_tags = var.source_tags
+    source_tags = var.http_source_tags
 }
 
 module "nomad-rpc" {
@@ -43,7 +44,7 @@ module "nomad-rpc" {
     name        = "nomad-rpc"
     port        = 4647
     protocol    = "tcp"
-    source_tags = var.source_tags
+    source_tags = var.rpc_source_tags
 }
 
 module "nomad-wan-tcp" {
@@ -52,7 +53,7 @@ module "nomad-wan-tcp" {
     name        = "nomad-wan-tcp"
     port        = 4648
     protocol    = "tcp"
-    source_tags = var.source_tags
+    source_tags = var.gossip_source_tags
 }
 
 module "nomad-wan-udp" {
@@ -61,5 +62,5 @@ module "nomad-wan-udp" {
     name        = "nomad-wan-udp"
     port        = 4648
     protocol    = "udp"
-    source_tags = var.source_tags
+    source_tags = var.gossip_source_tags
 }
