@@ -4,6 +4,8 @@
 
 [Terraform](https://www.terraform.io/) Module for [Nomad](https://nomadproject.io/) clusters on [GCP](https://cloud.google.com/).
 
+<img alt="Infrastructure Diagram" src="https://raw.githubusercontent.com/picatz/terraform-google-nomad/master/diagram.png" height="600"/>
+
 ## Cloud Shell Interactive Tutorial
 
 For a full interactive tutorial to get started using this module:
