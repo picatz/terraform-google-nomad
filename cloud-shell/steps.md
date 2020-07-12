@@ -212,7 +212,7 @@ The `example` directory contains an simple Terraform configuration using the [`p
 > }
 > ```
 
-The configuration disables the default SSH bastion to the cluster, and runs only one server, and client node to save costs.
+The configuration disables the default SSH bastion to the cluster, as well as running only one server and client node to save costs.
 
 ### Initialize Terraform
 
