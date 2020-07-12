@@ -26,7 +26,6 @@ module "nomad-ssh" {
     name        = "nomad-ssh"
     port        = 22
     protocol    = "tcp"
-    source_tags = var.ssh_source_tags
 }
 
 module "nomad-http" {
