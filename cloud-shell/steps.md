@@ -6,7 +6,7 @@
 
 **Includes**:
 
-1. 🛠 Setting up your cloud shell environment with `packer` and `terraform` binaries.
+1. 🛠 Setting up your cloud shell environment with `nomad`, `packer`, and `terraform` binaries.
 2. ⚙️  Configuring a new GCP project, linking the billing account, and enabling the compute engine API using `gcloud`.
 3. 📦 Packaging cluster golden images (bastion, server, and client) with `packer`.
 4. ☁️  Deploying a Nomad cluster using `terraform`.
@@ -15,7 +15,7 @@
 
 ## Setup Environment
 
-Before we can deploy our cluster to GCP, we need to first setup our environment with the required tools.
+Before we can deploy our cluster, we need to setup our environment with the required HashiCorp tools.
 
 ### Download Nomad
 
@@ -50,11 +50,13 @@ sudo mv terraform /usr/local/bin
 terraform --version
 ```
 
-🎉 Now we have installed `nomad`, `packer`, and `terraform`!
+🎉 You have now installed `nomad`, `packer`, and `terraform`!
 
-Next, let's configure out GCP project to ensure it's ready for us to deploy our cluster.
+### Next Step
 
-## Configure Project
+Now that we have our tools, let's configure our GCP project.
+
+## Configure GCP Project
 
 Before building our infrastructure, we'll need to do a few things:
 
@@ -71,9 +73,10 @@ To get started, let's create a new GCP project:
 ```console
 gcloud projects create your-new-project-name
 ```
+
 > ℹ️  **Projects within GSuite Organizations**
 >
-> If you have any organizations associated with your account, which is likely that case if you're an student or an employee at an organization using GSuite, then you can create a new project within that organization:
+> If you have any organizations associated with your account, which is likely that case if you're a student or an employee at an organization using GSuite. If you are, then you can probably create a new project within that organization:
 >
 > ```console
 > gcloud project create your-new-project-name --organization="$GOOGLE_ORGANIZATION"
