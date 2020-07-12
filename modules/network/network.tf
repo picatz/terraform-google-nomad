@@ -63,6 +63,3 @@ module "nomad-wan-udp" {
     protocol    = "udp"
     source_tags = var.source_tags
 }
-
-// This only works right now because the Nomad UI is avaiable to all nodes within the cluster.
-// gcloud compute ssh nomad-bastion --zone=us-east1-c -- -N -L 4646:$(gcloud compute instances list | grep "nomad-server" | head -n 1 | awk '{print $4}'):4646
