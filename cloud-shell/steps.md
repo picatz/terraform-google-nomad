@@ -62,13 +62,13 @@ Before building our infrastructure, we'll need to do a few things:
 
 1. Create a new GCP project.
 2. Link a billing account to that project.
-3. Enable the compute engine API.
+3. Enable the [compute engine](https://cloud.google.com/compute).
 4. Create a Terraform Service Account, with a credentials file (`account.json`).
-5. Set the required environment variables.
+5. Set the required environment variables to move onto the next steps.
 
 ### Create a New Project
 
-To get started, let's create a new GCP project:
+To get started, let's create a new GCP project with the following command:
 
 ```console
 gcloud projects create your-new-project-name
