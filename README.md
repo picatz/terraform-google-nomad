@@ -22,6 +22,7 @@ For a full interactive tutorial to get started using this module:
 <details><summary>Manual Steps for Development</summary>
 <p>
 
+
 ## Bootstrap a brand new GCP project using [`gcloud`](https://cloud.google.com/sdk/gcloud)
 
 Bootstrap a new GCP using the `setup_gcp.sh` shell script:
@@ -67,6 +68,20 @@ $ terraform apply -var="project=$GOOGLE_PROJECT" -var="credentials=$GOOGLE_APPLI
 <p align="center">
     <img alt="Infrastructure Diagram" src="https://raw.githubusercontent.com/picatz/terraform-google-nomad/master/diagram.png" height="700"/>
 </p>
+
+## Logs
+
+Logs are centralized using GCP's [Cloud Logging](https://cloud.google.com/logging). You can use the following filter to see all Nomad agent logs:
+
+```console
+$ gcloud logging read 'resource.type="gce_instance" jsonPayload.ident="nomad"'
+...
+```
+
+```console
+$ gcloud logging read 'resource.type="gce_instance" jsonPayload.ident="nomad" jsonPayload.host="nomad-server-0"' --format=json | jq -r '.[] | .jsonPayload.message' | less
+...
+```
 
 ## Bootstrap ACL Token
 
