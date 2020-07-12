@@ -239,6 +239,10 @@ To create an administrative management token (only meant to be used by Nomad Adm
 nomad acl bootstrap
 ```
 
+> ℹ️ **Note**
+>
+> If the command above errors due to an i/o timeout, try rerunning the command again. This will happen when attempting to `bootstrap` a cluster that hasn't started yet. This should only take a few minutes at the most.
+
 Then we can use the token (Secret ID) in the previous command's output to access the cluster by setting the `NOMAD_TOKEN` environment variable:
 
 ```console
