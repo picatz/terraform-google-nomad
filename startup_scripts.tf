@@ -16,10 +16,16 @@ data "template_file" "nomad_client_bootstrap_script" {
   template = file("${path.module}/templates/client.sh")
 
   vars = {
-    project            = var.project
-    ca_cert            = tls_self_signed_cert.nomad-ca.cert_pem
-    client_cert        = tls_locally_signed_cert.nomad-client.cert_pem
-    client_private_key = tls_private_key.nomad-client.private_key_pem
-    acls_enabled       = var.acls_enabled
+    project                  = var.project
+    ca_cert                  = tls_self_signed_cert.nomad-ca.cert_pem
+    client_cert              = tls_locally_signed_cert.nomad-client.cert_pem
+    client_private_key       = tls_private_key.nomad-client.private_key_pem
+    acls_enabled             = var.acls_enabled
+    gvisor_enabled           = var.gvisor_enabled
+    gvisor_release           = var.gvisor_release
+    docker_default_runtime   = var.docker_default_runtime
+    docker_rootless_enabled  = var.docker_rootless_enabled
+    docker_no_new_privileges = var.docker_no_new_privileges
+    docker_icc_enabled       = var.docker_icc_enabled
   }
 }

@@ -87,6 +87,42 @@ variable "acls_enabled" {
   description = "If ACLs should be enabled for the cluster."
 }
 
+variable "gvisor_enabled" {
+  type        = bool
+  default     = true
+  description = "Enables the gVisor Docker runtime for the cluster."
+}
+
+variable "gvisor_release" {
+  type        = string
+  default     = "release"
+  description = "The release type to use, defaults to the latest release type."
+}
+
+variable "docker_default_runtime" {
+  type        = string
+  default     = "runc"
+  description = "The default Docker runtime to use."
+}
+
+variable "docker_rootless_enabled" {
+  type        = bool
+  default     = true
+  description = "Enable rootless mode (experimental)."
+}
+
+variable "docker_no_new_privileges" {
+  type        = bool
+  default     = true
+  description = "Set no-new-privileges by default for new containers."
+}
+
+variable "docker_icc_enabled" {
+  type        = bool
+  default     = false
+  description = "Enables inter-container communication."
+}
+
 variable "loadbalancer_enabled" {
   type        = bool
   default     = true

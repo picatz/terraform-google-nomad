@@ -6,4 +6,11 @@ set -ex
 timeout 180 /usr/bin/cloud-init status --wait
 
 sudo apt-get update
-sudo apt-get install -y unzip
+sudo apt-get install -y \
+    apt-transport-https \
+    ca-certificates \
+    unzip \
+    curl \
+    gnupg-agent \
+    software-properties-common \
+    jq

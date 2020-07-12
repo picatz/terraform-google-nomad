@@ -6,12 +6,14 @@
 
 ## Module Features
 
+* Automated load balancer configuration to access the Nomad Server API.
 * Automatically enables mTLS, and generates certifcates.
 * Automatically enables gossip encryption, and generates the gossip key.
 * Automatically generates SSH credentials for the bastion host.
 * ACLs enabled by default.
 * Only the [Docker task driver](https://www.nomadproject.io/docs/drivers/docker) is enabled by default.
-* Automated load balancer configuration to access the Nomad Server API.
+* Runs the Docker daemon in [rootless mode](https://docs.docker.com/engine/security/rootless/), with `no-new-privileges=true` and `iss=false` set by default.
+* Installs the [gVisor](https://gvisor.dev/) container runtime by default (`runsc`).
 
 ## Cloud Shell Interactive Tutorial
 
@@ -21,7 +23,6 @@ For a full interactive tutorial to get started using this module:
 
 <details><summary>Manual Steps for Development</summary>
 <p>
-
 
 ## Bootstrap a brand new GCP project using [`gcloud`](https://cloud.google.com/sdk/gcloud)
 
