@@ -34,3 +34,7 @@ variable "instances" {
   type = list(string)
 }
 
+variable "enabled" {
+  type    = bool
+  default = true
+}

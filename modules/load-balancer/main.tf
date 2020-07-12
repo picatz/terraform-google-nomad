@@ -1,4 +1,5 @@
 resource "google_compute_firewall" "default-lb-fw" {
+  count         = var.enabled ? 1 : 0
   name          = var.name
   network       = var.network
   source_ranges = ["0.0.0.0/0"]
@@ -13,7 +14,8 @@ resource "google_compute_firewall" "default-lb-fw" {
 }
 
 resource "google_compute_forwarding_rule" "default" {
-  target                = google_compute_target_pool.default.self_link
+  count                 = var.enabled ? 1 : 0
+  target                = google_compute_target_pool.default[count.index].self_link
   name                  = var.name
   load_balancing_scheme = "EXTERNAL"
   network_tier          = "STANDARD"
@@ -22,6 +24,7 @@ resource "google_compute_forwarding_rule" "default" {
 }
 
 resource "google_compute_health_check" "default" {
+  count               = var.enabled ? 1 : 0
   name                = var.name
   check_interval_sec  = 1
   timeout_sec         = 1
@@ -34,6 +37,7 @@ resource "google_compute_health_check" "default" {
 }
 
 resource "google_compute_target_pool" "default" {
+  count            = var.enabled ? 1 : 0
   name             = var.name
   region           = var.region
   session_affinity = "CLIENT_IP"

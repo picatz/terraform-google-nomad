@@ -86,3 +86,9 @@ variable "acls_enabled" {
   default     = true
   description = "If ACLs should be enabled for the cluster."
 }
+
+variable "loadbalancer_enabled" {
+  type        = bool
+  default     = true
+  description = "Enables the GCP load balancer for the Nomad Server API to make the cluster available over the internet."
+}
