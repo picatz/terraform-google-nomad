@@ -3,7 +3,7 @@ variable "project" {
 }
 
 variable "credentials" {
-    description = "The GCP project credentials to use, preferably a Terraform Service Account."
+    description = "The GCP credentials file path to use, preferably a Terraform Service Account."
 }
 
 module "nomad" {
