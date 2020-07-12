@@ -90,7 +90,7 @@ $ ...
 
 ## Use `ssh-mtls-terminating-proxy` to access the Nomad UI
 
-When using the SSH bastion, you can use the `ssh-mtls-terminating-proxy.go` helper script to tunnel a connection from localhost the Nomad server API:
+When using the SSH bastion, you can use the `ssh-mtls-terminating-proxy.go` helper script to tunnel a connection from localhost to the Nomad server API:
 
 ```console
 $ go run ssh-mtls-terminating-proxy.go
