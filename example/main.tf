@@ -8,7 +8,7 @@ variable "credentials" {
 
 module "nomad" {
   source      = "picatz/nomad/google"
-  version     = "1.1.2"
+  version     = "1.1.3"
   project     = var.project
   credentials = var.credentials
 }
