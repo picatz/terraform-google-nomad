@@ -4,6 +4,15 @@
 
 [Terraform](https://www.terraform.io/) Module for [Nomad](https://nomadproject.io/) clusters on [GCP](https://cloud.google.com/).
 
+## Module Features
+
+* Automatically enables mTLS, and generates certifcates.
+* Automatically enables gossip encryption, and generates the gossip key.
+* Automatically generates SSH credentials for the bastion host.
+* ACLs enabled by default.
+* Only the [Docker task driver](https://www.nomadproject.io/docs/drivers/docker) is enabled by default.
+* Automated load balancer configuration to access the Nomad Server API.
+
 ## Cloud Shell Interactive Tutorial
 
 For a full interactive tutorial to get started using this module:
