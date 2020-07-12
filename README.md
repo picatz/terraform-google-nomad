@@ -54,9 +54,10 @@ $ terraform apply -var="project=$GOOGLE_PROJECT" -var="credentials=$GOOGLE_APPLI
 </details>
 
 ## Infrastructure Diagram
-<center>
+
+<p align="center">
     <img alt="Infrastructure Diagram" src="https://raw.githubusercontent.com/picatz/terraform-google-nomad/master/diagram.png" height="700"/>
-</center>
+</p>
 
 ## Bootstrap ACL Token
 
