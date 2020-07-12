@@ -51,6 +51,12 @@ variable "client_machine_type" {
   description = "The VM machine type for Nomad clients."
 }
 
+variable "bastion_enabled" {
+  type        = bool
+  default     = true
+  description = "Enables the SSH bastion."
+}
+
 variable "bastion_machine_type" {
   type        = string
   default     = "g1-small"

@@ -1,4 +1,5 @@
 module "bastion" {
+  instances      = var.bastion_enabled ? 1 : 0
   source         = "./modules/vm"
   name           = "nomad-bastion"
   machine_type   = var.bastion_machine_type
