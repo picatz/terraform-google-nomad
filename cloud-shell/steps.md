@@ -74,9 +74,7 @@ To get started, let's create a new GCP project with the following command:
 gcloud projects create your-new-project-name
 ```
 
-### Link Billing Account to Project
-
-Next, let's link a billing account to that project which can now be set as an environment variable:
+Now export the project name as the `GOOGLE_PROJECT` environment variable:
 
 ```console
 export GOOGLE_PROJECT="your-new-project-name"
@@ -88,19 +86,21 @@ And then set your `gcloud` config to use that project:
 gcloud config set project $GOOGLE_PROJECT
 ```
 
-To determine what billing accounts are available:
+### Link Billing Account to Project
+
+Next, let's link a billing account to that project. To determine what billing accounts are available, run the following command:
 
 ```console
 gcloud alpha billing accounts list
 ```
 
-Then set the preferred billing account ID:
+Then set the billing account ID `GOOGLE_BILLING_ACCOUNT` environment variable:
 
 ```console
 export GOOGLE_BILLING_ACCOUNT="XXXXXXX"
 ```
 
-Now we can link the `GOOGLE_BILLING_ACCOUNT` with the `GOOGLE_PROJECT`:
+So we can link the `GOOGLE_BILLING_ACCOUNT` with the previously created `GOOGLE_PROJECT`:
 
 ```console
 gcloud alpha billing projects link "$GOOGLE_PROJECT" --billing-account "$GOOGLE_BILLING_ACCOUNT"
@@ -108,7 +108,7 @@ gcloud alpha billing projects link "$GOOGLE_PROJECT" --billing-account "$GOOGLE_
 
 ### Enable Compute API
 
-To deploy VMs to the project, we need to enable the compute API:
+In order to deploy VMs to the project, we need to enable the compute API:
 
 ```console
 gcloud services enable compute.googleapis.com
@@ -139,6 +139,10 @@ gcloud iam service-accounts keys create account.json \
     --iam-account "terraform@$GOOGLE_PROJECT.iam.gserviceaccount.com"
 ```
 
+> ⚠️  **Warning**
+>
+> The `account.json` credentials give high-privellege access to this GCP project. Be sure to prevent from accidently leaking these credentials in version control systems such as `git`. In general, as an operator on your own host machine, or in own GCP cloud shell is ok, but using a secrets management systems like HashiCorp [Vault](https://www.vaultproject.io/) can often be a better long-term for teams. For this tutorial's purposes, we'll be storing the `account.json` credentials on disk in the cloud shell.
+
 Now set the *full path* of the newly created `account.json` file as `GOOGLE_APPLICATION_CREDENTIALS` environment variable.
 
 ```console
@@ -147,7 +151,7 @@ export GOOGLE_APPLICATION_CREDENTIALS=$(realpath account.json)
 
 ### Ensure Required Environment Variables Are Set
 
-Before moving onto the next steps, be sure that the following environment variables are set:
+Before moving onto the next steps, ensure the following environment variables are set:
 
 * `GOOGLE_PROJECT` with your selected GCP project name.
 * `GOOGLE_APPLICATION_CREDENTIALS` with the *full path* to the Terraform Service Account `account.json` credentials file created with the last step.
@@ -170,7 +174,7 @@ packer build -force template.json
 >
 > The command will take about 5 minutes to complete.
 
-Once the command completes successfully, change back to the root directory of the repository (going back/up one directory) to move onto the next phase:
+Once the command completes successfully, change back to previous folder to move onto the next phase:
 
 ```console
 cd ..
@@ -178,14 +182,44 @@ cd ..
 
 ## Deploy Infrastructure with Terraform
 
-🙌🏽 Now to finally deploy the Nomad cluster!
+🙌🏽 Now to finally deploy the Nomad cluster using Terraform!
+
+### Example Configuration
+
+The `example` directory contains an simple Terraform configuration using the [`picatz/google/nomad`](https://registry.terraform.io/modules/picatz/nomad/google) module:
+
+> ℹ️ **Terraform Configuration**
+>
+> The `example/main.tf` file contains:
+>
+> ```hcl
+> variable "project" {
+>     description = "The GCP project name to deploy the cluster to."
+> }
+>
+> variable "credentials" {
+>     description = "The GCP credentials file path to use, preferably a Terraform Service Account."
+> }
+>
+> module "nomad" {
+>   source      = "picatz/nomad/google"
+>   version     = "1.1.3"
+>   project     = var.project
+>   credentials = var.credentials
+> }
+> ```
 
 ### Initialize Terraform
 
-Change into the `example` directory and initialize Terraform:
+Run the following command to change into the `example` directory:
 
 ```console
 cd example
+```
+
+Then initialize Terraform which will download the module from the Terraform Registry:
+
+```console
 terraform init
 ```
 
@@ -252,7 +286,7 @@ No running jobs
 
 ### Run Container
 
-Now that we deployed the cluster, let's use it to run an example job, a Docker container that runs Folding at Home:
+Now that we deployed the cluster, let's use it to submit an example job using a Docker container to run [Folding at Home](https://foldingathome.org/):
 
 ```hcl
 job "folding-at-home" {
@@ -267,6 +301,11 @@ job "folding-at-home" {
     }
 }
 ```
+
+> ℹ️ **Note**
+>
+> There are many other [task drivers](https://www.nomadproject.io/docs/drivers) available for Nomad, but the `picatz/google/nomad` module is setup to support just the [Docker Driver](https://www.nomadproject.io/docs/drivers/docker) by default.
+>
 
 To submit the job to the cluster, run the following command using the `jobs/folding-at-home.hcl` job file:
 
@@ -348,6 +387,7 @@ nomad alloc logs -f 6311f4ea
 >
 > Press [CTRL+C](https://en.wikipedia.org/wiki/Control-C) to quit tailing/following the logs.
 
+
 ### Stop Container
 
 To stop the container, we can stop the `folding-at-home` job:
@@ -365,6 +405,33 @@ Output will look *something* like this:
     Evaluation status changed: "pending" -> "complete"
 ==> Evaluation "b6144971" finished with status "complete"
 ```
+
+## Doing More with Nomad
+
+Ready to start running other containers in the cluster, or interested in what other things Nomad can do? Check out these awesome resources:
+
+### HashiCorp Learn
+
+The official [HashiCorp Learn](https://learn.hashicorp.com/) platform provides tutorials for:
+
+* [Gettings Started with Jobs](https://learn.hashicorp.com/nomad/getting-started/jobs)
+* [ACL System Fundamentlas](https://learn.hashicorp.com/nomad/acls/fundamentals)
+* [Advanced Scheduling](https://learn.hashicorp.com/nomad/advanced-scheduling/advanced-scheduling)
+* [Stateful Workloads](https://learn.hashicorp.com/nomad/stateful-workloads/stateful-workloads)
+* [Task Depencies](https://learn.hashicorp.com/nomad/task-deps/interjob)
+* And much [more](https://learn.hashicorp.com/nomad)!
+
+### Documentation
+
+* [Schedulers](https://www.nomadproject.io/docs/schedulers)
+* [Job Specification](https://www.nomadproject.io/docs/job-specification)
+* [Security Model](https://www.nomadproject.io/docs/internals/security)
+* And much [more](https://www.nomadproject.io/docs)!
+
+### Example Job Files
+
+* [Charlie Voiselle's Collection of Nomad Job Examples](https://github.com/angrycub/nomad_example_jobs)
+* [Guy Barros' Collection of Nomad Jobs](https://github.com/GuyBarros/nomad_jobs)
 
 ## Conclusion
 
