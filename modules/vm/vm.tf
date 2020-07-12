@@ -27,7 +27,10 @@ resource "google_compute_instance" "vm" {
 
   service_account {
     # https://developers.google.com/identity/protocols/googlescopes
-    scopes = ["https://www.googleapis.com/auth/compute.readonly"]
+    scopes = [
+      "https://www.googleapis.com/auth/compute.readonly",
+      "https://www.googleapis.com/auth/logging.write",
+    ]
   }
 
   metadata = {
