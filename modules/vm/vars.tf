@@ -58,3 +58,13 @@ variable "disk_size" {
   type    = number
   default = 50
 }
+
+variable "enable_shielded_vm" {
+    type    = bool
+    default = true
+}
+
+variable "enable_preemptible" {
+    type    = bool
+    default = false
+}

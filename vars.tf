@@ -128,3 +128,27 @@ variable "loadbalancer_enabled" {
   default     = true
   description = "Enables the GCP load balancer for the Nomad Server API to make the cluster available over the internet."
 }
+
+variable "enable_preemptible_bastion_vm" {
+  type        = bool
+  default     = true
+  description = "Enables a preemptible SSH bastion host to save costs."
+}
+
+variable "enable_preemptible_server_vms" {
+  type        = bool
+  default     = false
+  description = "Enables preemptible Nomad server hosts to save costs."
+}
+
+variable "enable_preemptible_client_vms" {
+  type        = bool
+  default     = true
+  description = "Enables preemptible Nomad client hosts to save costs."
+}
+
+variable "enable_shielded_vms" {
+  type        = bool
+  default     = true
+  description = "Enables shielded VMs for all hosts."
+}

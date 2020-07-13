@@ -25,6 +25,26 @@ resource "google_compute_instance" "vm" {
     }
   }
 
+  lifecycle {
+    create_before_destroy = "true"
+  }
+
+  scheduling {
+    preemptible       = var.enable_preemptible
+    # scheduling must have automatic_restart be false when preemptible is true.
+    automatic_restart = ! var.enable_preemptible
+  }
+
+  dynamic "shielded_instance_config" {
+    # https://github.com/terraform-google-modules/terraform-google-vm/blob/a3d482fa2f33a61880d3cdfe2e7e86ee6b6597d0/modules/instance_template/main.tf#L51
+    for_each = var.enable_shielded_vm ? [{}] : []
+    content {
+      enable_secure_boot          = true
+      enable_vtpm                 = true
+      enable_integrity_monitoring = true
+    }
+  }
+
   service_account {
     # https://developers.google.com/identity/protocols/googlescopes
     scopes = [
