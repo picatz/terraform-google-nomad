@@ -105,12 +105,6 @@ variable "docker_default_runtime" {
   description = "The default Docker runtime to use."
 }
 
-variable "docker_rootless_enabled" {
-  type        = bool
-  default     = true
-  description = "Enable rootless mode (experimental)."
-}
-
 variable "docker_no_new_privileges" {
   type        = bool
   default     = true

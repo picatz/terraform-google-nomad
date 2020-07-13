@@ -24,7 +24,6 @@ data "template_file" "nomad_client_bootstrap_script" {
     gvisor_enabled           = var.gvisor_enabled
     gvisor_release           = var.gvisor_release
     docker_default_runtime   = var.docker_default_runtime
-    docker_rootless_enabled  = var.docker_rootless_enabled
     docker_no_new_privileges = var.docker_no_new_privileges
     docker_icc_enabled       = var.docker_icc_enabled
   }

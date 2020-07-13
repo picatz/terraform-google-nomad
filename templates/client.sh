@@ -37,13 +37,6 @@ cat /etc/docker/daemon.json  | jq '{"default-runtime": "${docker_default_runtime
 cat /tmp/daemon.json > /etc/docker/daemon.json
 rm /tmp/daemon.json
 
-# Optionally enable rootless mode
-if [ "${docker_rootless_enabled}" = "true" ]; then
-    cat /etc/docker/daemon.json  | jq '{"experimental": true, "rootless": true} + .' > /tmp/daemon.json
-    cat /tmp/daemon.json > /etc/docker/daemon.json
-    rm /tmp/daemon.json
-fi
-
 # Optionally enable no-new-privileges
 if [ "${docker_no_new_privileges}" = "true" ]; then
     cat /etc/docker/daemon.json  | jq '. + {"no-new-privileges": true}' > /tmp/daemon.json
