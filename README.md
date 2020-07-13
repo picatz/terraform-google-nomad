@@ -12,7 +12,7 @@
 * Automatically generates SSH credentials for the bastion host.
 * ACLs enabled by default.
 * Only the [Docker task driver](https://www.nomadproject.io/docs/drivers/docker) is enabled by default.
-* Runs the Docker daemon in [rootless mode](https://docs.docker.com/engine/security/rootless/), with `no-new-privileges=true` and `iss=false` set by default.
+* Runs the Docker daemon in [rootless mode](https://docs.docker.com/engine/security/rootless/), with `no-new-privileges=true` and `icc=false` set by default.
 * Installs the [gVisor](https://gvisor.dev/) container runtime by default (`runsc`).
 
 ## Cloud Shell Interactive Tutorial
