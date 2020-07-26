@@ -1,0 +1,31 @@
+
+name: Update Tutorial Module Version
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      working-directory: cloud-shell/steps.md
+      run: |
+        # small sleep buffer
+        sleep 5
+        # get previous and latest versions
+        PREVIOUS_MODULE_VERSION=$(hub release -L 2 | tail -n 1 | awk -F 'v' '{print $2}')
+        LATEST_MODULE_VERSION=$(hub release -L 1 | awk -F 'v' '{print $2}')
+        # configure git
+        git config user.name "Tutorial Update Bot"
+        git config user.email "picatz@users.noreply.github.com"
+        git remote set-url origin "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY"
+        # update
+        sed -i "s/$PREVIOUS_MODULE_VERSION/$LATEST_MODULE_VERSION/g" steps.md
+        git commit -m "tutorial-update-bot: update module version from $PREVIOUS_MODULE_VERSION to $LATEST_MODULE_VERSION" || exit 1
+        git status
+        git push origin HEAD:master
