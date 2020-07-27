@@ -1,19 +1,37 @@
-output "ca_cert" {
+output "nomad_ca_cert" {
   sensitive   = true
   description = "The TLS CA certificate used for CLI authentication."
   value       = tls_self_signed_cert.nomad-ca.cert_pem
 }
 
-output "cli_cert" {
+output "nomad_cli_cert" {
   sensitive   = true
   description = "The TLS certificate used for CLI authentication."
   value       = tls_locally_signed_cert.nomad-cli.cert_pem
 }
 
-output "cli_key" {
+output "nomad_cli_key" {
   sensitive   = true
   description = "The TLS private key used for CLI authentication."
   value       = tls_private_key.nomad-cli.private_key_pem
+}
+
+output "consul_ca_cert" {
+  sensitive   = true
+  description = "The TLS CA certificate used for CLI authentication."
+  value       = tls_self_signed_cert.consul-ca.cert_pem
+}
+
+output "consul_cli_cert" {
+  sensitive   = true
+  description = "The TLS certificate used for CLI authentication."
+  value       = tls_locally_signed_cert.consul-cli.cert_pem
+}
+
+output "consul_cli_key" {
+  sensitive   = true
+  description = "The TLS private key used for CLI authentication."
+  value       = tls_private_key.consul-cli.private_key_pem
 }
 
 output "bastion_ssh_public_key" {
@@ -33,8 +51,8 @@ output "bastion_public_ip" {
   value       = module.bastion.external_ip
 }
 
-output "nomad_server_ip" {
-  description = "The Nomad server private IP."
+output "server_internal_ip" {
+  description = "The Nomad/Consul server private IP."
   value       = module.server.internal_ip
 }
 

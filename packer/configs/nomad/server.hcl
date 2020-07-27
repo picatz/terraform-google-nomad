@@ -14,7 +14,7 @@ server {
   enabled = true
 
   server_join {
-    retry_join     = ["provider=gce project_name={PROJECT-NAME} tag_value=nomad-server"]
+    retry_join     = ["provider=gce project_name={PROJECT-NAME} tag_value=server"]
     retry_max      = 12
     retry_interval = "10s"
   }

@@ -15,17 +15,22 @@ variable "cidr_range" {
 
 variable "http_source_tags" {
     type    = list(string)
-    default = ["nomad-bastion", "nomad-server", "nomad-client"]
+    default = ["bastion", "server", "client"]
 }
 
 variable "rpc_source_tags" {
     type    = list(string)
-    default = ["nomad-server", "nomad-client"]
+    default = ["server", "client"]
+}
+
+variable "dns_source_tags" {
+    type    = list(string)
+    default = ["bastion", "server", "client"]
 }
 
 variable "gossip_source_tags" {
     type    = list(string)
-    default = ["nomad-server"]
+    default = ["server", "client"]
 }
 
 variable "router_asn" {

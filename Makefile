@@ -70,3 +70,27 @@ terraform/destroy/example: ## Runs and auto-apporves the Terraform destroy comma
 		-auto-approve \
 		-var="project=${GOOGLE_PROJECT}" \
 		-var="credentials=${GOOGLE_APPLICATION_CREDENTIALS}"
+
+.PHONY: ssh/client
+ssh/client: ## Connects to the client instance using SSH
+	gcloud compute ssh client-0 --tunnel-through-iap
+
+.PHONY: ssh/server
+ssh/server: ## Connects to the server instance using SSH
+	gcloud compute ssh server-0 --tunnel-through-iap
+
+.PHONY: ssh/proxy/consul
+ssh/proxy/consul: ## Forwards the Consul server port to localhost
+	gcloud compute ssh server-0 --tunnel-through-iap -- -f -N -L 127.0.0.1:8500:127.0.0.1:8500
+
+.PHONY: ssh/proxy/nomad
+ssh/proxy/nomad: ## Forwards the Nomad server port to localhost
+	gcloud compute ssh server-0 --tunnel-through-iap -- -f -N -L 127.0.0.1:4646:127.0.0.1:4646
+
+.PHONY: ssh/proxy/nomad
+ssh/proxy/mtls/nomad: ## Forwards the Nomad server port to localhost, using the custom mTLS terminating proxy script
+	go run ssh-mtls-terminating-proxy.go
+
+.PHONY: ssh/proxy/count-dashboard
+ssh/proxy/count-dashboard: ## Forwards the example dashboard serverive port to localhost
+	gcloud compute ssh client-0 --tunnel-through-iap -- -f -N -L 127.0.0.1:9002:0.0.0.0:9002

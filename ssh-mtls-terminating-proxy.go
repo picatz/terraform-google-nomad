@@ -29,10 +29,10 @@ type terraformOutput struct {
 	BastionPublicIP      terraformOutputNode `json:"bastion_public_ip"`
 	BastionSSHPrivateKey terraformOutputNode `json:"bastion_ssh_private_key"`
 	BastionSSHPublicKey  terraformOutputNode `json:"bastion_ssh_public_key"`
-	NomadServerIP        terraformOutputNode `json:"nomad_server_ip"`
-	CACert               terraformOutputNode `json:"ca_cert"`
-	CLICert              terraformOutputNode `json:"cli_cert"`
-	CLIKey               terraformOutputNode `json:"cli_key"`
+	NomadServerIP        terraformOutputNode `json:"server_internal_ip"`
+	CACert               terraformOutputNode `json:"nomad_ca_cert"`
+	CLICert              terraformOutputNode `json:"nomad_cli_cert"`
+	CLIKey               terraformOutputNode `json:"nomad_cli_key"`
 }
 
 func getTerraformOutput() (*terraformOutput, error) {

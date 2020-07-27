@@ -16,7 +16,7 @@
             "project_id": "{{user `project`}}",
             "source_image_family": "{{user `source_image_family`}}",
             "image_description": "nomad bastion image",
-            "image_name": "nomad-bastion",
+            "image_name": "bastion",
             "disk_size": "{{user `disk_size_gb`}}",
             "machine_type": "n1-standard-1",
             "state_timeout": "15m",
@@ -31,8 +31,8 @@
             "account_file": "{{user `account_file`}}",
             "project_id": "{{user `project`}}",
             "source_image_family": "{{user `source_image_family`}}",
-            "image_description": "nomad server image",
-            "image_name": "nomad-server",
+            "image_description": "HashiCorp Nomad and Consul server image",
+            "image_name": "server",
             "disk_size": "{{user `disk_size_gb`}}",
             "machine_type": "n1-standard-1",
             "state_timeout": "15m",
@@ -47,8 +47,8 @@
             "account_file": "{{user `account_file`}}",
             "project_id": "{{user `project`}}",
             "source_image_family": "{{user `source_image_family`}}",
-            "image_description": "nomad client image",
-            "image_name": "nomad-client",
+            "image_description": "HashiCorp Nomad and Consul client image",
+            "image_name": "client",
             "disk_size": "{{user `disk_size_gb`}}",
             "machine_type": "n1-standard-1",
             "state_timeout": "15m",
@@ -62,20 +62,38 @@
         {
             "only": ["server"],
 			"type": "file",
-			"source": "configs/server.hcl",
-			"destination": "/tmp/agent.hcl"
+			"source": "configs/nomad/server.hcl",
+			"destination": "/tmp/nomad-agent.hcl"
+		},
+        {
+            "only": ["server"],
+			"type": "file",
+			"source": "configs/consul/server.hcl",
+			"destination": "/tmp/consul-agent.hcl"
 		},
         {
             "only": ["client"],
 			"type": "file",
-			"source": "configs/client.hcl",
-			"destination": "/tmp/agent.hcl"
+			"source": "configs/nomad/client.hcl",
+			"destination": "/tmp/nomad-agent.hcl"
+		},
+        {
+            "only": ["client"],
+			"type": "file",
+			"source": "configs/consul/client.hcl",
+			"destination": "/tmp/consul-agent.hcl"
 		},
 		{
             "only": ["server", "client"],
 			"type": "file",
-			"source": "configs/nomad.service",
+			"source": "configs/nomad/nomad.service",
 			"destination": "/tmp/nomad.service"
+		},
+		{
+            "only": ["server", "client"],
+			"type": "file",
+			"source": "configs/consul/consul.service",
+			"destination": "/tmp/consul.service"
 		},
 		{
 			"type": "shell",
@@ -91,10 +109,18 @@
 			]
 		},
 		{
+            "only": ["client"],
+			"type": "shell",
+			"scripts": [
+				"scripts/install_cni_plugins.sh"
+			]
+		},
+		{
             "only": ["server", "client"],
 			"type": "shell",
 			"scripts": [
-                "scripts/install_nomad.sh"
+                "scripts/install_nomad.sh",
+                "scripts/install_consul.sh"
 			]
 		},
 		{
@@ -107,7 +133,7 @@
             "only": ["bastion"],
 			"type": "shell",
 			"inline": [
-                "curl https://releases.hashicorp.com/nomad/0.10.4/nomad_0.10.4_linux_amd64.zip -o nomad.zip",
+                "curl https://releases.hashicorp.com/nomad/0.12.1/nomad_0.12.1_linux_amd64.zip -o nomad.zip",
                 "unzip nomad.zip",
                 "sudo mv nomad /bin",
                 "rm nomad.zip"

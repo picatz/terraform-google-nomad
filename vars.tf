@@ -81,16 +81,16 @@ variable "save_ssh_keypair_locally" {
   description = "If the SSH keypair (bastion.pub, bastion) should be saved locally."
 }
 
-variable "acls_enabled" {
+variable "nomad_acls_enabled" {
   type        = bool
   default     = true
-  description = "If ACLs should be enabled for the cluster."
+  description = "If ACLs should be enabled for the Nomad cluster."
 }
 
 variable "gvisor_enabled" {
   type        = bool
   default     = true
-  description = "Enables the gVisor Docker runtime for the cluster."
+  description = "Enables the gVisor Docker runtime for the Nomad cluster."
 }
 
 variable "gvisor_release" {
@@ -145,4 +145,10 @@ variable "enable_shielded_vms" {
   type        = bool
   default     = true
   description = "Enables shielded VMs for all hosts."
+}
+
+variable "consul_acls_enabled" {
+  type        = bool
+  default     = false
+  description = "If ACLs should be enabled for the Consul cluster."
 }
