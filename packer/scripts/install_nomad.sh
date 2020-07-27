@@ -2,7 +2,7 @@
 
 set -ex
 
-NOMAD_VERSION=0.12.0
+NOMAD_VERSION=0.12.1
 
 mkdir -p /tmp/build
 cd /tmp/build
