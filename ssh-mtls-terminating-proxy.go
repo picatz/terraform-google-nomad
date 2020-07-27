@@ -14,6 +14,7 @@ import (
 	"net"
 	"os"
 	"os/exec"
+	"sync"
 
 	"golang.org/x/crypto/ssh"
 	"golang.org/x/crypto/ssh/agent"
@@ -29,10 +30,13 @@ type terraformOutput struct {
 	BastionPublicIP      terraformOutputNode `json:"bastion_public_ip"`
 	BastionSSHPrivateKey terraformOutputNode `json:"bastion_ssh_private_key"`
 	BastionSSHPublicKey  terraformOutputNode `json:"bastion_ssh_public_key"`
-	NomadServerIP        terraformOutputNode `json:"server_internal_ip"`
-	CACert               terraformOutputNode `json:"nomad_ca_cert"`
-	CLICert              terraformOutputNode `json:"nomad_cli_cert"`
-	CLIKey               terraformOutputNode `json:"nomad_cli_key"`
+	ServerInternalIP     terraformOutputNode `json:"server_internal_ip"`
+	NomadCACert          terraformOutputNode `json:"nomad_ca_cert"`
+	NomadCLICert         terraformOutputNode `json:"nomad_cli_cert"`
+	NomadCLIKey          terraformOutputNode `json:"nomad_cli_key"`
+	ConsulCACert         terraformOutputNode `json:"consul_ca_cert"`
+	ConsulCLICert        terraformOutputNode `json:"consul_cli_cert"`
+	ConsulCLIKey         terraformOutputNode `json:"consul_cli_key"`
 }
 
 func getTerraformOutput() (*terraformOutput, error) {
@@ -54,12 +58,15 @@ func getTerraformOutput() (*terraformOutput, error) {
 }
 
 var (
-	nomadServerIP       string
-	nomadBastionIP      string
-	nomadBastionPrivKey string
-	nomadCACert         string
-	nomadCLICert        string
-	nomadCLIKey         string
+	serverInternalIP  string
+	bastionExternalIP string
+	bastionSSHPrivKey string
+	nomadCACert       string
+	nomadCLICert      string
+	nomadCLIKey       string
+	consulCACert      string
+	consulCLICert     string
+	consulCLIKey      string
 )
 
 func errorAndExit(mesg interface{}) {
@@ -89,12 +96,15 @@ func init() {
 			errorAndExit(err)
 		}
 
-		nomadBastionIP = tfOutput.BastionPublicIP.Value
-		nomadServerIP = tfOutput.NomadServerIP.Value
-		nomadBastionPrivKey = tfOutput.BastionSSHPrivateKey.Value
-		nomadCACert = tfOutput.CACert.Value
-		nomadCLICert = tfOutput.CLICert.Value
-		nomadCLIKey = tfOutput.CLIKey.Value
+		bastionExternalIP = tfOutput.BastionPublicIP.Value
+		serverInternalIP = tfOutput.ServerInternalIP.Value
+		bastionSSHPrivKey = tfOutput.BastionSSHPrivateKey.Value
+		nomadCACert = tfOutput.NomadCACert.Value
+		nomadCLICert = tfOutput.NomadCLICert.Value
+		nomadCLIKey = tfOutput.NomadCLIKey.Value
+		consulCACert = tfOutput.ConsulCACert.Value
+		consulCLICert = tfOutput.ConsulCLICert.Value
+		consulCLIKey = tfOutput.ConsulCLIKey.Value
 	} else {
 		var (
 			nomadBastionSSHFile string
@@ -103,22 +113,23 @@ func init() {
 			nomadCLIKeyFile     string
 		)
 
-		flag.StringVar(&nomadServerIP, "server-ip", "", "internal Nomad server IP")
-		flag.StringVar(&nomadBastionIP, "bastion-ip", "", "external Nomad bastion IP")
+		flag.StringVar(&serverInternalIP, "server-ip", "", "internal Nomad server IP")
+		flag.StringVar(&bastionExternalIP, "bastion-ip", "", "external Nomad bastion IP")
+		flag.StringVar(&nomadBastionSSHFile, "bastion-ssh-file", "", "ssh key file")
 		flag.StringVar(&nomadCACertFile, "ca-file", "", "mTLS certifcate authority file")
 		flag.StringVar(&nomadCLICertFile, "cert-file", "", "mTLS client cert file")
 		flag.StringVar(&nomadCLIKeyFile, "key-file", "", "mTLS client key file")
 
 		flag.Parse()
 
-		nomadBastionPrivKey = readFileContent(nomadBastionSSHFile)
+		bastionSSHPrivKey = readFileContent(nomadBastionSSHFile)
 		nomadCACert = readFileContent(nomadCACertFile)
 		nomadCLICert = readFileContent(nomadCLICertFile)
 		nomadCLIKey = readFileContent(nomadCLIKeyFile)
 	}
 
-	log.Printf("Bastion IP: %q", nomadBastionIP)
-	log.Printf("Server IP: %q", nomadServerIP)
+	log.Printf("Bastion IP: %q", bastionExternalIP)
+	log.Printf("Server IP: %q", serverInternalIP)
 }
 
 func sshAgent(privPEM string) (ssh.AuthMethod, error) {
@@ -153,7 +164,7 @@ func sshAgent(privPEM string) (ssh.AuthMethod, error) {
 
 func main() {
 	log.Println("Setting up SSH agent")
-	sshAgent, err := sshAgent(nomadBastionPrivKey)
+	sshAgent, err := sshAgent(bastionSSHPrivKey)
 	if err != nil {
 		errorAndExit(err)
 	}
@@ -168,85 +179,160 @@ func main() {
 	}
 
 	log.Println("Connecting to the bastion")
-	conn, err := ssh.Dial("tcp", fmt.Sprintf("%s:22", nomadBastionIP), sshConfig)
+	conn, err := ssh.Dial("tcp", fmt.Sprintf("%s:22", bastionExternalIP), sshConfig)
 	if err != nil {
 		errorAndExit(err)
 	}
 	defer conn.Close()
 
 	log.Println("Connecting to the server through the bastion")
-	tconn, err := conn.Dial("tcp", fmt.Sprintf("%s:22", nomadServerIP))
+	tconn, err := conn.Dial("tcp", fmt.Sprintf("%s:22", serverInternalIP))
 	if err != nil {
 		errorAndExit(err)
 	}
 	defer tconn.Close()
 
 	log.Println("Wrapping the server connection with SSH through the bastion")
-	stconn, chans, reqs, err := ssh.NewClientConn(tconn, fmt.Sprintf("%s:22", nomadServerIP), sshConfig)
+	stconn, chans, reqs, err := ssh.NewClientConn(tconn, fmt.Sprintf("%s:22", serverInternalIP), sshConfig)
 	if err != nil {
 		errorAndExit(err)
 	}
 
-	log.Println("Tunneling a connection to the server with SSH through the bastion")
-	tclient := ssh.NewClient(stconn, chans, reqs)
-	defer tclient.Close()
+	wg := sync.WaitGroup{}
 
-	log.Println("Loading the TLS data")
-	nomadCert, err := tls.X509KeyPair([]byte(nomadCLICert), []byte(nomadCLIKey))
-	if err != nil {
-		errorAndExit(err)
-	}
+	wg.Add(2)
 
-	// TODO(kent): don't use insecure skip verify...
-	// if I use ServerName I get "x509: certificate signed by unknown authority" as an error
-	tlsClientConfig := &tls.Config{
-		Certificates: []tls.Certificate{nomadCert},
-		ClientCAs:    x509.NewCertPool(),
-		ClientAuth:   tls.RequireAndVerifyClientCert,
-		MinVersion:   tls.VersionTLS12,
-		// ServerName:         "localhost",
-		InsecureSkipVerify: true,
-	}
+	go func() {
+		defer wg.Done()
+		log.Println("Tunneling a new connection for Nomad to the server with SSH through the bastion")
+		tclient := ssh.NewClient(stconn, chans, reqs)
+		defer tclient.Close()
 
-	tlsClientConfig.ClientCAs.AppendCertsFromPEM([]byte(nomadCACert))
-
-	tlsClientConfig.BuildNameToCertificate()
-
-	log.Println("Starting local listener on localhost:4646")
-	ln, err := net.Listen("tcp", "localhost:4646")
-	if err != nil {
-		errorAndExit(err)
-	}
-	for {
-		conn, err := ln.Accept()
+		log.Println("Loading Nomad TLS data")
+		nomadCert, err := tls.X509KeyPair([]byte(nomadCLICert), []byte(nomadCLIKey))
 		if err != nil {
-			log.Println(err)
-			continue
+			errorAndExit(err)
 		}
 
-		go func(conn net.Conn) {
-			nomad, err := tclient.Dial("tcp", "0.0.0.0:4646")
+		// TODO(kent): don't use insecure skip verify...
+		// if I use ServerName I get "x509: certificate signed by unknown authority" as an error
+		tlsClientConfig := &tls.Config{
+			Certificates: []tls.Certificate{nomadCert},
+			ClientCAs:    x509.NewCertPool(),
+			ClientAuth:   tls.RequireAndVerifyClientCert,
+			MinVersion:   tls.VersionTLS12,
+			// ServerName:         "localhost",
+			InsecureSkipVerify: true,
+		}
+
+		tlsClientConfig.ClientCAs.AppendCertsFromPEM([]byte(nomadCACert))
+
+		tlsClientConfig.BuildNameToCertificate()
+
+		log.Println("Starting Nomad local listener on localhost:4646")
+		ln, err := net.Listen("tcp", "localhost:4646")
+		if err != nil {
+			errorAndExit(err)
+		}
+		for {
+			conn, err := ln.Accept()
 			if err != nil {
 				log.Println(err)
-				return
+				continue
 			}
 
-			nomadWrap := tls.Client(nomad, tlsClientConfig)
+			go func(conn net.Conn) {
+				nomad, err := tclient.Dial("tcp", "0.0.0.0:4646")
+				if err != nil {
+					log.Println(err)
+					return
+				}
 
-			err = nomadWrap.Handshake()
+				nomadWrap := tls.Client(nomad, tlsClientConfig)
+
+				err = nomadWrap.Handshake()
+				if err != nil {
+					log.Println(err)
+					return
+				}
+
+				copyConn := func(writer, reader net.Conn) {
+					defer writer.Close()
+					defer reader.Close()
+					io.Copy(writer, reader)
+				}
+
+				go copyConn(conn, nomadWrap)
+				go copyConn(nomadWrap, conn)
+			}(conn)
+		}
+	}()
+
+	go func() {
+		defer wg.Done()
+		log.Println("Tunneling a new connection for Consul to the server with SSH through the bastion")
+		tclient := ssh.NewClient(stconn, chans, reqs)
+		defer tclient.Close()
+
+		log.Println("Loading Consul TLS data")
+		consulCert, err := tls.X509KeyPair([]byte(consulCLICert), []byte(consulCLIKey))
+		if err != nil {
+			errorAndExit(err)
+		}
+
+		// TODO(kent): don't use insecure skip verify...
+		// if I use ServerName I get "x509: certificate signed by unknown authority" as an error
+		tlsClientConfig := &tls.Config{
+			Certificates: []tls.Certificate{consulCert},
+			ClientCAs:    x509.NewCertPool(),
+			ClientAuth:   tls.RequireAndVerifyClientCert,
+			MinVersion:   tls.VersionTLS12,
+			// ServerName:         "localhost",
+			InsecureSkipVerify: true,
+		}
+
+		tlsClientConfig.ClientCAs.AppendCertsFromPEM([]byte(consulCACert))
+
+		tlsClientConfig.BuildNameToCertificate()
+
+		log.Println("Starting Consul local listener on localhost:8500")
+		ln, err := net.Listen("tcp", "localhost:8500")
+		if err != nil {
+			errorAndExit(err)
+		}
+		for {
+			conn, err := ln.Accept()
 			if err != nil {
 				log.Println(err)
-				return
+				continue
 			}
 
-			copyConn := func(writer, reader net.Conn) {
-				defer writer.Close()
-				defer reader.Close()
-				io.Copy(writer, reader)
-			}
+			go func(conn net.Conn) {
+				consul, err := tclient.Dial("tcp", "0.0.0.0:8501")
+				if err != nil {
+					log.Println(err)
+					return
+				}
 
-			go copyConn(conn, nomadWrap)
-			go copyConn(nomadWrap, conn)
-		}(conn)
-	}
+				consulWrap := tls.Client(consul, tlsClientConfig)
+
+				err = consulWrap.Handshake()
+				if err != nil {
+					log.Println(err)
+					return
+				}
+
+				copyConn := func(writer, reader net.Conn) {
+					defer writer.Close()
+					defer reader.Close()
+					io.Copy(writer, reader)
+				}
+
+				go copyConn(conn, consulWrap)
+				go copyConn(consulWrap, conn)
+			}(conn)
+		}
+	}()
+
+	wg.Wait()
 }

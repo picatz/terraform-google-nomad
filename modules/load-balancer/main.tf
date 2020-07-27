@@ -6,7 +6,7 @@ resource "google_compute_firewall" "default-lb-fw" {
   target_tags   = var.target_tags
 
   allow {
-    ports    = ["${var.service_port}"]
+    ports    = sort(var.ports)
     protocol = var.protocol
   }
 
@@ -20,7 +20,7 @@ resource "google_compute_forwarding_rule" "default" {
   load_balancing_scheme = "EXTERNAL"
   network_tier          = "STANDARD"
   region                = "us-east1"
-  port_range            = var.service_port
+  port_range            = join("-", sort(var.ports))
 }
 
 resource "google_compute_health_check" "default" {

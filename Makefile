@@ -87,8 +87,8 @@ ssh/proxy/consul: ## Forwards the Consul server port to localhost
 ssh/proxy/nomad: ## Forwards the Nomad server port to localhost
 	gcloud compute ssh server-0 --tunnel-through-iap -- -f -N -L 127.0.0.1:4646:127.0.0.1:4646
 
-.PHONY: ssh/proxy/nomad
-ssh/proxy/mtls/nomad: ## Forwards the Nomad server port to localhost, using the custom mTLS terminating proxy script
+.PHONY: ssh/proxy/mtls
+ssh/proxy/mtls: ## Forwards the Consul and Nomad server port to localhost, using the custom mTLS terminating proxy script
 	go run ssh-mtls-terminating-proxy.go
 
 .PHONY: ssh/proxy/count-dashboard
