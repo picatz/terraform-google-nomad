@@ -34,6 +34,12 @@ output "consul_cli_key" {
   value       = tls_private_key.consul-cli.private_key_pem
 }
 
+output "consul_master_token" {
+  sensitive   = true
+  description = "The Consul master token."
+  value       = local.consul_master_token
+}
+
 output "bastion_ssh_public_key" {
   sensitive   = true
   description = "The SSH bastion public key."

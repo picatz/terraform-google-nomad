@@ -14,6 +14,7 @@ data "template_file" "server_bootstrap_script" {
     consul_server_cert        = tls_locally_signed_cert.consul-server.cert_pem
     consul_server_private_key = tls_private_key.consul-server.private_key_pem
     consul_acls_enabled       = var.consul_acls_enabled
+    consul_master_token       = local.consul_master_token
   }
 }
 
@@ -31,6 +32,7 @@ data "template_file" "client_bootstrap_script" {
     consul_client_cert        = tls_locally_signed_cert.consul-client.cert_pem
     consul_client_private_key = tls_private_key.consul-client.private_key_pem
     consul_acls_enabled       = var.consul_acls_enabled
+    consul_master_token       = local.consul_master_token
     gvisor_enabled            = var.gvisor_enabled
     gvisor_release            = var.gvisor_release
     docker_default_runtime    = var.docker_default_runtime

@@ -149,6 +149,6 @@ variable "enable_shielded_vms" {
 
 variable "consul_acls_enabled" {
   type        = bool
-  default     = false
+  default     = true
   description = "If ACLs should be enabled for the Consul cluster."
 }

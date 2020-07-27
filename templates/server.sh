@@ -33,6 +33,15 @@ sed -i -e "s/{PROJECT-NAME}/${project}/g" /consul/config/agent.hcl
 # Update the {ACLs-ENABLED} ad-hoc template var
 sed -i -e "s/{ACLs-ENABLED}/${consul_acls_enabled}/g" /consul/config/agent.hcl
 
+# Set ACL master token if ACLs are enabled
+if [ "${consul_acls_enabled}" = "true" ]; then
+    sed -i -e "s/{CONSUL-TOKEN}/${consul_master_token}/g" /nomad/config/agent.hcl
+    sed -i -e "s/{CONSUL-TOKEN}/${consul_master_token}/g" /consul/config/agent.hcl
+else
+    sed -i -e "s/{CONSUL-TOKEN}//g" /nomad/config/agent.hcl
+    sed -i -e "s/{CONSUL-TOKEN}//g" /consul/config/agent.hcl
+fi
+
 # Update the {PRIVATE-IPV4} ad-hoc template var
 IP=$(curl -H "Metadata-Flavor: Google" http://metadata/computeMetadata/v1/instance/network-interfaces/0/ip)
 sed -i -e "s/{PRIVATE-IPV4}/$${IP}/g" /consul/config/agent.hcl

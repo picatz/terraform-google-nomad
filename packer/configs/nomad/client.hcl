@@ -45,4 +45,5 @@ consul {
   ca_file    = "/consul/config/consul-ca.pem"
   cert_file  = "/consul/config/client.pem"
   key_file   = "/consul/config/client-key.pem"
+  token      = "{CONSUL-TOKEN}"
 }

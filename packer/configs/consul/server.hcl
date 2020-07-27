@@ -1,6 +1,7 @@
 datacenter = "dc1"
 bind_addr = "0.0.0.0"
 data_dir = "/consul/data"
+primary_datacenter = "dc1"
 
 advertise_addr = "{PRIVATE-IPV4}"
 advertise_addr_wan = "{PRIVATE-IPV4}"
@@ -42,6 +43,9 @@ acl {
   enabled                  = {ACLs-ENABLED}
   default_policy           = "deny"
   enable_token_persistence = true
+  tokens {
+    master = "{CONSUL-TOKEN}"
+  }
 }
 
 encrypt = "{GOSSIP-KEY}"

@@ -39,3 +39,13 @@ tls {
   verify_server_hostname = true
   verify_https_client    = true
 }
+
+consul {
+  ssl        = true
+  verify_ssl = true
+  address    = "127.0.0.1:8501"
+  ca_file    = "/consul/config/consul-ca.pem"
+  cert_file  = "/consul/config/server.pem"
+  key_file   = "/consul/config/server-key.pem"
+  token      = "{CONSUL-TOKEN}"
+}
