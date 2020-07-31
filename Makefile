@@ -92,5 +92,5 @@ ssh/proxy/mtls: ## Forwards the Consul and Nomad server port to localhost, using
 	go run ssh-mtls-terminating-proxy.go
 
 .PHONY: ssh/proxy/count-dashboard
-ssh/proxy/count-dashboard: ## Forwards the example dashboard serverive port to localhost
+ssh/proxy/count-dashboard: ## Forwards the example dashboard service port to localhost
 	gcloud compute ssh client-0 --tunnel-through-iap -- -f -N -L 127.0.0.1:9002:0.0.0.0:9002
