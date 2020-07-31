@@ -32,7 +32,8 @@ connect {
 }
 
 acl {
-  enabled = {ACLs-ENABLED}
+  enabled        = {ACLs-ENABLED}
+  default_policy = "deny"
 }
 
 verify_outgoing         = true
