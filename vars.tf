@@ -125,7 +125,7 @@ variable "loadbalancer_enabled" {
 
 variable "enable_preemptible_bastion_vm" {
   type        = bool
-  default     = true
+  default     = false
   description = "Enables a preemptible SSH bastion host to save costs."
 }
 
@@ -137,7 +137,7 @@ variable "enable_preemptible_server_vms" {
 
 variable "enable_preemptible_client_vms" {
   type        = bool
-  default     = true
+  default     = false
   description = "Enables preemptible Nomad client hosts to save costs."
 }
 
