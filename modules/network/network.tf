@@ -157,7 +157,7 @@ module "consul-serf-lan-udp" {
 resource "google_compute_firewall" "allow-all-internal-dyanmic-ports" {
   name        = "allow-all-internal-dynamic-ports"
   network     = google_compute_network.default.name
-  source_tags = var.gossip_source_tags
+  source_tags = var.server_client_source_tags
 
   # https://www.nomadproject.io/docs/job-specification/network#dynamic-ports (20000-32000)
   # https://www.consul.io/docs/install/ports#ports-table                     (21000-21255)

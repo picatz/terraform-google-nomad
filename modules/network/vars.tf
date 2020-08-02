@@ -28,6 +28,11 @@ variable "dns_source_tags" {
     default = ["bastion", "server", "client"]
 }
 
+variable "server_client_source_tags" {
+    type    = list(string)
+    default = ["server", "client"]
+}
+
 variable "gossip_source_tags" {
     type    = list(string)
     default = ["server", "client"]
