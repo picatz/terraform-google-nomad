@@ -94,3 +94,7 @@ ssh/proxy/mtls: ## Forwards the Consul and Nomad server port to localhost, using
 .PHONY: ssh/proxy/count-dashboard
 ssh/proxy/count-dashboard: ## Forwards the example dashboard service port to localhost
 	gcloud compute ssh client-0 --tunnel-through-iap -- -f -N -L 127.0.0.1:9002:0.0.0.0:9002
+
+.PHONY: gcloud/delete-metadata
+gcloud/delete-metadata: ## Deletes all metadata entries from client VMs
+	gcloud compute instances list | grep "client-" | awk '{print $1 " " $2}' | xargs -n2 bash -c 'gcloud compute instances remove-metadata $1 --zone=$2 --all' bash
