@@ -14,7 +14,7 @@ jobs:
     - name: Update Version
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      working-directory: cloud-shell/steps.md
+      working-directory: cloud-shell
       run: |
         # small sleep buffer
         sleep 5
