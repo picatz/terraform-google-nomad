@@ -159,10 +159,10 @@ resource "google_compute_firewall" "allow-all-internal-dyanmic-ports" {
   network     = google_compute_network.default.name
   source_tags = var.gossip_source_tags
 
-  # https://www.nomadproject.io/docs/job-specification/network#dynamic-ports
-  # https://www.consul.io/docs/install/ports#ports-table
+  # https://www.nomadproject.io/docs/job-specification/network#dynamic-ports (20000-32000)
+  # https://www.consul.io/docs/install/ports#ports-table                     (21000-21255)
   allow {
     protocol = "tcp"
-    ports    = ["0-65535"]
+    ports    = ["20000-32000"]
   }
 }
