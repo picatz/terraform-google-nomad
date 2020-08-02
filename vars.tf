@@ -29,7 +29,7 @@ variable "cidr_range" {
 
 variable "server_instances" {
   type        = number
-  default     = 1
+  default     = 3
   description = "The total number of Nomad servers to deploy (use odd numbers)."
 }
 
@@ -41,7 +41,7 @@ variable "server_machine_type" {
 
 variable "client_instances" {
   type        = number
-  default     = 1
+  default     = 5
   description = "The total number of Nomad clients to deploy."
 }
 
