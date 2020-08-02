@@ -33,6 +33,9 @@ sed -i -e "s/{PROJECT-NAME}/${project}/g" /consul/config/agent.hcl
 # Update the {ACLs-ENABLED} ad-hoc template var
 sed -i -e "s/{ACLs-ENABLED}/${consul_acls_enabled}/g" /consul/config/agent.hcl
 
+# Update the {ACLs-DEFAULT-POLICY} ad-hoc template var
+sed -i -e "s/{ACLs-DEFAULT-POLICY}/${consul_acls_default_policy}/g" /consul/config/agent.hcl
+
 # Set ACL master token if ACLs are enabled
 if [ "${consul_acls_enabled}" = "true" ]; then
     sed -i -e "s/{CONSUL-TOKEN}/${consul_master_token}/g" /nomad/config/agent.hcl

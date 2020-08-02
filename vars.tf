@@ -140,3 +140,9 @@ variable "consul_acls_enabled" {
   default     = true
   description = "If ACLs should be enabled for the Consul cluster."
 }
+
+variable "consul_acls_default_policy" {
+  type        = string
+  default     = "deny"
+  description = "The default policy to use for Consul ACLs (allow/deny)."
+}

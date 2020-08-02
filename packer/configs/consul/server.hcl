@@ -41,7 +41,7 @@ connect {
 
 acl {
   enabled                  = {ACLs-ENABLED}
-  default_policy           = "deny"
+  default_policy           = "{ACLs-DEFAULT-POLICY}"
   enable_token_persistence = true
   tokens {
     master = "{CONSUL-TOKEN}"

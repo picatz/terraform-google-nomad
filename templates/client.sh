@@ -23,6 +23,9 @@ sudo mv /tmp/client-key.pem /consul/config/client-key.pem
 # Update the {ACLs-ENABLED} ad-hoc template var
 sed -i -e "s/{ACLs-ENABLED}/${consul_acls_enabled}/g" /consul/config/agent.hcl
 
+# Update the {ACLs-DEFAULT-POLICY} ad-hoc template var
+sed -i -e "s/{ACLs-DEFAULT-POLICY}/${consul_acls_default_policy}/g" /consul/config/agent.hcl
+
 # Update the {ACLs-ENABLED} ad-hoc template var
 sed -i -e "s/{CONSUL-TOKEN}/${consul_master_token}/g" /consul/config/agent.hcl
 
