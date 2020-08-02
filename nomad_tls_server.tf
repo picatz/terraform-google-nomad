@@ -34,5 +34,6 @@ resource "tls_locally_signed_cert" "nomad-server" {
 
   allowed_uses = [
     "server_auth",
+    "client_auth",
   ]
 }
