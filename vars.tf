@@ -87,18 +87,6 @@ variable "nomad_acls_enabled" {
   description = "If ACLs should be enabled for the Nomad cluster."
 }
 
-variable "gvisor_enabled" {
-  type        = bool
-  default     = true
-  description = "Enables the gVisor Docker runtime for the Nomad cluster."
-}
-
-variable "gvisor_release" {
-  type        = string
-  default     = "release"
-  description = "The release type to use, defaults to the latest release type."
-}
-
 variable "docker_default_runtime" {
   type        = string
   default     = "runc"

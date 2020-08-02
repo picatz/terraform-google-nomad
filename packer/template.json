@@ -105,7 +105,8 @@
             "only": ["client"],
 			"type": "shell",
 			"scripts": [
-				"scripts/install_docker.sh"
+				"scripts/install_docker.sh",
+				"scripts/install_gvisor.sh"
 			]
 		},
 		{
