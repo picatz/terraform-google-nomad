@@ -5,13 +5,12 @@ Requires=network-online.target
 After=network-online.target
 
 [Service]
-User=nomad
-Group=nomad
+User=root
+Group=root
 ExecStart=/bin/nomad agent -config /nomad/config/agent.hcl
 KillMode=process
 Restart=on-failure
 LimitNOFILE=65536
 
 [Install]
-
 WantedBy=default.target

@@ -1,0 +1,18 @@
+[Unit]
+Description="HashiCorp Consul - A service mesh solution"
+Documentation=https://www.consul.io/docs/
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+User=consul
+Group=consul
+ExecStart=/bin/consul agent -ui -config-file /consul/config/agent.hcl
+ExecReload=/bin/consul  reload
+ExecStop=/bin/consul leave
+KillMode=process
+Restart=on-failure
+LimitNOFILE=65536
+
+[Install]
+WantedBy=default.target

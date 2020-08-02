@@ -21,8 +21,8 @@ variable "target_tags" {
   type = list(string)
 }
 
-variable "service_port" {
-  type = number
+variable "ports" {
+  type = list(number)
 }
 
 variable "protocol" {

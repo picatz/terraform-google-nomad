@@ -29,7 +29,7 @@ variable "cidr_range" {
 
 variable "server_instances" {
   type        = number
-  default     = 1
+  default     = 3
   description = "The total number of Nomad servers to deploy (use odd numbers)."
 }
 
@@ -41,7 +41,7 @@ variable "server_machine_type" {
 
 variable "client_instances" {
   type        = number
-  default     = 1
+  default     = 5
   description = "The total number of Nomad clients to deploy."
 }
 
@@ -81,22 +81,10 @@ variable "save_ssh_keypair_locally" {
   description = "If the SSH keypair (bastion.pub, bastion) should be saved locally."
 }
 
-variable "acls_enabled" {
+variable "nomad_acls_enabled" {
   type        = bool
   default     = true
-  description = "If ACLs should be enabled for the cluster."
-}
-
-variable "gvisor_enabled" {
-  type        = bool
-  default     = true
-  description = "Enables the gVisor Docker runtime for the cluster."
-}
-
-variable "gvisor_release" {
-  type        = string
-  default     = "release"
-  description = "The release type to use, defaults to the latest release type."
+  description = "If ACLs should be enabled for the Nomad cluster."
 }
 
 variable "docker_default_runtime" {
@@ -125,7 +113,7 @@ variable "loadbalancer_enabled" {
 
 variable "enable_preemptible_bastion_vm" {
   type        = bool
-  default     = true
+  default     = false
   description = "Enables a preemptible SSH bastion host to save costs."
 }
 
@@ -137,7 +125,7 @@ variable "enable_preemptible_server_vms" {
 
 variable "enable_preemptible_client_vms" {
   type        = bool
-  default     = true
+  default     = false
   description = "Enables preemptible Nomad client hosts to save costs."
 }
 
@@ -145,4 +133,16 @@ variable "enable_shielded_vms" {
   type        = bool
   default     = true
   description = "Enables shielded VMs for all hosts."
+}
+
+variable "consul_acls_enabled" {
+  type        = bool
+  default     = true
+  description = "If ACLs should be enabled for the Consul cluster."
+}
+
+variable "consul_acls_default_policy" {
+  type        = string
+  default     = "deny"
+  description = "The default policy to use for Consul ACLs (allow/deny)."
 }

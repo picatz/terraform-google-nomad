@@ -14,6 +14,7 @@
 * Only the [Docker task driver](https://www.nomadproject.io/docs/drivers/docker) is enabled by default.
 * Runs the Docker daemon with `no-new-privileges=true` and `icc=false` set by default.
 * Installs the [gVisor](https://gvisor.dev/) container runtime by default (`runsc`).
+* Installs HashiCorp's [Consul](https://www.consul.io/) service mesh.
 
 ## Cloud Shell Interactive Tutorial
 
@@ -80,7 +81,7 @@ $ gcloud logging read 'resource.type="gce_instance" jsonPayload.ident="nomad"'
 ```
 
 ```console
-$ gcloud logging read 'resource.type="gce_instance" jsonPayload.ident="nomad" jsonPayload.host="nomad-server-0"' --format=json | jq -r '.[] | .jsonPayload.message' | less
+$ gcloud logging read 'resource.type="gce_instance" jsonPayload.ident="nomad" jsonPayload.host="server-0"' --format=json | jq -r '.[] | .jsonPayload.message' | less
 ...
 ```
 
