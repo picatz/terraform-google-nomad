@@ -1,0 +1,40 @@
+name: Update Consul Version
+
+on:
+  schedule:
+  - cron: "0 8 * * *"
+
+jobs:
+  update_consul_version:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+      with:
+        persist-credentials: false
+        fetch-depth: 0
+    - name: Update Consul Version
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        cd ./packer/scripts
+        CURRENT=$(cat install_consul.sh | grep "CONSUL_VERSION=" | awk -F '=' '{print $2}')
+        LATEST=$(curl --silent https://releases.hashicorp.com/index.json | jq -r '.consul.versions | keys | .[]' | grep -v "-" | grep -v "+" | sort --version-sort | tail -n 1)
+        if [ "$CURRENT" != "$LATEST" ]; then
+            echo "Consul version $CURRENT is out-of-date, updating to $LATEST"
+            # configure git
+            git config user.name "Consul Update Bot"
+            git config user.email "picatz@users.noreply.github.com"
+            git remote set-url origin "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY"
+            # update install script
+            sed -i "s/$CURRENT/$LATEST/g" install_consul.sh
+            # update README
+            cd -
+            sed -i "s/$CURRENT/$LATEST/g" README.md
+            # rest of git workflow
+            git add .
+            git commit -m "consul-update-bot: update version from $CURRENT to $LATEST" || exit 1
+            git status
+            git push origin HEAD:master
+        else
+          echo "consul version $CURRENT is already up-to-date"
+        fi
