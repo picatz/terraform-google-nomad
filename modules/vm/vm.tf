@@ -39,7 +39,7 @@ resource "google_compute_instance" "vm" {
     # https://github.com/terraform-google-modules/terraform-google-vm/blob/a3d482fa2f33a61880d3cdfe2e7e86ee6b6597d0/modules/instance_template/main.tf#L51
     for_each = var.enable_shielded_vm ? [{}] : []
     content {
-      enable_secure_boot          = true
+      enable_secure_boot          = false
       enable_vtpm                 = true
       enable_integrity_monitoring = true
     }
