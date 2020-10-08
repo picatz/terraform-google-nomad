@@ -2,6 +2,8 @@ datacenter = "dc1"
 bind_addr = "0.0.0.0"
 data_dir = "/tmp/nomad-agent"
 
+leave_on_terminate = true
+
 advertise {
   http = "{PRIVATE-IPV4}"
   rpc  = "{PRIVATE-IPV4}"
