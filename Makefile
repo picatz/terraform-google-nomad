@@ -31,6 +31,8 @@ terraform/validate: ## Validates the Terraform config
 terraform/plan: ## Runs the Terraform plan command
 	terraform plan \
 		-var="project=${GOOGLE_PROJECT}" \
+		-var="server_instances=3" \
+		-var="client_instances=5" \
 		-var="credentials=${GOOGLE_APPLICATION_CREDENTIALS}"
 
 .PHONY: terraform/apply
@@ -38,6 +40,8 @@ terraform/apply: ## Runs and auto-apporves the Terraform apply command
 	terraform apply \
 		-auto-approve \
 		-var="project=${GOOGLE_PROJECT}" \
+		-var="server_instances=3" \
+		-var="client_instances=5" \
 		-var="credentials=${GOOGLE_APPLICATION_CREDENTIALS}"
 
 .PHONY: terraform/destroy
@@ -45,6 +49,8 @@ terraform/destroy: ## Runs and auto-apporves the Terraform destroy command
 	terraform destroy \
 		-auto-approve \
 		-var="project=${GOOGLE_PROJECT}" \
+		-var="server_instances=3" \
+		-var="client_instances=5" \
 		-var="credentials=${GOOGLE_APPLICATION_CREDENTIALS}"
 
 .PHONY: terraform/validate/example
