@@ -26,7 +26,7 @@ resource "google_compute_instance" "vm" {
   }
 
   lifecycle {
-    create_before_destroy = "true"
+    create_before_destroy = "false"
   }
 
   scheduling {
@@ -55,7 +55,6 @@ resource "google_compute_instance" "vm" {
 
   metadata = {
     ssh-keys = format("%s:%s", var.ssh_user, var.ssh_public_key)
+    startup-script = var.metadata_startup_script
   }
-
-  metadata_startup_script = var.metadata_startup_script
 }
