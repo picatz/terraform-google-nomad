@@ -22,6 +22,7 @@ if [ -z "$GOOGLE_ORGANIZATION" ]; then
     else
         if gcloud organizations list 2>&1  | grep -v "Listed 0 items"; then
             # if there are no organizations, then don't fail, since it's not possible to correct
+            echo "No organization found.  Skipping to next step."
         else
             gcloud organizations list
             echo -e "\nFrom the list above, choose the correct orgnaization ID and set it as the GOOGLE_ORGANIZATION environment variable to continue!\n"
