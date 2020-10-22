@@ -1,6 +1,6 @@
 # Nomad Cluster
 
-[![Nomad Version](https://img.shields.io/badge/Nomad%20Version-0.12.5-brightgreen.svg)](https://www.nomadproject.io/downloads)
+[![Nomad Version](https://img.shields.io/badge/Nomad%20Version-0.12.6-brightgreen.svg)](https://www.nomadproject.io/downloads)
 
 [Terraform](https://www.terraform.io/) Module for [Nomad](https://nomadproject.io/) clusters on [GCP](https://cloud.google.com/).
 
