@@ -14,6 +14,7 @@
 * Only the [Docker task driver](https://www.nomadproject.io/docs/drivers/docker) is enabled by default.
 * Runs the Docker daemon with `no-new-privileges=true` and `icc=false` set by default.
 * Installs the [gVisor](https://gvisor.dev/) container runtime by default (`runsc`).
+* Installs the [Falco](https://falco.org/) runtime security monitor by default.
 * Installs HashiCorp's [Consul](https://www.consul.io/) service mesh.
 
 ## Cloud Shell Interactive Tutorial
