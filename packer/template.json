@@ -127,7 +127,8 @@
 		{
 			"type": "shell",
 			"scripts": [
-				"scripts/install_stack_driver_agent.sh"
+                "scripts/install_stack_driver_agent.sh",
+                "scripts/install_falco.sh"
 			]
 		},
 		{
