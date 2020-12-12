@@ -51,10 +51,6 @@ job "metrics" {
 
         task "dashboard" {
             driver = "docker"
-            env {
-                COUNTING_SERVICE_URL = "http://${NOMAD_UPSTREAM_ADDR_prometheus}"
-            }
-
             config {
                 image = "grafana/grafana:7.0.0"
             }
