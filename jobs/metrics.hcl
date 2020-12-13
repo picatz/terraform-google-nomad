@@ -38,7 +38,7 @@ job "metrics" {
             port = "3000"
 
             connect {
-                    sidecar_service {
+                sidecar_service {
                     proxy {
                         upstreams {
                             destination_name = "prometheus"
