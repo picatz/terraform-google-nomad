@@ -17,6 +17,10 @@ client {
     "user.blacklist"       = "root,ubuntu"
   }
 
+  host_volume "gcs" {
+    path = "/gcs"
+  }
+
   meta {
     "runtime" = "docker"
   }

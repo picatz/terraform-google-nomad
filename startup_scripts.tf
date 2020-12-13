@@ -44,5 +44,6 @@ data "template_file" "client_bootstrap_script" {
     consul_master_token        = local.consul_master_token
     consul_acls_default_policy = var.consul_acls_default_policy
     docker_config              = local.docker_config
+    bucket_name                = google_storage_bucket.nomad_client.name
   }
 }

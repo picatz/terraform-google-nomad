@@ -146,3 +146,8 @@ variable "consul_acls_default_policy" {
   default     = "deny"
   description = "The default policy to use for Consul ACLs (allow/deny)."
 }
+
+variable "bucket_location" {
+  type    = string
+  default = "US"
+}

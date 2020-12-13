@@ -87,6 +87,22 @@ sudo mv /tmp/daemon.json /etc/docker/daemon.json
 # Restart docker to apply changes
 systemctl restart docker
 
+# install GCS FUSE plugin
+# export GCSFUSE_REPO=gcsfuse-`lsb_release -c -s`
+# echo "deb http://packages.cloud.google.com/apt $GCSFUSE_REPO main" | sudo tee /etc/apt/sources.list.d/gcsfuse.list
+# curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+# sudo apt-get update -y
+# sudo apt-get install gcsfuse -y
+# # and configure the mount path
+# sudo mkdir /gcs
+# sudo gcsfuse ${bucket_name} /gcs
+cat > /tmp/gcsfuse.env << EOF
+GCSFUSE_BUCKET=${bucket_name}
+EOF
+sudo mv /tmp/gcsfuse.env /etc/gcsfuse.env
+systemctl start gcsfuse
+systemctl enable gcsfuse
+
 # Start and enable Nomad
 systemctl start nomad
 systemctl enable nomad

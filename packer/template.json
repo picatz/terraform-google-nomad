@@ -115,6 +115,19 @@
 			"scripts": [
 				"scripts/install_cni_plugins.sh"
 			]
+        },
+        {
+            "only": ["client"],
+			"type": "file",
+			"source": "configs/gcsfuse/gcsfuse.service",
+			"destination": "/tmp/gcsfuse.service"
+		},
+        {
+            "only": ["client"],
+			"type": "shell",
+			"scripts": [
+				"scripts/install_gcsfuse.sh"
+			]
 		},
 		{
             "only": ["server", "client"],
