@@ -119,8 +119,20 @@
         {
             "only": ["client"],
 			"type": "file",
-			"source": "configs/gcsfuse/gcsfuse.service",
-			"destination": "/tmp/gcsfuse.service"
+			"source": "configs/gcsfuse/gcsfuse-shared.service",
+			"destination": "/tmp/gcsfuse-shared.service"
+		},
+        {
+            "only": ["client"],
+			"type": "file",
+			"source": "configs/gcsfuse/gcsfuse-prometheus.service",
+			"destination": "/tmp/gcsfuse-prometheus.service"
+        },
+        {
+            "only": ["client"],
+			"type": "file",
+			"source": "configs/gcsfuse/gcsfuse-grafana.service",
+			"destination": "/tmp/gcsfuse-grafana.service"
 		},
         {
             "only": ["client"],

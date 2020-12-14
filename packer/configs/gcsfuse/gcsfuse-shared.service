@@ -1,5 +1,5 @@
 [Unit]
-Description="GCSFUSE - Mount Google Cloud Storage Bucket on VM Filesystem"
+Description="GCSFUSE Shared - Mount Google Cloud Storage Bucket on VM Filesystem"
 Documentation=https://cloud.google.com/storage/docs/gcs-fuse
 Requires=network-online.target
 After=network-online.target
@@ -7,8 +7,8 @@ After=network-online.target
 [Service]
 Type=oneshot
 User=root
-Group=root
-EnvironmentFile=/etc/gcsfuse.env
+roup=root
+EnvironmentFile=/etc/gcsfuse-shared.env
 ExecStart=/usr/bin/gcsfuse --local-file-cache $GCSFUSE_BUCKET /gcs
 RemainAfterExit=true
 KillMode=process

@@ -8,6 +8,7 @@ resource "tls_cert_request" "consul-server" {
   private_key_pem = tls_private_key.consul-server.private_key_pem
 
   ip_addresses = [
+    module.load_balancer.external_ip,
     "127.0.0.1",
   ]
 

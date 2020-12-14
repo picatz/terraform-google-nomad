@@ -87,21 +87,27 @@ sudo mv /tmp/daemon.json /etc/docker/daemon.json
 # Restart docker to apply changes
 systemctl restart docker
 
-# install GCS FUSE plugin
-# export GCSFUSE_REPO=gcsfuse-`lsb_release -c -s`
-# echo "deb http://packages.cloud.google.com/apt $GCSFUSE_REPO main" | sudo tee /etc/apt/sources.list.d/gcsfuse.list
-# curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-# sudo apt-get update -y
-# sudo apt-get install gcsfuse -y
-# # and configure the mount path
-# sudo mkdir /gcs
-# sudo gcsfuse ${bucket_name} /gcs
-cat > /tmp/gcsfuse.env << EOF
-GCSFUSE_BUCKET=${bucket_name}
+# setup GCS FUSE plugins
+cat > /tmp/gcsfuse-shared.env << EOF
+GCSFUSE_BUCKET=${shared_bucket_name}
 EOF
-sudo mv /tmp/gcsfuse.env /etc/gcsfuse.env
-systemctl start gcsfuse
-systemctl enable gcsfuse
+sudo mv /tmp/gcsfuse-shared.env /etc/gcsfuse-shared.env
+systemctl start gcsfuse-shared
+systemctl enable gcsfuse-shared
+
+cat > /tmp/gcsfuse-prometheus.env << EOF
+GCSFUSE_BUCKET=${prometheus_bucket_name}
+EOF
+sudo mv /tmp/gcsfuse-prometheus.env /etc/gcsfuse-prometheus.env
+systemctl start gcsfuse-prometheus
+systemctl enable gcsfuse-prometheus
+
+cat > /tmp/gcsfuse-grafana.env << EOF
+GCSFUSE_BUCKET=${grafana_bucket_name}
+EOF
+sudo mv /tmp/gcsfuse-grafana.env /etc/gcsfuse-grafana.env
+systemctl start gcsfuse-grafana
+systemctl enable gcsfuse-grafana
 
 # Start and enable Nomad
 systemctl start nomad

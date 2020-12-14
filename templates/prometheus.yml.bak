@@ -1,0 +1,40 @@
+---
+global:
+  scrape_interval:     5s
+  evaluation_interval: 5s
+
+scrape_configs:
+  - job_name: 'prometheus'
+
+    static_configs:
+    - targets: ['localhost:9090']
+
+  - job_name: 'nomad_metrics'
+
+    consul_sd_configs:
+    - server: '127.0.0.1:8501'
+      token: ${consul_master_token}
+      datacenter: 'dc1'
+      scheme: 'https'
+      tls_config:
+        ca_file: '/gcs/consul-ca.pem'
+        cert_file: '/gcs/consul-client.pem'
+        key_file: '/gcs/consul-client-key.pem'
+        insecure_skip_verify: false
+      services: ['nomad-client', 'nomad']
+
+    relabel_configs:
+    - source_labels: ['__meta_consul_tags']
+      regex: '(.*)http(.*)'
+      action: keep
+
+    scrape_interval: 5s
+    metrics_path: /v1/metrics
+    scheme: https
+    tls_config:
+      ca_file: /gcs/nomad-ca.pem
+      cert_file: /gcs/nomad-client.pem
+      key_file: /gcs/nomad-client-key.pem
+      insecure_skip_verify: false
+    params:
+      format: 'prometheus'

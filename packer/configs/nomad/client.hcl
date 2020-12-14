@@ -21,6 +21,14 @@ client {
     path = "/gcs"
   }
 
+  host_volume "prometheus" {
+    path = "/prometheus"
+  }
+
+  host_volume "grafana" {
+    path = "/grafana"
+  }
+
   meta {
     "runtime" = "docker"
   }

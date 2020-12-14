@@ -1,0 +1,18 @@
+[Unit]
+Description="GCSFUSE Grafana - Mount Google Cloud Storage Bucket on VM Filesystem"
+Documentation=https://cloud.google.com/storage/docs/gcs-fuse
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+roup=root
+EnvironmentFile=/etc/gcsfuse-grafana.env
+ExecStart=/usr/bin/gcsfuse --local-file-cache $GCSFUSE_BUCKET /grafana
+RemainAfterExit=true
+KillMode=process
+LimitNOFILE=65536
+
+[Install]
+WantedBy=default.target
