@@ -40,7 +40,7 @@ node_prefix "" {
   policy = "read"
 }
 $ consul acl policy create -name "metrics" -description "Prometheus metrics" -datacenter "dc1" -rules @metrics-consul-policy.hcl
-ID:           d30b02b3-b92d-196c-4d91-51b4cfdafec4
+ID:           7cb2fcf6-2831-2bbc-45d0-612d3a19798a
 Name:         metrics
 Description:  Prometheus metrics
 Datacenters:
@@ -52,23 +52,23 @@ service_prefix "" {
 node_prefix "" {
         policy = "read"
 }
-$ consul acl role create -name "metrics" -description "Prometheus metrics" -policy-id d30b02b3
-ID:           c61a8fe5-a222-a004-5566-d8196f636993
+$ consul acl role create -name "metrics" -description "Prometheus metrics" -policy-id 7cb2fcf6
+ID:           b249cb35-05da-efbb-dee4-1dd393a5439e
 Name:         metrics
 Description:  Prometheus metrics
 Policies:
-   d30b02b3-b92d-196c-4d91-51b4cfdafec4 - metrics
+   7cb2fcf6-2831-2bbc-45d0-612d3a19798a - metrics
 
-$ consul acl token create -description "Prometheus metrics" -role-id c61a8fe5
-AccessorID:       e593b02d-a84b-36ae-b343-9b847fb00b14
-SecretID:         b71d99e9-53a5-fbe4-79f7-299f4ee4dd7e
+$ consul acl token create -description "Prometheus metrics" -role-id b249cb35
+AccessorID:       762ca197-247d-4aae-4724-d4952b717071
+SecretID:         fad43fad-9a5b-9ae3-1cce-b881bdbe6e5a
 Description:      Prometheus metrics
 Local:            false
-Create Time:      2020-12-13 22:36:50.26319864 +0000 UTC
+Create Time:      2020-12-13 22:49:39.791118949 +0000 UTC
 Roles:
-   c61a8fe5-a222-a004-5566-d8196f636993 - metrics
+   b249cb35-05da-efbb-dee4-1dd393a5439e - metrics
 
-$ nomad job run -var="consul_metrics_token=b71d99e9-53a5-fbe4-79f7-299f4ee4dd7e" -var="load_balancer_ip=${LB_IP}" metrics.hcl
+$ nomad job run -var="consul_metrics_token=fad43fad-9a5b-9ae3-1cce-b881bdbe6e5a" -var="load_balancer_ip=${LB_IP}" metrics.hcl
 ==> Monitoring evaluation "6981e9cf"
     Evaluation triggered by job "metrics"
     Evaluation within deployment: "136ae5a3"
@@ -76,4 +76,11 @@ $ nomad job run -var="consul_metrics_token=b71d99e9-53a5-fbe4-79f7-299f4ee4dd7e"
     Allocation "d46442e4" created: node "cbc0f642", group "prometheus"
     Evaluation status changed: "pending" -> "complete"
 ==> Evaluation "6981e9cf" finished with status "complete"
+```
+
+Then connect to Grafana dashboard:
+
+```console
+$ gcloud compute ssh client-1 --tunnel-through-iap -- -N -L 127.0.0.1:3000:127.0.0.1:3000
+...
 ```
