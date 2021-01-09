@@ -1,6 +1,8 @@
 {
     "variables": {
         "project": "{{env `GOOGLE_PROJECT`}}",
+        "network": "default",
+        "subnetwork": "",
         "account_file": "{{env `GOOGLE_APPLICATION_CREDENTIALS`}}",
         "zone": "us-east1-b",
         "disk_size_gb": "10",
@@ -22,6 +24,8 @@
             "state_timeout": "15m",
             "ssh_username": "ubuntu",
             "zone": "{{user `zone`}}",
+            "network": "{{user `network`}}",
+            "subnetwork": "{{user `subnetwork`}}",
             "use_iap": "{{user `use_iap`}}",
             "preemptible": "{{user `use_preemptible`}}"
         },
@@ -38,6 +42,8 @@
             "state_timeout": "15m",
             "ssh_username": "ubuntu",
             "zone": "{{user `zone`}}",
+            "network": "{{user `network`}}",
+            "subnetwork": "{{user `subnetwork`}}",
             "use_iap": "{{user `use_iap`}}",
             "preemptible": "{{user `use_preemptible`}}"
         },
@@ -54,6 +60,8 @@
             "state_timeout": "15m",
             "ssh_username": "ubuntu",
             "zone": "{{user `zone`}}",
+            "network": "{{user `network`}}",
+            "subnetwork": "{{user `subnetwork`}}",
             "use_iap": "{{user `use_iap`}}",
             "preemptible": "{{user `use_preemptible`}}"
         }
