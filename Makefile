@@ -35,6 +35,18 @@ terraform/plan: ## Runs the Terraform plan command
 		-var="client_instances=5" \
 		-var="credentials=${GOOGLE_APPLICATION_CREDENTIALS}"
 
+.PHONY: terraform/wait
+terraform/wait: ## Waits for infra to be ready 
+	@echo "... waiting 30 seconds for all services to be ready before starting proxy ..."
+	@sleep 30
+
+.PHONY: terraform/output
+terraform/output: ## Gets the Terraform output
+	@terraform output -json
+
+.PHONY: terraform/up
+terraform/up: terraform/apply terraform/wait ssh/proxy/mtls ## Spins up infrastructure and local proxy
+
 .PHONY: terraform/apply
 terraform/apply: ## Runs and auto-apporves the Terraform apply command
 	terraform apply \
@@ -43,6 +55,18 @@ terraform/apply: ## Runs and auto-apporves the Terraform apply command
 		-var="server_instances=3" \
 		-var="client_instances=5" \
 		-var="credentials=${GOOGLE_APPLICATION_CREDENTIALS}"
+
+.PHONY: terraform/shutdown
+terraform/shutdown: ## Turns off all VM instances 
+	terraform apply \
+		-auto-approve \
+		-var="project=${GOOGLE_PROJECT}" \
+		-var="server_instances=0" \
+		-var="client_instances=0" \
+		-var="credentials=${GOOGLE_APPLICATION_CREDENTIALS}"
+
+.PHONY: terraform/restart
+terraform/restart: terraform/shutdown terraform/apply ## Shuts down all VM instances and restarts them
 
 .PHONY: terraform/destroy
 terraform/destroy: ## Runs and auto-apporves the Terraform destroy command
