@@ -66,3 +66,13 @@ output "load_balancer_ip" {
   description = "The external ip address of the load balacner"
   value       = module.load_balancer.external_ip
 }
+
+output "client_internal_ips" {
+  description = "The Nomad/Consul client private IP addresses."
+  value       = module.client.internal_ips
+}
+
+output "server_internal_ips" {
+  description = "The Nomad/Consul client private IP addresses."
+  value       = module.server.internal_ips
+}
