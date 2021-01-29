@@ -7,6 +7,11 @@ resource "tls_cert_request" "consul-cli" {
   key_algorithm   = tls_private_key.consul-cli.algorithm
   private_key_pem = tls_private_key.consul-cli.private_key_pem
 
+  ip_addresses = [
+    module.load_balancer.external_ip,
+    "127.0.0.1",
+  ]
+
   dns_names = [
     "localhost",
     "cli.dc1.consul",
