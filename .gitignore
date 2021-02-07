@@ -1,5 +1,5 @@
 account.json
-.terraform
+.terraform*
 *tfstate*
 *.pem
 *.csr
