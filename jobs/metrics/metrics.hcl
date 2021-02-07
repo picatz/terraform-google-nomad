@@ -10,32 +10,32 @@ variable "prometheus_config" {
 
 variable "nomad_ca" {
   type    = string
-  default = "nomad-ca.pem"
+  default = "../../nomad-ca.pem"
 }
 
 variable "nomad_cli" {
   type    = string
-  default = "nomad-cli-cert.pem"
+  default = "../../nomad-cli-cert.pem"
 }
 
 variable "nomad_cli_key" {
   type    = string
-  default = "nomad-cli-key.pem"
+  default = "../../nomad-cli-key.pem"
 }
 
 variable "consul_ca" {
   type    = string
-  default = "consul-ca.pem"
+  default = "../../consul-ca.pem"
 }
 
 variable "consul_cli" {
   type    = string
-  default = "consul-cli-cert.pem"
+  default = "../../consul-cli-cert.pem"
 }
 
 variable "consul_cli_key" {
   type    = string
-  default = "consul-cli-key.pem"
+  default = "../../consul-cli-key.pem"
 }
 
 job "metrics" {
@@ -65,52 +65,52 @@ job "metrics" {
             template {
                 change_mode = "restart"
                 destination = "local/prometheus.yml"
-                data        = file(var.prometheus_config) 
+                data        = file(var.prometheus_config)
             }
-            
+
             template {
                 change_mode = "noop"
                 destination = "local/nomad-ca.pem"
-                data        = file(var.nomad_ca) 
+                data        = file(var.nomad_ca)
             }
-            
+
             template {
                 change_mode = "noop"
                 destination = "local/nomad-cli-cert.pem"
-                data        = file(var.nomad_cli) 
+                data        = file(var.nomad_cli)
             }
 
             template {
                 change_mode = "noop"
                 destination = "local/nomad-cli-key.pem"
-                data        = file(var.nomad_cli_key) 
+                data        = file(var.nomad_cli_key)
             }
 
             template {
                 change_mode = "noop"
                 destination = "local/consul-ca.pem"
-                data        = file(var.consul_ca) 
+                data        = file(var.consul_ca)
             }
-            
+
             template {
                 change_mode = "noop"
                 destination = "local/consul-cli-cert.pem"
-                data        = file(var.consul_cli) 
+                data        = file(var.consul_cli)
             }
 
             template {
                 change_mode = "noop"
                 destination = "local/consul-cli-key.pem"
-                data        = file(var.consul_cli_key) 
+                data        = file(var.consul_cli_key)
             }
-            
+
             driver = "docker"
 
             config {
                 image = "prom/prometheus:latest"
 
                 args = [
-                    "--log.level=debug", 
+                    "--log.level=debug",
                     "--config.file=/etc/prometheus/prometheus.yml",
                 ]
 
