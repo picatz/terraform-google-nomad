@@ -15,8 +15,8 @@ client {
     "driver.docker.enable" = "1"
     "driver.whitelist"     = "docker"
     "user.blacklist"       = "root,ubuntu"
-    "docker.auth.config"   = "/nomad/config/docker_auth_config.json"
-    "docker.auth.helper"   = "gcr"
+    // "docker.auth.config"   = "/nomad/config/docker_auth_config.json"
+    // "docker.auth.helper"   = "gcr"
   }
 
   meta {
