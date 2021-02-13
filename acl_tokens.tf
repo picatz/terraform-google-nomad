@@ -1,3 +1,1 @@
-locals {
-    consul_master_token = uuid()
-}
+resource "random_uuid" "consul_master_token" {}

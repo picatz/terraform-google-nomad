@@ -37,7 +37,7 @@ output "consul_cli_key" {
 output "consul_master_token" {
   sensitive   = true
   description = "The Consul master token."
-  value       = local.consul_master_token
+  value       = random_uuid.consul_master_token.result
 }
 
 output "bastion_ssh_public_key" {
