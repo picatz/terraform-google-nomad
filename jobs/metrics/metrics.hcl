@@ -103,7 +103,18 @@ scrape_configs:
     - source_labels: ['__meta_consul_tags']
       regex: '(.*)http(.*)'
       action: keep
-
+  - job_name: 'fuzz_metrics'
+    consul_sd_configs:
+    - server: '${var.consul_lb_ip}:8501'
+      token: '${var.consul_acl_token}'
+      datacenter: 'dc1'
+      scheme: 'https'
+      tls_config:
+        ca_file: '/local/consul-ca.pem'
+        cert_file: '/local/consul-cli-cert.pem'
+        key_file: '/local/consul-cli-key.pem'
+        insecure_skip_verify: false
+      services: ['fuzz']
 EOH
             }
 
