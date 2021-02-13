@@ -38,3 +38,7 @@ variable "enabled" {
   type    = bool
   default = true
 }
+
+variable "health_check_port" {
+  type = number
+}
