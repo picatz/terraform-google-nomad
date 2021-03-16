@@ -129,9 +129,15 @@ ssh/proxy/count-dashboard: ## Forwards the example dashboard service port to loc
 gcloud/delete-metadata: ## Deletes all metadata entries from client VMs
 	gcloud compute instances list | grep "client-" | awk '{print $1 " " $2}' | xargs -n2 bash -c 'gcloud compute instances remove-metadata $1 --zone=$2 --all' bash
 
+.PHONY: consul/metrics/token
+consul/metrics/token: ## Creates a Consul token for metrics
+	@consul acl policy create -name "resolve-any" -rules 'service_prefix "" { policy = "read" } node_prefix "" { policy = "read" }'
+	@consul acl role create -name "metrics" -policy-name "resolve-any"
+	@consul acl token create -role-name "metrics"
+
 .PHONY: nomad/metrics
 nomad/metrics: ## Runs a Prometheus and Grafana stack on Nomad
-	@nomad run -var="consul_acl_token=$(shell terraform output consul_master_token)" -var="consul_lb_ip=$(shell terraform output load_balancer_ip)" jobs/metrics/metrics.hcl
+	@nomad run -var="consul_acl_token=$(CONSUL_METRICS_TOKEN)" -var="consul_lb_ip=$(shell terraform output load_balancer_ip)" jobs/metrics/metrics.hcl
 
 .PHONY: nomad/bootstrap
 nomad/bootstrap: ## Bootstraps the ACL system on the Nomad cluster
