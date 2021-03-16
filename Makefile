@@ -36,7 +36,7 @@ terraform/plan: ## Runs the Terraform plan command
 		-var="credentials=${GOOGLE_APPLICATION_CREDENTIALS}"
 
 .PHONY: terraform/wait
-terraform/wait: ## Waits for infra to be ready 
+terraform/wait: ## Waits for infra to be ready
 	@echo "... waiting 30 seconds for all services to be ready before starting proxy ..."
 	@sleep 30
 
@@ -57,7 +57,7 @@ terraform/apply: ## Runs and auto-apporves the Terraform apply command
 		-var="credentials=${GOOGLE_APPLICATION_CREDENTIALS}"
 
 .PHONY: terraform/shutdown
-terraform/shutdown: ## Turns off all VM instances 
+terraform/shutdown: ## Turns off all VM instances
 	terraform apply \
 		-auto-approve \
 		-var="project=${GOOGLE_PROJECT}" \
