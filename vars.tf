@@ -47,7 +47,7 @@ variable "client_instances" {
 
 variable "client_machine_type" {
   type        = string
-  default     = "n1-standard-1"
+  default     = "c2-standard-4"
   description = "The VM machine type for Nomad clients."
 }
 
