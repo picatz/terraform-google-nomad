@@ -134,10 +134,10 @@ consul/metrics/acls: ## Create a Consul policy, role, and token to use with prom
 	@echo "📑 Creating Consul ACL Policy"
 	@consul acl policy create -name "resolve-any-upstream" -rules 'service_prefix "" { policy = "read" } node_prefix "" { policy = "read" }' -token=$(shell terraform output consul_master_token)
 	@echo "🎭 Creating Consul ACL Role"
-	@consul acl role create -name "metrics" -policy-name  "resolve-any-upstream"
+	@consul acl role create -name "metrics" -policy-name  "resolve-any-upstream" -token=$(shell terraform output consul_master_token)
 	@echo "🔑 Creating Consul ACL Token to Use for Prometheus Consul Service Discovery"
-	@consul acl token create -role-name "metrics"
-
+	@consul acl token create -role-name "metrics" -token=$(shell terraform output consul_master_token)
+ 
 .PHONY: nomad/metrics
 nomad/metrics: ## Runs a Prometheus and Grafana stack on Nomad
 	@nomad run -var="consul_acl_token=$(consul_acl_token)" -var="consul_lb_ip=$(shell terraform output load_balancer_ip)" jobs/metrics/metrics.hcl
