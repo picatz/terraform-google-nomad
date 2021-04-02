@@ -3,11 +3,6 @@ variable "datacenters" {
   default = ["dc1"]
 }
 
-variable "image" {
-  type    = string
-  default = "grafana/loki:latest"
-}
-
 job "logs" {
     datacenters = var.datacenters
 
@@ -90,7 +85,7 @@ EOH
             driver = "docker"
 
             config {
-                image = var.image
+                image = "grafana/loki:latest"
 
                 args = [
                     "--log.level=debug",
