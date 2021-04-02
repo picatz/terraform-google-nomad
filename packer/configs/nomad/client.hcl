@@ -22,6 +22,10 @@ client {
   meta {
     "runtime" = "docker"
   }
+
+  host_volume "nomad" {
+    path = "/nomad/data"
+  }
 }
 
 acl {
