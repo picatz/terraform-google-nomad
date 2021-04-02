@@ -142,6 +142,10 @@ consul/metrics/acls: ## Create a Consul policy, role, and token to use with prom
 nomad/metrics: ## Runs a Prometheus and Grafana stack on Nomad
 	@nomad run -var="consul_acl_token=$(consul_acl_token)" -var="consul_lb_ip=$(shell terraform output load_balancer_ip)" jobs/metrics/metrics.hcl
 
+.PHONY: nomad/logs
+nomad/logs: ## Runs a Loki job on Nomad
+	@nomad run jobs/logs/logs.hcl 
+
 .PHONY: nomad/bootstrap
 nomad/bootstrap: ## Bootstraps the ACL system on the Nomad cluster
 	nomad acl bootstrap

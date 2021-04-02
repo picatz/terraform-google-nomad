@@ -191,6 +191,10 @@ EOH
                             destination_name = "prometheus"
                             local_bind_port  = 9090
                         }
+                        upstreams {
+                            destination_name = "loki-http"
+                            local_bind_port  = 3100
+                        }
                     }
                 }
             }
