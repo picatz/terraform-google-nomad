@@ -1,6 +1,6 @@
 datacenter = "dc1"
 log_level = "DEBUG"
-data_dir = "/tmp/nomad-agent"
+data_dir = "/nomad/data"
 
 client {
   enabled = true
