@@ -12,26 +12,30 @@ job "ingress" {
 
         network {
             mode = "bridge"
-            port "http" {
-                static = 8080
-                to     = 8080
+            port "grafana" {
+                static = 3000
+                to     = 3000
             }
             port "dashboard" {
                 static = 8081
                 to     = 8081
             }
+            port "metrics" {
+                static = 8082
+                to     = 8082
+            }
         }
 
         service {
-            name = "traefik"
-            port = "8080"
+            name = "traefik-grafana"
+            port = "grafana"
 
             connect {
                 sidecar_service {
                     proxy {
                         upstreams {
                             destination_name = "grafana"
-                            local_bind_port  = 3000
+                            local_bind_port  = 3001
                         }
                     }
                 }
@@ -44,11 +48,8 @@ job "ingress" {
                 destination = "local/traefik.toml"
                 data        = <<EOH
 [entryPoints]
-    [entryPoints.http]
-    address = ":8080"
-    [entryPoints.http.http.redirections]
-      [entryPoints.http.http.redirections.entryPoint]
-        to = ":3000"
+    [entryPoints.grafana]
+      address = ":3000"
     [entryPoints.traefik]
       address = ":8081"
     [entryPoints.metrics]
@@ -68,6 +69,27 @@ job "ingress" {
 [api]
     dashboard = true
     insecure  = true
+
+[providers]
+  [providers.file]
+    directory = "/local/traefik"
+EOH
+            }
+
+            template {
+                change_mode = "restart"
+                destination = "local/traefik/conf.toml"
+                data        = <<EOH
+[tcp.routers]
+  [tcp.routers.grafana]
+    entryPoints = ["grafana"]
+    rule = "HostSNI(`*`)"
+    service = "grafana"
+
+[tcp.services]
+  [tcp.services.grafana.loadBalancer]
+    [[tcp.services.grafana.loadBalancer.servers]]
+      address = "localhost:3001"
 EOH
             }
 

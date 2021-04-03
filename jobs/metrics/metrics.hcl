@@ -174,10 +174,6 @@ EOH
     group "grafana" {
         network {
             mode ="bridge"
-            port "grafana" {
-                static = 3000
-                to     = 3000
-            }
         }
 
         service {
