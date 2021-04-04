@@ -63,3 +63,8 @@ key_file  = "/consul/config/server-key.pem"
 auto_encrypt {
   allow_tls = true
 }
+
+telemetry {
+  prometheus_retention_time  = "24h"
+  disable_hostname           = true
+}

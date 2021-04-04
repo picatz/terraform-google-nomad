@@ -132,7 +132,7 @@ gcloud/delete-metadata: ## Deletes all metadata entries from client VMs
 .PHONY: consul/metrics/acls
 consul/metrics/acls: ## Create a Consul policy, role, and token to use with prometheus 
 	@echo "📑 Creating Consul ACL Policy"
-	@consul acl policy create -name "resolve-any-upstream" -rules 'service_prefix "" { policy = "read" } node_prefix "" { policy = "read" }' -token=$(shell terraform output consul_master_token)
+	@consul acl policy create -name "resolve-any-upstream" -rules 'service_prefix "" { policy = "read" } node_prefix "" { policy = "read" } agent_prefix "" { policy = "read" }' -token=$(shell terraform output consul_master_token)
 	@echo "🎭 Creating Consul ACL Role"
 	@consul acl role create -name "metrics" -policy-name  "resolve-any-upstream" -token=$(shell terraform output consul_master_token)
 	@echo "🔑 Creating Consul ACL Token to Use for Prometheus Consul Service Discovery"
@@ -140,7 +140,7 @@ consul/metrics/acls: ## Create a Consul policy, role, and token to use with prom
  
 .PHONY: nomad/metrics
 nomad/metrics: ## Runs a Prometheus and Grafana stack on Nomad
-	@nomad run -var="consul_acl_token=$(consul_acl_token)" -var="consul_lb_ip=$(shell terraform output load_balancer_ip)" jobs/metrics/metrics.hcl
+	@nomad run -var='consul_targets=[$(shell terraform output -json | jq -r '(.server_internal_ips.value + .client_internal_ips.value) | map(.+":8501") |  @csv')]' -var="consul_acl_token=$(consul_acl_token)" -var="consul_lb_ip=$(shell terraform output load_balancer_ip)" jobs/metrics/metrics.hcl
 
 .PHONY: nomad/logs
 nomad/logs: ## Runs a Loki and Promtail jobs on Nomad

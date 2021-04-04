@@ -67,6 +67,11 @@ output "load_balancer_ip" {
   value       = module.load_balancer.external_ip
 }
 
+output "grafana_load_balancer_ip" {
+  description = "The external ip address of the grafana load balacner"
+  value       = module.grafana_load_balancer.external_ip
+}
+
 output "client_internal_ips" {
   description = "The Nomad/Consul client private IP addresses."
   value       = module.client.internal_ips
