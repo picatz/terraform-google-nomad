@@ -147,6 +147,10 @@ nomad/logs: ## Runs a Loki and Promtail jobs on Nomad
 	@nomad run jobs/logs/loki.hcl 
 	@nomad run jobs/logs/promtail.hcl
 
+.PHONY: nomad/ingress
+nomad/ingress: ## Runs a Traefik proxy to handle ingress traffic across the cluster
+	@nomad run jobs/ingress/traefik.hcl 
+
 .PHONY: nomad/bootstrap
 nomad/bootstrap: ## Bootstraps the ACL system on the Nomad cluster
 	nomad acl bootstrap
