@@ -71,10 +71,6 @@ job "metrics" {
         }
 
         task "prometheus" {
-            env {
-              CONSUL_TARGETS = jsonencode(var.consul_targets)
-            }
-
             template {
                 change_mode = "restart"
                 destination = "local/prometheus.yml"
@@ -139,7 +135,7 @@ scrape_configs:
     authorization:
       credentials: '${var.consul_acl_token}'
     static_configs:
-    - targets: {{ env "CONSUL_TARGETS" }}
+    - targets: ${jsonencode(var.consul_targets)}
 EOH
             }
 
