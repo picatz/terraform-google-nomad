@@ -136,7 +136,8 @@ scrape_configs:
       insecure_skip_verify: true
     params:
       format: ['prometheus']
-      token: ['${var.consul_acl_token}']
+    authorization:
+      credentials: '${var.consul_acl_token}'
     static_configs:
     - targets: {{ env "CONSUL_TARGETS" }}
 EOH
