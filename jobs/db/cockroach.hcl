@@ -15,12 +15,12 @@ job "cockroach" {
   }
 
   constraint {
-      distinct_hosts = true
+    distinct_hosts = true
   }
 
   group "cockroach-1" {
     network {
-        mode = "bridge"
+      mode = "bridge"
     }
 
     service {
