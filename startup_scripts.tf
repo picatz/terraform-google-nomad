@@ -1,5 +1,5 @@
-# Note: Always escape potential forward-slashes in the the base64 output of the gossip key 
-#       if being passed to commands like sed in a startup-script. And this is obviously not perfect 
+# Note: Always escape potential forward-slashes in the the base64 output of the gossip key
+#       if being passed to commands like sed in a startup-script. And this is obviously not perfect
 #       for many reasons, but is required for the current configuration setup using a cloud-init
 #       startup script.
 
@@ -44,6 +44,11 @@ data "template_file" "client_bootstrap_script" {
       "default-runtime"  = var.docker_default_runtime,
       "no-new-privileges"= var.docker_no_new_privileges,
       "icc"              = var.docker_icc_enabled,
+      "runtimes"         = {
+        "runsc" = {
+          "path" = "/usr/local/bin/runsc"
+        }
+      }
     })
   }
 }
