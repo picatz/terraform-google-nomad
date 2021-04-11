@@ -24,6 +24,15 @@ job "cockroach" {
     }
 
     service {
+        name = "cockroach"
+        port = "26258"
+
+        connect {
+            sidecar_service {}
+        }
+    }
+
+    service {
         name = "cockroach-1"
         port = "26258"
 
@@ -71,6 +80,15 @@ job "cockroach" {
     }
 
     service {
+        name = "cockroach"
+        port = "26259"
+
+        connect {
+            sidecar_service {}
+        }
+    }
+
+    service {
         name = "cockroach-2"
         port = "26259"
 
@@ -115,6 +133,15 @@ job "cockroach" {
   group "cockroach-3" {
     network {
         mode = "bridge"
+    }
+
+    service {
+        name = "cockroach"
+        port = "26260"
+
+        connect {
+            sidecar_service {}
+        }
     }
 
     service {
