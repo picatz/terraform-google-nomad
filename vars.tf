@@ -168,3 +168,15 @@ variable "dns_record_set_name_prefix" {
   type    = string
   default = "public"
 }
+
+variable "grafana_load_balancer_enabled" {
+  type        = bool
+  default     = false
+  description = "Start a public load balancer to be used to handle ingress Grafana traffic to client nodes within the cluster."
+}
+
+variable "nomad_load_balancer_enabled" {
+  type        = bool
+  default     = true
+  description = "Start a public load balancer to be used to handle ingress Nomad traffic to server nodes within the cluster."
+}

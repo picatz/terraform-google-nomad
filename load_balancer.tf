@@ -1,5 +1,6 @@
 module "load_balancer" {
   source            = "./modules/load-balancer"
+  enabled           = var.nomad_load_balancer_enabled
   region            = var.region
   name              = "load-balancer"
   ports             = [4646,8501]
@@ -12,6 +13,7 @@ module "load_balancer" {
 
 module "grafana_load_balancer" {
   source            = "./modules/load-balancer"
+  enabled           = var.grafana_load_balancer_enabled
   region            = var.region
   name              = "grafana-load-balancer"
   ports             = [3000]
