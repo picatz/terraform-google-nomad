@@ -1,6 +1,6 @@
 # Nomad Cluster
 
-[![Nomad Version](https://img.shields.io/badge/Nomad%20Version-1.0.2-brightgreen.svg)](https://www.nomadproject.io/downloads)
+[![Nomad Version](https://img.shields.io/badge/Nomad%20Version-1.0.4-brightgreen.svg)](https://www.nomadproject.io/downloads)
 
 [Terraform](https://www.terraform.io/) Module for [Nomad](https://nomadproject.io/) clusters on [GCP](https://cloud.google.com/).
 
@@ -100,7 +100,7 @@ We can bootstrap ACLs to get the bootstrap management token like so:
 
 ```console
 $ nomad acl bootstrap
-Accessor ID  = a1495889-37ce-6784-78f3-31.0.2984bca
+Accessor ID  = a1495889-37ce-6784-78f3-31.0.4984bca
 Secret ID    = dc8c0349-c1fd-dc2c-299c-d513e5dd6df2
 Name         = Bootstrap Token
 Type         = management
