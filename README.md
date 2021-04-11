@@ -12,7 +12,7 @@
 * Optional SSH bastion host
 * Only the [Docker task driver](https://www.nomadproject.io/docs/drivers/docker) is enabled
 * Installs the [gVisor](https://gvisor.dev/) container runtime (`runsc`)
-* Installs the [Falco](https://falco.org/) runtime security monitor.
+* Installs the [Falco](https://falco.org/) runtime security monitor
 
 ## Cloud Shell Interactive Tutorial
 
