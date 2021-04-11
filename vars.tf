@@ -35,7 +35,7 @@ variable "server_instances" {
 
 variable "server_machine_type" {
   type        = string
-  default     = "g1-small"
+  default     = "n1-standard-1"
   description = "The VM machine type for Nomad servers."
 }
 
@@ -47,7 +47,7 @@ variable "client_instances" {
 
 variable "client_machine_type" {
   type        = string
-  default     = "n1-standard-1"
+  default     = "n1-standard-2"
   description = "The VM machine type for Nomad clients."
 }
 
@@ -145,4 +145,51 @@ variable "consul_acls_default_policy" {
   type        = string
   default     = "deny"
   description = "The default policy to use for Consul ACLs (allow/deny)."
+}
+
+variable "bucket_location" {
+  type    = string
+  default = "US"
+}
+
+variable "nomad_load_balancer_enabled" {
+  type        = bool
+  default     = true
+  description = "Start a public load balancer to be used to handle ingress Nomad traffic to server nodes within the cluster."
+}
+
+
+variable "dns_enabled" {
+  type    = bool
+  default = false
+}
+
+variable "dns_managed_zone_dns_name" {
+  // example: nomad.example.com
+  type    = string
+  default = ""
+}
+
+variable "dns_record_set_name_prefix" {
+  // example: public.$dns_managed_zone_dns_name
+  type    = string
+  default = "public"
+}
+
+variable "grafana_load_balancer_enabled" {
+  type        = bool
+  default     = false
+  description = "Start a public load balancer to be used to handle ingress Grafana traffic to client nodes within the cluster."
+}
+
+variable "grafana_dns_managed_zone_dns_name" {
+  // example: grafana.example.com
+  type    = string
+  default = ""
+}
+
+variable "grafana_dns_record_set_name_prefix" {
+  // example: public.$dns_managed_zone_dns_name
+  type    = string
+  default = "public"
 }

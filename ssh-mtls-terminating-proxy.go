@@ -90,7 +90,7 @@ func readFileContent(file string) string {
 
 func init() {
 	if len(os.Args) <= 1 {
-		log.Println("Getting Terraform Output")
+		log.Println("getting terraform output")
 		tfOutput, err := getTerraformOutput()
 		if err != nil {
 			errorAndExit(err)
@@ -116,9 +116,9 @@ func init() {
 		flag.StringVar(&serverInternalIP, "server-ip", "", "internal Nomad server IP")
 		flag.StringVar(&bastionExternalIP, "bastion-ip", "", "external Nomad bastion IP")
 		flag.StringVar(&nomadBastionSSHFile, "bastion-ssh-file", "", "ssh key file")
-		flag.StringVar(&nomadCACertFile, "ca-file", "", "mTLS certifcate authority file")
-		flag.StringVar(&nomadCLICertFile, "cert-file", "", "mTLS client cert file")
-		flag.StringVar(&nomadCLIKeyFile, "key-file", "", "mTLS client key file")
+		flag.StringVar(&nomadCACertFile, "ca-file", "", "mtls certifcate authority file")
+		flag.StringVar(&nomadCLICertFile, "cert-file", "", "mtls client cert file")
+		flag.StringVar(&nomadCLIKeyFile, "key-file", "", "mtls client key file")
 
 		flag.Parse()
 
@@ -135,12 +135,12 @@ func init() {
 func sshAgent(privPEM string) (ssh.AuthMethod, error) {
 	block, _ := pem.Decode([]byte(privPEM))
 	if block == nil {
-		return nil, errors.New("failed to parse PEM block containing the key")
+		return nil, fmt.Errorf("failed to parse PEM block containing the key")
 	}
 
 	pk, err := x509.ParsePKCS1PrivateKey(block.Bytes)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to parse PKCS1 private key: %w", err)
 	}
 
 	ak := agent.AddedKey{
@@ -149,14 +149,14 @@ func sshAgent(privPEM string) (ssh.AuthMethod, error) {
 
 	sshAgent, err := net.Dial("unix", os.Getenv("SSH_AUTH_SOCK"))
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to connect to SSH_AUTH_SOCK: %w", err)
 	}
 
 	c := agent.NewClient(sshAgent)
 
 	err = c.Add(ak)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to add key to agent: %w", err)
 	}
 
 	return ssh.PublicKeysCallback(c.Signers), nil
@@ -174,25 +174,25 @@ func main() {
 		Auth: []ssh.AuthMethod{
 			sshAgent,
 		},
-		// TODO(kent): don't use insecure ignore host key...
+		// TODO(kent): don't always use insecure ignore host key...
 		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
 	}
 
-	log.Println("Connecting to the bastion")
+	log.Println("connecting to the bastion")
 	conn, err := ssh.Dial("tcp", fmt.Sprintf("%s:22", bastionExternalIP), sshConfig)
 	if err != nil {
 		errorAndExit(err)
 	}
 	defer conn.Close()
 
-	log.Println("Connecting to the server through the bastion")
+	log.Println("connecting to the server through the bastion")
 	tconn, err := conn.Dial("tcp", fmt.Sprintf("%s:22", serverInternalIP))
 	if err != nil {
 		errorAndExit(err)
 	}
 	defer tconn.Close()
 
-	log.Println("Wrapping the server connection with SSH through the bastion")
+	log.Println("wrapping the server connection with SSH through the bastion")
 	stconn, chans, reqs, err := ssh.NewClientConn(tconn, fmt.Sprintf("%s:22", serverInternalIP), sshConfig)
 	if err != nil {
 		errorAndExit(err)
@@ -204,32 +204,48 @@ func main() {
 
 	go func() {
 		defer wg.Done()
-		log.Println("Tunneling a new connection for Nomad to the server with SSH through the bastion")
+		log.Println("tunneling a new connection for somad to the server with ssh through the bastion")
 		tclient := ssh.NewClient(stconn, chans, reqs)
 		defer tclient.Close()
 
-		log.Println("Loading Nomad TLS data")
+		log.Println("loading Nomad TLS data")
 		nomadCert, err := tls.X509KeyPair([]byte(nomadCLICert), []byte(nomadCLIKey))
 		if err != nil {
 			errorAndExit(err)
 		}
 
-		// TODO(kent): don't use insecure skip verify...
-		// if I use ServerName I get "x509: certificate signed by unknown authority" as an error
-		tlsClientConfig := &tls.Config{
-			Certificates: []tls.Certificate{nomadCert},
-			ClientCAs:    x509.NewCertPool(),
-			ClientAuth:   tls.RequireAndVerifyClientCert,
-			MinVersion:   tls.VersionTLS12,
-			// ServerName:         "localhost",
-			InsecureSkipVerify: true,
+		pool := x509.NewCertPool()
+		ok := pool.AppendCertsFromPEM([]byte(nomadCACert))
+		if !ok {
+			errorAndExit(errors.New("failed to load Nomad ca cert from PEM"))
 		}
 
-		tlsClientConfig.ClientCAs.AppendCertsFromPEM([]byte(nomadCACert))
+		tlsVerifyOpts := x509.VerifyOptions{
+			Roots:   pool,
+			DNSName: "server.global.nomad",
+		}
 
-		tlsClientConfig.BuildNameToCertificate()
+		tlsClientConfig := &tls.Config{
+			Certificates:       []tls.Certificate{nomadCert},
+			MinVersion:         tls.VersionTLS12,
+			InsecureSkipVerify: true, // required for custom mTLS certificate verification
+			VerifyPeerCertificate: func(rawCerts [][]byte, verifiedChains [][]*x509.Certificate) error {
+				if len(rawCerts) != 1 {
+					return fmt.Errorf("custom verification expected 1 cert duirng peer verification from server, found %d", len(rawCerts))
+				}
+				peerCert, err := x509.ParseCertificate(rawCerts[0])
+				if err != nil {
+					return fmt.Errorf("failed to parse peer certificate: %w", err)
+				}
+				_, err = peerCert.Verify(tlsVerifyOpts)
+				if err != nil {
+					return fmt.Errorf("failed to verify peer certificate: %w", err)
+				}
+				return nil
+			},
+		}
 
-		log.Println("Starting Nomad local listener on localhost:4646")
+		log.Println("starting Nomad local listener on localhost:4646")
 		ln, err := net.Listen("tcp", "localhost:4646")
 		if err != nil {
 			errorAndExit(err)
@@ -237,14 +253,14 @@ func main() {
 		for {
 			conn, err := ln.Accept()
 			if err != nil {
-				log.Println(err)
+				log.Println(fmt.Errorf("failed to accepted connection on local listener: %v: %w", ln.Addr(), err))
 				continue
 			}
 
 			go func(conn net.Conn) {
 				nomad, err := tclient.Dial("tcp", "0.0.0.0:4646")
 				if err != nil {
-					log.Println(err)
+					log.Println(fmt.Errorf("failed to connect to Nomad server over SSH: %w", err))
 					return
 				}
 
@@ -252,7 +268,7 @@ func main() {
 
 				err = nomadWrap.Handshake()
 				if err != nil {
-					log.Println(err)
+					log.Println(fmt.Errorf("TLS handshake error to Nomad server over ssh: %w", err))
 					return
 				}
 
@@ -270,32 +286,48 @@ func main() {
 
 	go func() {
 		defer wg.Done()
-		log.Println("Tunneling a new connection for Consul to the server with SSH through the bastion")
+		log.Println("tunneling a new connection for Consul to the server with SSH through the bastion")
 		tclient := ssh.NewClient(stconn, chans, reqs)
 		defer tclient.Close()
 
-		log.Println("Loading Consul TLS data")
+		log.Println("loading Consul TLS data")
 		consulCert, err := tls.X509KeyPair([]byte(consulCLICert), []byte(consulCLIKey))
 		if err != nil {
 			errorAndExit(err)
 		}
 
-		// TODO(kent): don't use insecure skip verify...
-		// if I use ServerName I get "x509: certificate signed by unknown authority" as an error
-		tlsClientConfig := &tls.Config{
-			Certificates: []tls.Certificate{consulCert},
-			ClientCAs:    x509.NewCertPool(),
-			ClientAuth:   tls.RequireAndVerifyClientCert,
-			MinVersion:   tls.VersionTLS12,
-			// ServerName:         "localhost",
-			InsecureSkipVerify: true,
+		pool := x509.NewCertPool()
+		ok := pool.AppendCertsFromPEM([]byte(consulCACert))
+		if !ok {
+			errorAndExit(errors.New("failed to load Consul CA cert from PEM"))
 		}
 
-		tlsClientConfig.ClientCAs.AppendCertsFromPEM([]byte(consulCACert))
+		tlsVerifyOpts := x509.VerifyOptions{
+			Roots:   pool,
+			DNSName: "server.dc1.consul",
+		}
 
-		tlsClientConfig.BuildNameToCertificate()
+		tlsClientConfig := &tls.Config{
+			Certificates:       []tls.Certificate{consulCert},
+			MinVersion:         tls.VersionTLS12,
+			InsecureSkipVerify: true, // required for custom mTLS certificate verification
+			VerifyPeerCertificate: func(rawCerts [][]byte, verifiedChains [][]*x509.Certificate) error {
+				if len(rawCerts) != 1 {
+					return fmt.Errorf("custom verification expected 1 cert duirng peer verification from server, found %d", len(rawCerts))
+				}
+				peerCert, err := x509.ParseCertificate(rawCerts[0])
+				if err != nil {
+					return fmt.Errorf("failed to parse peer certificate: %w", err)
+				}
+				_, err = peerCert.Verify(tlsVerifyOpts)
+				if err != nil {
+					return fmt.Errorf("failed to verify peer certificate: %w", err)
+				}
+				return nil
+			},
+		}
 
-		log.Println("Starting Consul local listener on localhost:8500")
+		log.Println("starting Consul local listener on localhost:8500")
 		ln, err := net.Listen("tcp", "localhost:8500")
 		if err != nil {
 			errorAndExit(err)
@@ -318,7 +350,7 @@ func main() {
 
 				err = consulWrap.Handshake()
 				if err != nil {
-					log.Println(err)
+					log.Println(fmt.Errorf("TLS handshake error to Consul server over ssh: %w", err))
 					return
 				}
 

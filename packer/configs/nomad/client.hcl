@@ -1,6 +1,6 @@
 datacenter = "dc1"
 log_level = "DEBUG"
-data_dir = "/tmp/nomad-agent"
+data_dir = "/nomad/data"
 
 client {
   enabled = true
@@ -15,10 +15,16 @@ client {
     "driver.docker.enable" = "1"
     "driver.whitelist"     = "docker"
     "user.blacklist"       = "root,ubuntu"
+    // "docker.auth.config"   = "/nomad/config/docker_auth_config.json"
+    // "docker.auth.helper"   = "gcr"
   }
 
   meta {
     "runtime" = "docker"
+  }
+
+  host_volume "nomad" {
+    path = "/nomad/data"
   }
 }
 
@@ -46,4 +52,12 @@ consul {
   cert_file  = "/consul/config/client.pem"
   key_file   = "/consul/config/client-key.pem"
   token      = "{CONSUL-TOKEN}"
+}
+
+telemetry {
+  collection_interval        = "5s"
+  disable_hostname           = true
+  prometheus_metrics         = true
+  publish_allocation_metrics = true
+  publish_node_metrics       = true
 }

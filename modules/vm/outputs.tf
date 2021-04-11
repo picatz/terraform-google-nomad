@@ -6,3 +6,7 @@ output "external_ip" {
 output "internal_ip" {
   value = (var.instances >= 1) ? google_compute_instance.vm[0].network_interface[0].network_ip : ""
 }
+
+output "internal_ips" {
+  value = (var.instances >= 1) ? [for i in range(var.instances) : google_compute_instance.vm[i].network_interface[0].network_ip] : []
+}

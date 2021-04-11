@@ -90,6 +90,12 @@
 			"type": "file",
 			"source": "configs/consul/client.hcl",
 			"destination": "/tmp/consul-agent.hcl"
+        },
+        {
+            "only": ["client"],
+			"type": "file",
+			"source": "configs/nomad/docker_auth_config.json",
+			"destination": "/tmp/docker_auth_config.json"
 		},
 		{
             "only": ["server", "client"],
@@ -114,9 +120,9 @@
 			"type": "shell",
 			"scripts": [
 				"scripts/install_docker.sh",
-				"scripts/install_gvisor.sh"
+                "scripts/install_gvisor.sh"
 			]
-		},
+        },
 		{
             "only": ["client"],
 			"type": "shell",
@@ -139,6 +145,13 @@
                 "scripts/install_falco.sh"
 			]
 		},
+		{
+            "only": ["client"],
+			"type": "shell",
+			"scripts": [
+				"scripts/install_docker-credential-gcr.sh"
+			]
+        },
 		{
             "only": ["bastion"],
 			"type": "shell",

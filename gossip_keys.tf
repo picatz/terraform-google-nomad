@@ -1,9 +1,7 @@
-resource "random_password" "nomad-gossip-key" {
-  length  = 32
-  special = true
+resource "random_id" "nomad-gossip-key" {
+  byte_length = 32
 }
 
-resource "random_password" "consul-gossip-key" {
-  length  = 32
-  special = true
+resource "random_id" "consul-gossip-key" {
+  byte_length = 32
 }

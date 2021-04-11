@@ -37,7 +37,7 @@ output "consul_cli_key" {
 output "consul_master_token" {
   sensitive   = true
   description = "The Consul master token."
-  value       = local.consul_master_token
+  value       = random_uuid.consul_master_token.result
 }
 
 output "bastion_ssh_public_key" {
@@ -65,4 +65,19 @@ output "server_internal_ip" {
 output "load_balancer_ip" {
   description = "The external ip address of the load balacner"
   value       = module.load_balancer.external_ip
+}
+
+output "grafana_load_balancer_ip" {
+  description = "The external ip address of the grafana load balacner"
+  value       = module.grafana_load_balancer.external_ip
+}
+
+output "client_internal_ips" {
+  description = "The Nomad/Consul client private IP addresses."
+  value       = module.client.internal_ips
+}
+
+output "server_internal_ips" {
+  description = "The Nomad/Consul client private IP addresses."
+  value       = module.server.internal_ips
 }

@@ -72,6 +72,10 @@ echo "Enabling compute engine API for project"
 # Enable the compute engine API
 gcloud services enable compute.googleapis.com
 
+echo "Enabling container registry API for project"
+# Enable the compute engine API
+gcloud services enable containerregistry.googleapis.com
+
 echo "Creating the Terraform service account"
 # Create the service account with account.json file if it doesn't exist
 gcloud iam service-accounts create terraform \
