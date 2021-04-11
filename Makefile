@@ -184,6 +184,14 @@ nomad/logs: ## Runs a Loki and Promtail jobs on Nomad
 nomad/ingress: ## Runs a Traefik proxy to handle ingress traffic across the cluster
 	@nomad run jobs/ingress/traefik.hcl
 
+.PHONY: nomad/cockroachdb
+nomad/cockroachdb: ## Runs a Cockroach DB cluster
+	@nomad run jobs/db/cockroach.hcl
+	@sleep 10s
+	@nomad alloc exec -i -t=false -task cockroach $(shell nomad status cockroach | grep "running" | grep "cockroach-1" | head -n 1 | awk '{print $$1}') cockroach init --insecure --host=localhost:26258
+	@sleep 10s
+	@nomad alloc exec -i -t=false -task cockroach $(shell nomad status cockroach | grep "running" | grep "cockroach-1" | head -n 1 | awk '{print $$1}') cockroach node ls --insecure --host=localhost:26258
+
 .PHONY: nomad/bootstrap
 nomad/bootstrap: ## Bootstraps the ACL system on the Nomad cluster
 	@nomad acl bootstrap
