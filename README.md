@@ -86,6 +86,30 @@ $ gcloud logging read 'resource.type="gce_instance" jsonPayload.ident="nomad" js
 ...
 ```
 
+Logs can also be collected within the cluster using Promtail and Loki, then visualized using Grafana (optionally exposed using a public load balancer and DNS name).
+
+```console
+$ DNS_ENABLED=true PUBLIC_DOMAIN="nomad.your-domain.com" make terraform/apply
+...
+$ export NOMAD_TOKEN=...
+$ export CONSUL_HTTP_TOKEN=...
+$ make consul/metrics/acls
+...
+🔑 Creating Consul ACL Token to Use for Prometheus Consul Service Discovery
+AccessorID:       15b9a51d-7af4-e8d4-7c09-312c594a5907
+SecretID:         2a1c7926-b6e3-566e-ddf5-b19279fa134e
+Description:
+Local:            false
+Create Time:      2021-04-11 16:16:03.902311312 +0000 UTC
+Roles:
+   6ae94122-0c07-49a7-fa95-8ce14aa8a75e - metrics
+
+$ consul_acl_token=2a1c7926-b6e3-566e-ddf5-b19279fa134e make nomad/metrics
+$ make nomad/logs
+$ make nomad/ingress
+$ GRAFANA_PUBLIC_DOMAIN="grafana.your-domain.com" GRAFANA_LOAD_BALANCER_ENABLED=true DNS_ENABLED=true PUBLIC_DOMAIN="nomad.your-domain.com" make terraform/apply
+```
+
 ## Bootstrap ACL Token
 
 If the cluster is started with ACLs enabled, which is the default behavior of this module, you may see this:
@@ -125,17 +149,20 @@ $ ...
 When using the SSH bastion, you can use the `ssh-mtls-terminating-proxy.go` helper script to tunnel a connection from localhost to the Nomad server API:
 
 ```console
-$ go run ssh-mtls-terminating-proxy.go
-2020/04/27 01:27:38 Getting Terraform Output
-2020/04/27 01:27:38 Bastion IP: "104.196.121.185"
-2020/04/27 01:27:38 Server IP: "192.168.2.3"
-2020/04/27 01:27:38 Setting up SSH agent
-2020/04/27 01:27:38 Connecting to the bastion
-2020/04/27 01:27:41 Connecting to the server through the bastion
-2020/04/27 01:27:44 Wrapping the server connection with SSH through the bastion
-2020/04/27 01:27:45 Tunneling a connection to the server with SSH through the bastion
-2020/04/27 01:27:45 Loading the TLS data
-2020/04/27 01:27:45 Starting local listener on localhost:4646
+$ make ssh/proxy/mtls
+2021/04/11 13:18:28 getting terraform output
+2021/04/11 13:18:29 Bastion IP: "34.73.106.60"
+2021/04/11 13:18:29 Server IP: "192.168.2.8"
+2021/04/11 13:18:29 Setting up SSH agent
+2021/04/11 13:18:29 connecting to the bastion
+2021/04/11 13:18:29 connecting to the server through the bastion
+2021/04/11 13:18:30 wrapping the server connection with SSH through the bastion
+2021/04/11 13:18:30 tunneling a new connection for Consul to the server with SSH through the bastion
+2021/04/11 13:18:30 loading Consul TLS data
+2021/04/11 13:18:30 tunneling a new connection for somad to the server with ssh through the bastion
+2021/04/11 13:18:30 loading Nomad TLS data
+2021/04/11 13:18:30 starting Consul local listener on localhost:8500
+2021/04/11 13:18:30 starting Nomad local listener on localhost:4646
 ...
 ```
 

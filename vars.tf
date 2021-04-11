@@ -152,6 +152,13 @@ variable "bucket_location" {
   default = "US"
 }
 
+variable "nomad_load_balancer_enabled" {
+  type        = bool
+  default     = true
+  description = "Start a public load balancer to be used to handle ingress Nomad traffic to server nodes within the cluster."
+}
+
+
 variable "dns_enabled" {
   type    = bool
   default = false
@@ -175,8 +182,14 @@ variable "grafana_load_balancer_enabled" {
   description = "Start a public load balancer to be used to handle ingress Grafana traffic to client nodes within the cluster."
 }
 
-variable "nomad_load_balancer_enabled" {
-  type        = bool
-  default     = true
-  description = "Start a public load balancer to be used to handle ingress Nomad traffic to server nodes within the cluster."
+variable "grafana_dns_managed_zone_dns_name" {
+  // example: grafana.example.com
+  type    = string
+  default = ""
+}
+
+variable "grafana_dns_record_set_name_prefix" {
+  // example: public.$dns_managed_zone_dns_name
+  type    = string
+  default = "public"
 }
