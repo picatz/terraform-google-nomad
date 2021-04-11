@@ -1,8 +1,8 @@
 SERVERS ?= 3
 CLIENTS ?= 5
-CLIENT_MACHINE_TYPE ?= g1-small
-SERVER_MACHINE_TYPE ?= g1-small
-DNS_ENABLED ?= true
+CLIENT_MACHINE_TYPE ?= n1-standard-2
+SERVER_MACHINE_TYPE ?= n1-standard-1
+DNS_ENABLED ?= false
 
 .PHONY: help
 help: ## Print this help menu
