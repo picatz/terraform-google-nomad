@@ -12,7 +12,11 @@ resource "tls_cert_request" "nomad-server" {
     "127.0.0.1",
   ]
 
-  dns_names = [
+  dns_names = var.dns_enabled ? [
+    "localhost",
+    "server.global.nomad",
+    trimsuffix(google_dns_record_set.public.0.name, "."),
+  ] : [
     "localhost",
     "server.global.nomad",
   ]

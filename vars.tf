@@ -35,7 +35,7 @@ variable "server_instances" {
 
 variable "server_machine_type" {
   type        = string
-  default     = "g1-small"
+  default     = "n1-standard-1"
   description = "The VM machine type for Nomad servers."
 }
 
@@ -150,4 +150,21 @@ variable "consul_acls_default_policy" {
 variable "bucket_location" {
   type    = string
   default = "US"
-} 
+}
+
+variable "dns_enabled" {
+  type    = bool
+  default = false
+}
+
+variable "dns_managed_zone_dns_name" {
+  // example: nomad.example.com
+  type    = string
+  default = ""
+}
+
+variable "dns_record_set_name_prefix" {
+  // example: public.$dns_managed_zone_dns_name
+  type    = string
+  default = "public"
+}

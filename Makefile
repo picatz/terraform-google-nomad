@@ -1,3 +1,9 @@
+SERVERS ?= 3
+CLIENTS ?= 5
+CLIENT_MACHINE_TYPE ?= g1-small
+SERVER_MACHINE_TYPE ?= g1-small
+DNS_ENABLED ?= true
+
 .PHONY: help
 help: ## Print this help menu
 help:
@@ -6,6 +12,7 @@ help:
 	@echo Required environment variables:
 	@echo "* GOOGLE_PROJECT (${GOOGLE_PROJECT})"
 	@echo "* GOOGLE_APPLICATION_CREDENTIALS (${GOOGLE_APPLICATION_CREDENTIALS})"
+	@echo "* PUBLIC_DOMAIN (${PUBLIC_DOMAIN})"
 	@echo
 	@echo 'Usage: make <target>'
 	@echo
@@ -31,8 +38,12 @@ terraform/validate: ## Validates the Terraform config
 terraform/plan: ## Runs the Terraform plan command
 	terraform plan \
 		-var="project=${GOOGLE_PROJECT}" \
-		-var="server_instances=3" \
-		-var="client_instances=5" \
+		-var="server_instances=$(SERVERS)" \
+		-var="client_instances=$(CLIENTS)" \
+		-var="client_machine_type=$(CLIENT_MACHINE_TYPE)" \
+		-var="server_machine_type=$(SERVER_MACHINE_TYPE)" \
+		-var="dns_enabled=$(DNS_ENABLED)" \
+		-var="dns_managed_zone_dns_name=${PUBLIC_DOMAIN}" \
 		-var="credentials=${GOOGLE_APPLICATION_CREDENTIALS}"
 
 .PHONY: terraform/wait
@@ -52,8 +63,12 @@ terraform/apply: ## Runs and auto-apporves the Terraform apply command
 	terraform apply \
 		-auto-approve \
 		-var="project=${GOOGLE_PROJECT}" \
-		-var="server_instances=3" \
-		-var="client_instances=5" \
+		-var="server_instances=$(SERVERS)" \
+		-var="client_instances=$(CLIENTS)" \
+		-var="client_machine_type=$(CLIENT_MACHINE_TYPE)" \
+		-var="server_machine_type=$(SERVER_MACHINE_TYPE)" \
+		-var="dns_enabled=$(DNS_ENABLED)" \
+		-var="dns_managed_zone_dns_name=${PUBLIC_DOMAIN}" \
 		-var="credentials=${GOOGLE_APPLICATION_CREDENTIALS}"
 
 .PHONY: terraform/shutdown
@@ -61,8 +76,12 @@ terraform/shutdown: ## Turns off all VM instances
 	terraform apply \
 		-auto-approve \
 		-var="project=${GOOGLE_PROJECT}" \
-		-var="server_instances=0" \
-		-var="client_instances=0" \
+		-var="server_instances=$(SERVERS)" \
+		-var="client_instances=$(CLIENTS)" \
+		-var="client_machine_type=$(CLIENT_MACHINE_TYPE)" \
+		-var="server_machine_type=$(SERVER_MACHINE_TYPE)" \
+		-var="dns_enabled=$(DNS_ENABLED)" \
+		-var="dns_managed_zone_dns_name=${PUBLIC_DOMAIN}" \
 		-var="credentials=${GOOGLE_APPLICATION_CREDENTIALS}"
 
 .PHONY: terraform/restart
@@ -73,8 +92,12 @@ terraform/destroy: ## Runs and auto-apporves the Terraform destroy command
 	terraform destroy \
 		-auto-approve \
 		-var="project=${GOOGLE_PROJECT}" \
-		-var="server_instances=3" \
-		-var="client_instances=5" \
+		-var="server_instances=$(SERVERS)" \
+		-var="client_instances=$(CLIENTS)" \
+		-var="client_machine_type=$(CLIENT_MACHINE_TYPE)" \
+		-var="server_machine_type=$(SERVER_MACHINE_TYPE)" \
+		-var="dns_enabled=$(DNS_ENABLED)" \
+		-var="dns_managed_zone_dns_name=${PUBLIC_DOMAIN}" \
 		-var="credentials=${GOOGLE_APPLICATION_CREDENTIALS}"
 
 .PHONY: terraform/validate/example
