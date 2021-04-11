@@ -41,6 +41,12 @@ variable "consul_cli_key" {
   default = "consul-cli-key.pem"
 }
 
+// Consul services are registered as 8300, and only for servers by default. This makes it
+// not easy/possible(?) to use Prometheus Consul SD to scrape Consul.
+variable "consul_targets" {
+  type = list(string)
+}
+
 job "metrics" {
     datacenters = var.datacenters
 
@@ -115,6 +121,21 @@ scrape_configs:
         key_file: '/local/consul-cli-key.pem'
         insecure_skip_verify: false
       services: ['fuzz']
+  - job_name: 'consul_metrics'
+    scrape_interval: 5s
+    metrics_path: /v1/agent/metrics
+    scheme: https
+    tls_config:
+      ca_file: '/local/consul-ca.pem'
+      cert_file: '/local/consul-cli-cert.pem'
+      key_file: '/local/consul-cli-key.pem'
+      insecure_skip_verify: true
+    params:
+      format: ['prometheus']
+    authorization:
+      credentials: '${var.consul_acl_token}'
+    static_configs:
+    - targets: ${jsonencode(var.consul_targets)}
 EOH
             }
 
@@ -174,10 +195,6 @@ EOH
     group "grafana" {
         network {
             mode ="bridge"
-            port "grafana" {
-                static = 3000
-                to     = 3000
-            }
         }
 
         service {
@@ -190,6 +207,10 @@ EOH
                         upstreams {
                             destination_name = "prometheus"
                             local_bind_port  = 9090
+                        }
+                        upstreams {
+                            destination_name = "loki-http"
+                            local_bind_port  = 3100
                         }
                     }
                 }

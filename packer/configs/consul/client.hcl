@@ -47,3 +47,8 @@ key_file = "/consul/config/client-key.pem"
 encrypt = "{GOSSIP-KEY}"
 encrypt_verify_incoming = true
 encrypt_verify_outgoing = true
+
+telemetry {
+  prometheus_retention_time  = "24h"
+  disable_hostname           = true
+}

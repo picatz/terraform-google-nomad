@@ -1,6 +1,6 @@
 datacenter = "dc1"
 log_level = "DEBUG"
-data_dir = "/tmp/nomad-agent"
+data_dir = "/nomad/data"
 
 client {
   enabled = true
@@ -21,6 +21,10 @@ client {
 
   meta {
     "runtime" = "docker"
+  }
+
+  host_volume "nomad" {
+    path = "/nomad/data"
   }
 }
 
@@ -56,4 +60,4 @@ telemetry {
   prometheus_metrics         = true
   publish_allocation_metrics = true
   publish_node_metrics       = true
-} 
+}

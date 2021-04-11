@@ -220,14 +220,29 @@ func main() {
 			errorAndExit(errors.New("failed to load Nomad ca cert from PEM"))
 		}
 
-		// TODO(kent): implement full custom mTLS verification.
+		tlsVerifyOpts := x509.VerifyOptions{
+			Roots:   pool,
+			DNSName: "server.global.nomad",
+		}
+
 		tlsClientConfig := &tls.Config{
 			Certificates:       []tls.Certificate{nomadCert},
-			ClientCAs:          pool,
-			ClientAuth:         tls.RequireAndVerifyClientCert,
 			MinVersion:         tls.VersionTLS12,
-			InsecureSkipVerify: true,
-			// ServerName:      "localhost"
+			InsecureSkipVerify: true, // required for custom mTLS certificate verification
+			VerifyPeerCertificate: func(rawCerts [][]byte, verifiedChains [][]*x509.Certificate) error {
+				if len(rawCerts) != 1 {
+					return fmt.Errorf("custom verification expected 1 cert duirng peer verification from server, found %d", len(rawCerts))
+				}
+				peerCert, err := x509.ParseCertificate(rawCerts[0])
+				if err != nil {
+					return fmt.Errorf("failed to parse peer certificate: %w", err)
+				}
+				_, err = peerCert.Verify(tlsVerifyOpts)
+				if err != nil {
+					return fmt.Errorf("failed to verify peer certificate: %w", err)
+				}
+				return nil
+			},
 		}
 
 		log.Println("starting Nomad local listener on localhost:4646")
@@ -287,14 +302,29 @@ func main() {
 			errorAndExit(errors.New("failed to load Consul CA cert from PEM"))
 		}
 
-		// TODO(kent): implement full custom mTLS verification.
+		tlsVerifyOpts := x509.VerifyOptions{
+			Roots:   pool,
+			DNSName: "server.dc1.consul",
+		}
+
 		tlsClientConfig := &tls.Config{
 			Certificates:       []tls.Certificate{consulCert},
-			ClientCAs:          pool,
-			ClientAuth:         tls.RequireAndVerifyClientCert,
 			MinVersion:         tls.VersionTLS12,
-			InsecureSkipVerify: true,
-			// ServerName:      "localhost"
+			InsecureSkipVerify: true, // required for custom mTLS certificate verification
+			VerifyPeerCertificate: func(rawCerts [][]byte, verifiedChains [][]*x509.Certificate) error {
+				if len(rawCerts) != 1 {
+					return fmt.Errorf("custom verification expected 1 cert duirng peer verification from server, found %d", len(rawCerts))
+				}
+				peerCert, err := x509.ParseCertificate(rawCerts[0])
+				if err != nil {
+					return fmt.Errorf("failed to parse peer certificate: %w", err)
+				}
+				_, err = peerCert.Verify(tlsVerifyOpts)
+				if err != nil {
+					return fmt.Errorf("failed to verify peer certificate: %w", err)
+				}
+				return nil
+			},
 		}
 
 		log.Println("starting Consul local listener on localhost:8500")

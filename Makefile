@@ -152,15 +152,27 @@ ssh/proxy/count-dashboard: ## Forwards the example dashboard service port to loc
 gcloud/delete-metadata: ## Deletes all metadata entries from client VMs
 	gcloud compute instances list | grep "client-" | awk '{print $1 " " $2}' | xargs -n2 bash -c 'gcloud compute instances remove-metadata $1 --zone=$2 --all' bash
 
-.PHONY: consul/metrics/token
-consul/metrics/token: ## Creates a Consul token for metrics
-	@consul acl policy create -name "resolve-any" -rules 'service_prefix "" { policy = "read" } node_prefix "" { policy = "read" }'
-	@consul acl role create -name "metrics" -policy-name "resolve-any"
-	@consul acl token create -role-name "metrics"
+.PHONY: consul/metrics/acls
+consul/metrics/acls: ## Create a Consul policy, role, and token to use with prometheus
+	@echo "📑 Creating Consul ACL Policy"
+	@consul acl policy create -name "resolve-any-upstream" -rules 'service_prefix "" { policy = "read" } node_prefix "" { policy = "read" } agent_prefix "" { policy = "read" }' -token=$(shell terraform output consul_master_token)
+	@echo "🎭 Creating Consul ACL Role"
+	@consul acl role create -name "metrics" -policy-name  "resolve-any-upstream" -token=$(shell terraform output consul_master_token)
+	@echo "🔑 Creating Consul ACL Token to Use for Prometheus Consul Service Discovery"
+	@consul acl token create -role-name "metrics" -token=$(shell terraform output consul_master_token)
 
 .PHONY: nomad/metrics
 nomad/metrics: ## Runs a Prometheus and Grafana stack on Nomad
-	@nomad run -var="consul_acl_token=$(CONSUL_METRICS_TOKEN)" -var="consul_lb_ip=$(shell terraform output load_balancer_ip)" jobs/metrics/metrics.hcl
+	@nomad run -var='consul_targets=[$(shell terraform output -json | jq -r '(.server_internal_ips.value + .client_internal_ips.value) | map(.+":8501") |  @csv')]' -var="consul_acl_token=$(consul_acl_token)" -var="consul_lb_ip=$(shell terraform output load_balancer_ip)" jobs/metrics/metrics.hcl
+
+.PHONY: nomad/logs
+nomad/logs: ## Runs a Loki and Promtail jobs on Nomad
+	@nomad run jobs/logs/loki.hcl
+	@nomad run jobs/logs/promtail.hcl
+
+.PHONY: nomad/ingress
+nomad/ingress: ## Runs a Traefik proxy to handle ingress traffic across the cluster
+	@nomad run jobs/ingress/traefik.hcl
 
 .PHONY: nomad/bootstrap
 nomad/bootstrap: ## Bootstraps the ACL system on the Nomad cluster
