@@ -10,7 +10,8 @@ job "cockroach" {
 
   update {
     max_parallel     = 1
-    stagger          = "12s"
+    stagger          = "30s"
+    min_healthy_time = "30s"
     healthy_deadline = "3m"
   }
 
@@ -21,26 +22,55 @@ job "cockroach" {
   group "cockroach-1" {
     network {
       mode = "bridge"
+      port "metrics" {}
     }
 
     service {
-        name = "cockroach-1"
-        port = "26258"
+      name = "cockroach-metrics"
+      port = "metrics"
+      connect {
+				sidecar_service {
+					proxy {
+						expose {
+							path {
+								path = "/_status/vars"
+								protocol = "http"
+								listener_port = "metrics"
+								local_path_port = 8080
+							}
+						}
+					}
+				}
+			}
+    }
 
-        connect {
-            sidecar_service {
-                proxy {
-                    upstreams {
-                        destination_name = "cockroach-2"
-                        local_bind_port  = 26259
-                    }
-                    upstreams {
-                        destination_name = "cockroach-3"
-                        local_bind_port  = 26260
-                    }
-                }
+    service {
+      name = "cockroach"
+      port = "26258"
+
+      connect {
+        sidecar_service {}
+      }
+    }
+
+    service {
+      name = "cockroach-1"
+      port = "26258"
+
+      connect {
+        sidecar_service {
+          proxy {
+            upstreams {
+              destination_name = "cockroach-2"
+              local_bind_port  = 26259
             }
+            upstreams {
+              destination_name = "cockroach-3"
+              local_bind_port  = 26260
+            }
+          }
         }
+      }
     }
 
     ephemeral_disk {
@@ -58,8 +88,9 @@ job "cockroach" {
           "--insecure",
           "--advertise-addr=localhost:26258",
           "--listen-addr=localhost:26258",
+          "--http-addr=0.0.0.0:8080",
           "--join=localhost:26258,localhost:26259,localhost:26260",
-          "--logtostderr=INFO",
+          "--logtostderr=WARNING",
         ]
       }
     }
@@ -67,27 +98,56 @@ job "cockroach" {
 
   group "cockroach-2" {
     network {
-        mode = "bridge"
+      mode = "bridge"
+      port "metrics" {}
     }
 
     service {
-        name = "cockroach-2"
-        port = "26259"
+      name = "cockroach-metrics"
+      port = "metrics"
+      connect {
+				sidecar_service {
+					proxy {
+						expose {
+							path {
+								path = "/_status/vars"
+								protocol = "http"
+								listener_port = "metrics"
+								local_path_port = 8080
+							}
+						}
+					}
+				}
+			}
+    }
 
-        connect {
-            sidecar_service {
-                proxy {
-                    upstreams {
-                        destination_name = "cockroach-1"
-                        local_bind_port  = 26258
-                    }
-                    upstreams {
-                        destination_name = "cockroach-3"
-                        local_bind_port  = 26260
-                    }
-                }
+    service {
+      name = "cockroach"
+      port = "26259"
+
+      connect {
+        sidecar_service {}
+      }
+    }
+
+    service {
+      name = "cockroach-2"
+      port = "26259"
+
+      connect {
+        sidecar_service {
+          proxy {
+            upstreams {
+              destination_name = "cockroach-1"
+              local_bind_port  = 26258
             }
+            upstreams {
+              destination_name = "cockroach-3"
+              local_bind_port  = 26260
+            }
+          }
         }
+      }
     }
 
     ephemeral_disk {
@@ -104,9 +164,10 @@ job "cockroach" {
           "start",
           "--insecure",
           "--advertise-addr=localhost:26259",
+          "--http-addr=0.0.0.0:8080",
           "--listen-addr=localhost:26259",
           "--join=localhost:26258,localhost:26259,localhost:26260",
-          "--logtostderr=INFO",
+          "--logtostderr=WARNING",
         ]
       }
     }
@@ -114,27 +175,56 @@ job "cockroach" {
 
   group "cockroach-3" {
     network {
-        mode = "bridge"
+      mode = "bridge"
+      port "metrics" {}
     }
 
     service {
-        name = "cockroach-3"
+      name = "cockroach-metrics"
+      port = "metrics"
+      connect {
+				sidecar_service {
+					proxy {
+						expose {
+							path {
+								path = "/_status/vars"
+								protocol = "http"
+								listener_port = "metrics"
+								local_path_port = 8080
+							}
+						}
+					}
+				}
+			}
+    }
+
+    service {
+        name = "cockroach"
         port = "26260"
 
         connect {
-            sidecar_service {
-                proxy {
-                    upstreams {
-                        destination_name = "cockroach-1"
-                        local_bind_port  = 26258
-                    }
-                    upstreams {
-                        destination_name = "cockroach-2"
-                        local_bind_port  = 26259
-                    }
-                }
-            }
+          sidecar_service {}
         }
+    }
+
+    service {
+      name = "cockroach-3"
+      port = "26260"
+
+      connect {
+        sidecar_service {
+          proxy {
+            upstreams {
+              destination_name = "cockroach-1"
+              local_bind_port  = 26258
+            }
+            upstreams {
+              destination_name = "cockroach-2"
+              local_bind_port  = 26259
+            }
+          }
+        }
+      }
     }
 
     ephemeral_disk {
@@ -151,9 +241,10 @@ job "cockroach" {
           "start",
           "--insecure",
           "--advertise-addr=localhost:26260",
+          "--http-addr=0.0.0.0:8080",
           "--listen-addr=localhost:26260",
           "--join=localhost:26258,localhost:26259,localhost:26260",
-          "--logtostderr=INFO",
+          "--logtostderr=WARNING",
         ]
       }
     }
