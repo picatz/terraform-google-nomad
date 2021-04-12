@@ -89,7 +89,7 @@ job "cockroach" {
           "--listen-addr=localhost:26258",
           "--http-addr=0.0.0.0:8080",
           "--join=localhost:26258,localhost:26259,localhost:26260",
-          "--logtostderr=INFO",
+          "--logtostderr=WARNING",
         ]
       }
     }
@@ -166,7 +166,7 @@ job "cockroach" {
           "--http-addr=0.0.0.0:8080",
           "--listen-addr=localhost:26259",
           "--join=localhost:26258,localhost:26259,localhost:26260",
-          "--logtostderr=INFO",
+          "--logtostderr=WARNING",
         ]
       }
     }
@@ -243,7 +243,7 @@ job "cockroach" {
           "--http-addr=0.0.0.0:8080",
           "--listen-addr=localhost:26260",
           "--join=localhost:26258,localhost:26259,localhost:26260",
-          "--logtostderr=INFO",
+          "--logtostderr=WARNING",
         ]
       }
     }
