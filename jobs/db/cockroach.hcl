@@ -10,7 +10,8 @@ job "cockroach" {
 
   update {
     max_parallel     = 1
-    stagger          = "12s"
+    stagger          = "30s"
+    min_healthy_time = "30s"
     healthy_deadline = "3m"
   }
 
