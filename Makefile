@@ -188,13 +188,19 @@ nomad/ingress: ## Runs a Traefik proxy to handle ingress traffic across the clus
 nomad/cockroachdb: ## Runs a Cockroach DB cluster
 	@nomad run jobs/db/cockroach.hcl
 	@sleep 10s
+	@echo "initializing database"
 	@nomad alloc exec -i -t=false -task cockroach $(shell nomad status cockroach | grep "running" | grep "cockroach-1" | head -n 1 | awk '{print $$1}') cockroach init --insecure --host=localhost:26258
 	@sleep 10s
+	@echo "listing nodes"
 	@nomad alloc exec -i -t=false -task cockroach $(shell nomad status cockroach | grep "running" | grep "cockroach-1" | head -n 1 | awk '{print $$1}') cockroach node ls --insecure --host=localhost:26258
 
-.PHONY: cockroachdb
+.PHONY: nomad/cockroachdb/nodes
+nomad/cockroachdb/nodes: ## List all Cockroach DB nodes
+	@nomad alloc exec -i -t=false -task cockroach $(shell nomad status cockroach | grep "running" | grep "cockroach-1" | head -n 1 | awk '{print $$1}') cockroach node ls --insecure --host=localhost:26258
+
+.PHONY: nomad/cockroachdb/sql
 nomad/cockroachdb/sql: ## Start an interactive Cockroach DB SQL shell
-	@nomad alloc exec -i -t=true -task cockroach $(nomad status cockroach | grep "running" | grep "cockroach-1" | head -n 1 | awk '{print $1}') cockroach sql --insecure --host=localhost:26258
+	@nomad alloc exec -i -t=true -task cockroach $(shell nomad status cockroach | grep "running" | grep "cockroach-1" | head -n 1 | awk '{print $$1}') cockroach sql --insecure --host=localhost:26258
 
 .PHONY: nomad/bootstrap
 nomad/bootstrap: ## Bootstraps the ACL system on the Nomad cluster

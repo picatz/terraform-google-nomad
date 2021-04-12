@@ -121,6 +121,19 @@ scrape_configs:
         key_file: '/local/consul-cli-key.pem'
         insecure_skip_verify: false
       services: ['fuzz']
+  - job_name: 'cockroach_metrics'
+    metrics_path: /_status/vars
+    consul_sd_configs:
+    - server: '${var.consul_lb_ip}:8501'
+      token: '${var.consul_acl_token}'
+      datacenter: 'dc1'
+      scheme: 'https'
+      tls_config:
+        ca_file: '/local/consul-ca.pem'
+        cert_file: '/local/consul-cli-cert.pem'
+        key_file: '/local/consul-cli-key.pem'
+        insecure_skip_verify: false
+      services: ['cockroach-metrics']
   - job_name: 'consul_metrics'
     scrape_interval: 5s
     metrics_path: /v1/agent/metrics
