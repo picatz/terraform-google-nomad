@@ -27,6 +27,7 @@ jobs:
         git remote set-url origin "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY"
         # update
         sed -i "s/$PREVIOUS_MODULE_VERSION/$LATEST_MODULE_VERSION/g" steps.md
+        git add .
         git commit -m "tutorial-update-bot: update module version from $PREVIOUS_MODULE_VERSION to $LATEST_MODULE_VERSION" || exit 1
         git status
         git push origin HEAD:master
