@@ -3,7 +3,7 @@
 set -ex
 
 # Latest version of Nomad
-NOMAD_VERSION=1.0.4
+NOMAD_VERSION=1.0.5
 
 # Download Latest Version of Nomad
 mkdir -p /tmp/download-nomad
