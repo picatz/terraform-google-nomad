@@ -8,7 +8,7 @@ variable "credentials" {
 
 module "nomad" {
   source           = "picatz/nomad/google"
-  version          = "1.1.5"
+  version          = "2.5.0"
   project          = var.project
   credentials      = var.credentials
   bastion_enabled  = false
