@@ -203,7 +203,7 @@ The `example` directory contains an simple Terraform configuration using the [`p
 >
 > module "nomad" {
 >   source           = "picatz/nomad/google"
->   version          = "2.4.2"
+>   version          = "2.5.0"
 >   project          = var.project
 >   credentials      = var.credentials
 >   bastion_enabled  = false
