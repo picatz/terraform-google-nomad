@@ -90,3 +90,15 @@ systemctl restart docker
 # Start and enable Nomad
 systemctl start nomad
 systemctl enable nomad
+
+# Block access to the metadata endpoint in three easy steps
+# https://github.com/picatz/terraform-google-nomad/issues/19
+#
+# Note: this also blocks DNS resolution within Nomad allocations (no apt install in containers)
+#
+# 1. Create NOAMD-ADMIN chain
+sudo iptables --new NOMAD-ADMIN
+# 2. Add default rule
+sudo iptables --append NOMAD-ADMIN --destination 172.26.64.0/20  --jump ACCEPT
+# 3. Block access to metadata endpoint
+sudo iptables --append NOMAD-ADMIN --destination 169.254.169.254/32 --jump DROP
