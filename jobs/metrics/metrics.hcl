@@ -41,8 +41,11 @@ variable "consul_cli_key" {
   default = "consul-cli-key.pem"
 }
 
-// Consul services are registered as 8300, and only for servers by default. This makes it
-// not easy/possible(?) to use Prometheus Consul SD to scrape Consul.
+variable "promscale" {
+  type    = bool
+  default = false
+}
+
 variable "consul_targets" {
   type = list(string)
 }
@@ -56,12 +59,23 @@ job "metrics" {
         }
 
         service {
-            name = "prometheus"
-            port = "9090"
+          name = "prometheus"
+          port = "9090"
 
-            connect {
-                sidecar_service {}
+          connect {
+            sidecar_service {
+              proxy {
+                dynamic "upstreams" {
+                  for_each = var.promscale ? [1] : []
+
+                  content {
+                    destination_name = "promscale"
+                    local_bind_port  = "9201"
+                  }
+                }
+              }
             }
+          }
         }
 
         ephemeral_disk {
@@ -149,6 +163,13 @@ scrape_configs:
       credentials: '${var.consul_acl_token}'
     static_configs:
     - targets: ${jsonencode(var.consul_targets)}
+{{ if eq ${var.promscale} true }}
+remote_write:
+  - url: "http://127.0.0.1:9201/write"
+remote_read:
+  - url: "http://127.0.0.1:9201/read"
+    read_recent: true
+{{ end }}
 EOH
             }
 
@@ -224,6 +245,14 @@ EOH
                         upstreams {
                             destination_name = "loki-http"
                             local_bind_port  = 3100
+                        }
+                        dynamic "upstreams" {
+                          for_each = var.promscale ? [1] : []
+
+                          content {
+                            destination_name = "promscale"
+                            local_bind_port  = "9201"
+                          }
                         }
                     }
                 }
