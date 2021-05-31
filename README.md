@@ -88,8 +88,7 @@ Logs can also be collected within the cluster using Promtail and Loki, then visu
 ```console
 $ DNS_ENABLED=true PUBLIC_DOMAIN="nomad.your-domain.com" make terraform/apply
 ...
-$ export NOMAD_TOKEN=...
-$ export CONSUL_HTTP_TOKEN=...
+$ export CONSUL_HTTP_TOKEN=$(terraform output -json | jq -r .consul_master_token.value)
 $ make consul/metrics/acls
 ...
 🔑 Creating Consul ACL Token to Use for Prometheus Consul Service Discovery
@@ -105,6 +104,7 @@ $ consul_acl_token=2a1c7926-b6e3-566e-ddf5-b19279fa134e make nomad/metrics
 $ make nomad/logs
 $ make nomad/ingress
 $ GRAFANA_PUBLIC_DOMAIN="grafana.your-domain.com" GRAFANA_LOAD_BALANCER_ENABLED=true DNS_ENABLED=true PUBLIC_DOMAIN="nomad.your-domain.com" make terraform/apply
+$ open http://public.grafana.your-domain.com:3000/login
 ```
 
 ## Bootstrap ACL Token

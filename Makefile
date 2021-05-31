@@ -6,6 +6,7 @@ DNS_ENABLED ?= false
 PUBLIC_DOMAIN ?= ""
 GRAFANA_LOAD_BALANCER_ENABLED ?= false
 GRAFANA_PUBLIC_DOMAIN ?= ""
+PROMSCALE_ENABLED ?= false
 
 .PHONY: help
 help: ## Print this help menu
@@ -173,7 +174,7 @@ consul/metrics/acls: ## Create a Consul policy, role, and token to use with prom
 
 .PHONY: nomad/metrics
 nomad/metrics: ## Runs a Prometheus and Grafana stack on Nomad
-	@nomad run -var='consul_targets=[$(shell terraform output -json | jq -r '(.server_internal_ips.value + .client_internal_ips.value) | map(.+":8501") |  @csv')]' -var="consul_acl_token=$(consul_acl_token)" -var="consul_lb_ip=$(shell terraform output load_balancer_ip)" jobs/metrics/metrics.hcl
+	@nomad run -var='promscale=$(PROMSCALE_ENABLED)' -var='consul_targets=[$(shell terraform output -json | jq -r '(.server_internal_ips.value + .client_internal_ips.value) | map(.+":8501") |  @csv')]' -var="consul_acl_token=$(consul_acl_token)" -var="consul_lb_ip=$(shell terraform output load_balancer_ip)" jobs/metrics/metrics.hcl
 
 .PHONY: nomad/logs
 nomad/logs: ## Runs a Loki and Promtail jobs on Nomad
