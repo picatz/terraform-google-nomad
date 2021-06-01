@@ -5,6 +5,7 @@ module "bastion" {
   machine_type       = var.bastion_machine_type
   image              = format("%s/bastion", var.project)
   subnetwork         = module.network.subnetwork
+  region             = var.region
   zone               = var.zone
   tags               = ["bastion"]
   ssh_user           = var.ssh_user
@@ -21,6 +22,7 @@ module "server" {
   machine_type       = var.server_machine_type
   image              = format("%s/server", var.project)
   subnetwork         = module.network.subnetwork
+  region             = var.region
   zone               = var.zone
   tags               = ["server"]
   ssh_user           = var.ssh_user
@@ -38,6 +40,7 @@ module "client" {
   machine_type       = var.client_machine_type
   image              = format("%s/client", var.project)
   subnetwork         = module.network.subnetwork
+  region             = var.region
   zone               = var.zone
   tags               = ["client"]
   ssh_user           = var.ssh_user

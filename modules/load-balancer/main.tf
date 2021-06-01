@@ -19,7 +19,7 @@ resource "google_compute_forwarding_rule" "default" {
   name                  = var.name
   load_balancing_scheme = "EXTERNAL"
   network_tier          = "STANDARD"
-  region                = "us-east1"
+  region                = var.region
   port_range            = join("-", var.ports)
 }
 
