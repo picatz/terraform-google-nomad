@@ -1,6 +1,6 @@
 # Nomad Cluster
 
-[![Nomad Version](https://img.shields.io/badge/Nomad%20Version-1.1.0-00bc7f.svg)](https://www.nomadproject.io/downloads) [![Consul Version](https://img.shields.io/badge/Consul%20Version-1.9.5-ca2171.svg)](https://www.consul.io/downloads)
+[![Nomad Version](https://img.shields.io/badge/Nomad%20Version-1.1.0-00bc7f.svg)](https://www.nomadproject.io/downloads) [![Consul Version](https://img.shields.io/badge/Consul%20Version-1.9.6-ca2171.svg)](https://www.consul.io/downloads)
 
 [Terraform](https://www.terraform.io/) Module for [Nomad](https://nomadproject.io/) clusters with [Consul](https://www.consul.io/) on [GCP](https://cloud.google.com/).
 
