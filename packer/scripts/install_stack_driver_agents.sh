@@ -13,3 +13,10 @@ sudo apt-get update
 sudo apt-get install -y google-fluentd
 sudo apt-get install -y google-fluentd-catch-all-config-structured
 sudo systemctl enable google-fluentd
+
+# OLD WAY:
+# curl -sSfL https://dl.google.com/cloudagents/install-monitoring-agent.sh | sudo bash
+
+# NEW WAY:
+curl -sSO https://dl.google.com/cloudagents/add-monitoring-agent-repo.sh
+sudo bash add-monitoring-agent-repo.sh --also-install
