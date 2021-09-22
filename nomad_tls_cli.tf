@@ -7,13 +7,13 @@ resource "tls_cert_request" "nomad-cli" {
   key_algorithm   = tls_private_key.nomad-cli.algorithm
   private_key_pem = tls_private_key.nomad-cli.private_key_pem
 
-  ip_addresses = [
-    module.load_balancer.external_ip,
-    "127.0.0.1",
-  ]
+  // ip_addresses = [
+  //   module.load_balancer.external_ip,
+  //   "127.0.0.1",
+  // ]
 
   subject {
-    common_name  = "client.global.nomad"
+    common_name  = "cli.global.nomad"
     organization = var.tls_organization
   }
 }

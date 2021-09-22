@@ -31,7 +31,7 @@ resource "tls_locally_signed_cert" "consul-client" {
   ca_private_key_pem = tls_private_key.consul-ca.private_key_pem
   ca_cert_pem        = tls_self_signed_cert.consul-ca.cert_pem
 
-  validity_period_hours = 87600
+  validity_period_hours = var.tls_validity_period_hours
 
   allowed_uses = [
     "server_auth",
