@@ -7,6 +7,7 @@ PUBLIC_DOMAIN ?= ""
 GRAFANA_LOAD_BALANCER_ENABLED ?= false
 GRAFANA_PUBLIC_DOMAIN ?= ""
 PROMSCALE_ENABLED ?= false
+SSH_BASTION_ENABLED ?= false
 
 .PHONY: help
 help: ## Print this help menu
@@ -41,6 +42,7 @@ terraform/validate: ## Validates the Terraform config
 terraform/plan: ## Runs the Terraform plan command
 	@terraform plan \
 		-var="project=${GOOGLE_PROJECT}" \
+		-var="bastion_enabled=$(SSH_BASTION_ENABLED)" \
 		-var="server_instances=$(SERVERS)" \
 		-var="client_instances=$(CLIENTS)" \
 		-var="client_machine_type=$(CLIENT_MACHINE_TYPE)" \
@@ -68,6 +70,7 @@ terraform/apply: ## Runs and auto-apporves the Terraform apply command
 	@terraform apply \
 		-auto-approve \
 		-var="project=${GOOGLE_PROJECT}" \
+		-var="bastion_enabled=$(SSH_BASTION_ENABLED)" \
 		-var="server_instances=$(SERVERS)" \
 		-var="client_instances=$(CLIENTS)" \
 		-var="client_machine_type=$(CLIENT_MACHINE_TYPE)" \
@@ -83,6 +86,7 @@ terraform/shutdown: ## Turns off all VM instances
 	@terraform apply \
 		-auto-approve \
 		-var="project=${GOOGLE_PROJECT}" \
+		-var="bastion_enabled=$(SSH_BASTION_ENABLED)" \
 		-var="server_instances=0" \
 		-var="client_instances=0" \
 		-var="client_machine_type=$(CLIENT_MACHINE_TYPE)" \
@@ -101,6 +105,7 @@ terraform/destroy: ## Runs and auto-apporves the Terraform destroy command
 	@terraform destroy \
 		-auto-approve \
 		-var="project=${GOOGLE_PROJECT}" \
+		-var="bastion_enabled=$(SSH_BASTION_ENABLED)" \
 		-var="server_instances=$(SERVERS)" \
 		-var="client_instances=$(CLIENTS)" \
 		-var="client_machine_type=$(CLIENT_MACHINE_TYPE)" \
@@ -216,3 +221,11 @@ mtls/install/macos/keychain: ## Install generated CA and client certificate in t
 	@openssl pkcs12 -export -in nomad-cli-cert.pem -inkey nomad-cli-key.pem -out nomad-cli.p12 -CAfile nomad-ca.pem -name "Nomad CLI"
 	@security import nomad-cli.p12 -k $(shell realpath ~/Library/Keychains/nomad-db)
 	@sudo security add-trusted-cert -d -r trustRoot -k "/Library/Keychains/System.keychain" nomad-ca.pem
+
+.PHONY: mtls/proxy/nomad
+mtls/proxy/nomad: # Start mTLS local proxy for Nomad using github.com/picatz/mtls-proxy
+	@mtls-proxy -listener-addr="127.0.0.1:4646" -target-addr="$(shell terraform output -raw load_balancer_ip):4646" -ca-file="nomad-ca.pem" -cert-file="nomad-cli-cert.pem" -key-file="nomad-cli-key.pem"  -verify-dns-name="server.global.nomad"
+
+.PHONY: mtls/proxy/consul
+mtls/proxy/consul: # Start mTLS local proxy for Consul using github.com/picatz/mtls-proxy
+	@mtls-proxy -listener-addr="127.0.0.1:8500" -target-addr="$(shell terraform output -raw load_balancer_ip):8501" -ca-file="consul-ca.pem" -cert-file="consul-cli-cert.pem" -key-file="consul-cli-key.pem"  -verify-dns-name="server.dc1.consul"
