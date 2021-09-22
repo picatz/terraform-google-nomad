@@ -206,3 +206,13 @@ nomad/cockroachdb/sql: ## Start an interactive Cockroach DB SQL shell
 .PHONY: nomad/bootstrap
 nomad/bootstrap: ## Bootstraps the ACL system on the Nomad cluster
 	@nomad acl bootstrap
+
+.PHONY: mtls/init/macos/keychain
+mtls/init/macos/keychain: ## Create a new macOS keychain for Nomad
+	@security create-keychain -P nomad
+
+.PHONY: mtls/install/macos/keychain
+mtls/install/macos/keychain: ## Install generated CA and client certificate in the macOS keychain
+	@openssl pkcs12 -export -in nomad-cli-cert.pem -inkey nomad-cli-key.pem -out nomad-cli.p12 -CAfile nomad-ca.pem -name "Nomad CLI"
+	@security import nomad-cli.p12 -k $(shell realpath ~/Library/Keychains/nomad-db)
+	@sudo security add-trusted-cert -d -r trustRoot -k "/Library/Keychains/System.keychain" nomad-ca.pem
