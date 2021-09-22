@@ -5,3 +5,4 @@ account.json
 *.csr
 bastion
 bastion.pub
+*.p12

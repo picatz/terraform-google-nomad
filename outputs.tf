@@ -81,3 +81,13 @@ output "server_internal_ips" {
   description = "The Nomad/Consul client private IP addresses."
   value       = module.server.internal_ips
 }
+
+output "dns_name_servers" {
+  description = "Delegate your managed_zone to these virtual name servers if DNS is enabled"
+  value       = var.dns_enabled ? google_dns_managed_zone.nomad.0.name_servers : []
+}
+
+output "dns_url" {
+  description = "The mTLS enabled public URL using the configured DNS name"
+  value       = (var.dns_enabled) ? format("https://%s", trimsuffix(google_dns_record_set.public.0.name, ".")) : ""
+}

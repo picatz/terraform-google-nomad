@@ -5,7 +5,7 @@ resource "tls_private_key" "consul-ca" {
 
 resource "tls_self_signed_cert" "consul-ca" {
   is_ca_certificate     = true
-  validity_period_hours = 87600
+  validity_period_hours = var.tls_validity_period_hours
 
   key_algorithm   = tls_private_key.consul-ca.algorithm
   private_key_pem = tls_private_key.consul-ca.private_key_pem
