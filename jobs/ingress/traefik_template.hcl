@@ -54,7 +54,7 @@ ${join("\n", local.dynamic_entry_points)}
     directory = "/local/traefik"
     EOT
 
-    dynamic_routers = [for i, service in var.consul_services : format("  [tcp.routers.%s]\n    entryPoints = [%q]\n    rule = %q\n    service = %q", service.name, service.name, "HostSNI(`*`)", service.port)]
+    dynamic_routers = [for i, service in var.consul_services : format("  [tcp.routers.%s]\n    entryPoints = [%q]\n    rule = %q\n    service = %q", service.name, service.name, "HostSNI(`*`)", service.name)]
 
     dynamic_services = [for i, service in var.consul_services : format("  [tcp.services.%s.loadBalancer]\n    [[tcp.services.%s.loadBalancer.servers]]\n      address = \"localhost:%d\"", service.name, service.name, service.port + 1)]
 
