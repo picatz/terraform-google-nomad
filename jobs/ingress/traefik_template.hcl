@@ -24,7 +24,7 @@ variable "consul_services" {
 // TODO: consider option to optionally enable/disable the dashboard and metrics listeners
 
 locals {
-    dynamic_entry_points = [for i, service in var.consul_services : format("    [entryPoints.%s]\n      address = \"%d\"", service.name, service.port)]
+    dynamic_entry_points = [for i, service in var.consul_services : format("    [entryPoints.%s]\n      address = \":%d\"", service.name, service.port)]
 
     traefik_toml = <<EOT
 [entryPoints]
