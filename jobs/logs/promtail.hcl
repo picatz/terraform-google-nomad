@@ -1,3 +1,29 @@
+
+variable "http_port" {
+  type    = number
+  default = 9080
+}
+
+variable "grpc_port" {
+  type    = number
+  default = 9095
+}
+
+variable "positions_filename" {
+  type    = string
+  default = "/nomad/positions.yaml"
+}
+
+variable "positions_ignore_invalid_yaml" {
+  type    = bool
+  default = true
+}
+
+variable "client_url" {
+  type    = string
+  default = "http://127.0.0.1:3100/loki/api/v1/push"
+}
+
 job "promtail" {
   datacenters = ["dc1"]
   type = "system"
@@ -56,15 +82,15 @@ job "promtail" {
       template {
         data        = <<EOH
 server:
-  http_listen_port: 9080
-  grpc_listen_port: 9095
+  http_listen_port: ${var.http_port}
+  grpc_listen_port: ${var.grpc_port}
 
 positions:
-  filename: /nomad/positions.yaml
-  ignore_invalid_yaml: true
+  filename: ${var.positions_filename}
+  ignore_invalid_yaml: ${var.positions_ignore_invalid_yaml}
 
 client:
-  url: http://127.0.0.1:3100/loki/api/v1/push
+  url: ${var.client_url}
 
 scrape_configs:
  - job_name: system
