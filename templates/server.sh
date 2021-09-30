@@ -117,10 +117,10 @@ sudo mv /tmp/client-key.pem /vault/config/client-key.pem
 sed -i -e "s/{VAULT-ENABLED}/${vault_enabled}/g" /nomad/config/agent.hcl
 
 # Update the {VAULT-ADDR} ad-hoc template var
-sed -i -e "s/{VAULT-ADDR}/${vault_address}/g" /nomad/config/agent.hcl
+sed -i -e "s,{VAULT-ADDR},${vault_address},g" /nomad/config/agent.hcl
 
 # Update the {VAULT-TOKEN} ad-hoc template var
-sed -i -e "s,{VAULT-TOKEN},${vault_token},g" /nomad/config/agent.hcl
+sed -i -e "s/{VAULT-TOKEN}/${vault_token}/g" /nomad/config/agent.hcl
 
 # Update the {VAULT-ALLOW-UNAUTHENTICATED} ad-hoc template var
 sed -i -e "s/{VAULT-ALLOW-UNAUTHENTICATED}/${vault_allow_unauthenticated}/g" /nomad/config/agent.hcl
