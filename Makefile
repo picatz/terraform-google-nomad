@@ -8,6 +8,12 @@ GRAFANA_LOAD_BALANCER_ENABLED ?= false
 GRAFANA_PUBLIC_DOMAIN ?= ""
 PROMSCALE_ENABLED ?= false
 SSH_BASTION_ENABLED ?= false
+VAULT_ENABLED ?= false
+VAULT_ADDR ?= ""
+VAULT_CACERT ?= ""
+VAULT_CLIENT_CERT ?= ""
+VAULT_CLIENT_KEY ?= ""
+VAULT_TOKEN ?= ""
 
 .PHONY: help
 help: ## Print this help menu
@@ -49,6 +55,12 @@ terraform/plan: ## Runs the Terraform plan command
 		-var="server_machine_type=$(SERVER_MACHINE_TYPE)" \
 		-var="grafana_load_balancer_enabled=$(GRAFANA_LOAD_BALANCER_ENABLED)" \
 		-var="grafana_dns_managed_zone_dns_name=$(GRAFANA_PUBLIC_DOMAIN)" \
+		-var="vault_enabled=${VAULT_ENABLED}" \
+		-var="vault_address=${VAULT_ADDR}" \
+		-var="vault_token=${VAULT_TOKEN}" \
+		-var="vault_ca_cert_path=${VAULT_CACERT}" \
+		-var="vault_client_cert_path=${VAULT_CLIENT_CERT}" \
+		-var="vault_client_private_key_path=${VAULT_CLIENT_KEY}" \
 		-var="dns_enabled=$(DNS_ENABLED)" \
 		-var="dns_managed_zone_dns_name=$(PUBLIC_DOMAIN)" \
 		-var="credentials=${GOOGLE_APPLICATION_CREDENTIALS}"
@@ -77,6 +89,12 @@ terraform/apply: ## Runs and auto-apporves the Terraform apply command
 		-var="server_machine_type=$(SERVER_MACHINE_TYPE)" \
 		-var="grafana_load_balancer_enabled=$(GRAFANA_LOAD_BALANCER_ENABLED)" \
 		-var="grafana_dns_managed_zone_dns_name=$(GRAFANA_PUBLIC_DOMAIN)" \
+		-var="vault_enabled=${VAULT_ENABLED}" \
+		-var="vault_address=${VAULT_ADDR}" \
+		-var="vault_token=${VAULT_TOKEN}" \
+		-var="vault_ca_cert_path=${VAULT_CACERT}" \
+		-var="vault_client_cert_path=${VAULT_CLIENT_CERT}" \
+		-var="vault_client_private_key_path=${VAULT_CLIENT_KEY}" \
 		-var="dns_enabled=$(DNS_ENABLED)" \
 		-var="dns_managed_zone_dns_name=$(PUBLIC_DOMAIN)" \
 		-var="credentials=${GOOGLE_APPLICATION_CREDENTIALS}"
@@ -93,6 +111,12 @@ terraform/shutdown: ## Turns off all VM instances
 		-var="server_machine_type=$(SERVER_MACHINE_TYPE)" \
 		-var="grafana_load_balancer_enabled=$(GRAFANA_LOAD_BALANCER_ENABLED)" \
 		-var="grafana_dns_managed_zone_dns_name=$(GRAFANA_PUBLIC_DOMAIN)" \
+		-var="vault_enabled=${VAULT_ENABLED}" \
+		-var="vault_address=${VAULT_ADDR}" \
+		-var="vault_token=${VAULT_TOKEN}" \
+		-var="vault_ca_cert_path=${VAULT_CACERT}" \
+		-var="vault_client_cert_path=${VAULT_CLIENT_CERT}" \
+		-var="vault_client_private_key_path=${VAULT_CLIENT_KEY}" \
 		-var="dns_enabled=$(DNS_ENABLED)" \
 		-var="dns_managed_zone_dns_name=$(PUBLIC_DOMAIN)" \
 		-var="credentials=${GOOGLE_APPLICATION_CREDENTIALS}"
@@ -112,6 +136,12 @@ terraform/destroy: ## Runs and auto-apporves the Terraform destroy command
 		-var="server_machine_type=$(SERVER_MACHINE_TYPE)" \
 		-var="grafana_load_balancer_enabled=$(GRAFANA_LOAD_BALANCER_ENABLED)" \
 		-var="grafana_dns_managed_zone_dns_name=$(GRAFANA_PUBLIC_DOMAIN)" \
+		-var="vault_enabled=${VAULT_ENABLED}" \
+		-var="vault_address=${VAULT_ADDR}" \
+		-var="vault_token=${VAULT_TOKEN}" \
+		-var="vault_ca_cert_path=${VAULT_CACERT}" \
+		-var="vault_client_cert_path=${VAULT_CLIENT_CERT}" \
+		-var="vault_client_private_key_path=${VAULT_CLIENT_KEY}" \
 		-var="dns_enabled=$(DNS_ENABLED)" \
 		-var="dns_managed_zone_dns_name=$(PUBLIC_DOMAIN)" \
 		-var="credentials=${GOOGLE_APPLICATION_CREDENTIALS}"

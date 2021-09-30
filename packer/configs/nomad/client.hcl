@@ -91,3 +91,12 @@ plugin "docker" {
     }
   }
 }
+
+vault {
+  enabled               = {VAULT-ENABLED}
+  address               = "{VAULT-ADDR}"
+  ca_file               = "/vault/config/vault-ca.pem"
+  cert_file             = "/vault/config/client.pem"
+  key_file              = "/vault/config/client-key.pem"
+  allow_unauthenticated = {VAULT-ALLOW-UNAUTHENTICATED}
+}

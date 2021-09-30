@@ -58,4 +58,15 @@ telemetry {
   prometheus_metrics         = true
   publish_allocation_metrics = true
   publish_node_metrics       = true
-} 
+}
+
+vault {
+  enabled               = {VAULT-ENABLED}
+  address               = "{VAULT-ADDR}"
+  token                 = "{VAULT-TOKEN}"
+  create_from_role      = "nomad-cluster"
+  ca_file               = "/vault/config/vault-ca.pem"
+  cert_file             = "/vault/config/client.pem"
+  key_file              = "/vault/config/client-key.pem"
+  allow_unauthenticated = {VAULT-ALLOW-UNAUTHENTICATED}
+}
