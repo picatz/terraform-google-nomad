@@ -1,6 +1,6 @@
 # Nomad Cluster
 
-[![Nomad Version](https://img.shields.io/badge/Nomad%20Version-1.2.2-00bc7f.svg)](https://www.nomadproject.io/downloads) [![Consul Version](https://img.shields.io/badge/Consul%20Version-1.10.5-ca2171.svg)](https://www.consul.io/downloads)
+[![Nomad Version](https://img.shields.io/badge/Nomad%20Version-1.2.3-00bc7f.svg)](https://www.nomadproject.io/downloads) [![Consul Version](https://img.shields.io/badge/Consul%20Version-1.10.5-ca2171.svg)](https://www.consul.io/downloads)
 
 [Terraform](https://www.terraform.io/) Module for [Nomad](https://nomadproject.io/) clusters with [Consul](https://www.consul.io/) on [GCP](https://cloud.google.com/).
 
@@ -98,7 +98,7 @@ Description:
 Local:            false
 Create Time:      2021-04-11 16:16:03.902311312 +0000 UTC
 Roles:
-   6ae941.2.2c07-49a7-fa95-8ce14aa8a75e - metrics
+   6ae941.2.3c07-49a7-fa95-8ce14aa8a75e - metrics
 
 $ consul_acl_token=2a1c7926-b6e3-566e-ddf5-b19279fa134e make nomad/metrics
 $ make nomad/logs
@@ -121,7 +121,7 @@ We can bootstrap ACLs to get the bootstrap management token like so:
 
 ```console
 $ nomad acl bootstrap
-Accessor ID  = a1495889-37ce-6784-78f3-31.2.2984bca
+Accessor ID  = a1495889-37ce-6784-78f3-31.2.3984bca
 Secret ID    = dc8c0349-c1fd-dc2c-299c-d513e5dd6df2
 Name         = Bootstrap Token
 Type         = management
@@ -149,7 +149,7 @@ When using the SSH bastion, you can use the `ssh-mtls-terminating-proxy.go` help
 $ make ssh/proxy/mtls
 2021/04/11 13:18:28 getting terraform output
 2021/04/11 13:18:29 Bastion IP: "34.73.106.60"
-2021/04/11 13:18:29 Server IP: "1.2.268.2.8"
+2021/04/11 13:18:29 Server IP: "1.2.368.2.8"
 2021/04/11 13:18:29 Setting up SSH agent
 2021/04/11 13:18:29 connecting to the bastion
 2021/04/11 13:18:29 connecting to the server through the bastion
