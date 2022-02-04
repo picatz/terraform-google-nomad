@@ -18,6 +18,8 @@ resource "google_compute_firewall" "allow_icmp" {
   allow {
     protocol = "icmp"
   }
+
+  source_tags = []
 }
 
 module "ssh" {
