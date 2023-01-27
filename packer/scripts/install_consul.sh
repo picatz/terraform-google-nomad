@@ -3,7 +3,7 @@
 set -ex
 
 # Latest version of Consul
-CONSUL_VERSION=1.14.3
+CONSUL_VERSION=1.14.4
 
 # Download Latest Version of Consul
 mkdir -p /tmp/download-consul
