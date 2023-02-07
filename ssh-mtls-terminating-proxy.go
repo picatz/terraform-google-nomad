@@ -21,9 +21,9 @@ import (
 )
 
 type terraformOutputNode struct {
-	Senstive bool   `json:"senstive"`
-	Type     string `json:"type"`
-	Value    string `json:"value"`
+	Sensitive bool   `json:"sensitive"`
+	Type      string `json:"type"`
+	Value     string `json:"value"`
 }
 
 type terraformOutput struct {
