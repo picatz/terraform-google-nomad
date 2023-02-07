@@ -1,6 +1,6 @@
 datacenter = "dc1"
 bind_addr = "0.0.0.0"
-data_dir = "/tmp/nomad-agent"
+data_dir = "/nomad/data"
 
 leave_on_terminate = true
 
