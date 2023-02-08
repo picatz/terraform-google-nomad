@@ -199,3 +199,45 @@ variable "tls_validity_period_hours" {
   default     = 17520
   description = "The total number of hours the generated mTLS certificates are valid for with a default of 2 years"
 }
+
+variable "vault_ca_cert_path" {
+  type        = string
+  default     = ""
+  description = "..."
+}
+
+variable "vault_client_cert_path" {
+  type        = string
+  default     = ""
+  description = "..."
+}
+
+variable "vault_client_private_key_path" {
+  type        = string
+  default     = ""
+  description = "..."
+}
+
+variable "vault_enabled" {
+  type        = bool
+  default     = false
+  description = "..."
+}
+
+variable "vault_address" {
+  type        = string
+  default     = ""
+  description = "..."
+}
+
+variable "vault_token" {
+  type        = string
+  default     = ""
+  description = "..."
+}
+
+variable "vault_allow_unauthenticated" {
+  type        = bool
+  default     = false
+  description = "..."
+}

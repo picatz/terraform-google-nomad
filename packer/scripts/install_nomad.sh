@@ -25,3 +25,7 @@ sudo systemctl daemon-reload
 sudo mkdir -p /nomad/data && sudo mkdir -p /nomad/config
 sudo mv /tmp/nomad-agent.hcl /nomad/config/agent.hcl
 sudo chown --recursive root:root /nomad
+
+# Setup Config and Data Directory for Vault
+sudo mkdir -p /vault/data && sudo mkdir -p /vault/config
+sudo chown --recursive root:root /vault

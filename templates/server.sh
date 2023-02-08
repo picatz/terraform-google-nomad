@@ -92,3 +92,35 @@ sed -i -e "s/{PRIVATE-IPV4}/$${IP}/g" /nomad/config/agent.hcl
 # Enable and start Nomad
 systemctl enable nomad
 systemctl start nomad
+
+# VAULT CONFIGURATION
+
+# Add the Vault CA PEM
+cat > /tmp/vault-ca.pem << EOF
+${vault_ca_cert}
+EOF
+sudo mv /tmp/vault-ca.pem /vault/config/vault-ca.pem
+
+# Add the Vault Client PEM
+cat > /tmp/client.pem << EOF
+${vault_client_cert}
+EOF
+sudo mv /tmp/client.pem /vault/config/client.pem
+
+# Add the Vault Client Private Key PEM
+cat > /tmp/client-key.pem << EOF
+${vault_client_private_key}
+EOF
+sudo mv /tmp/client-key.pem /vault/config/client-key.pem
+
+# Update the {VAULT-ENABLED} ad-hoc template var
+sed -i -e "s/{VAULT-ENABLED}/${vault_enabled}/g" /nomad/config/agent.hcl
+
+# Update the {VAULT-ADDR} ad-hoc template var
+sed -i -e "s,{VAULT-ADDR},${vault_address},g" /nomad/config/agent.hcl
+
+# Update the {VAULT-TOKEN} ad-hoc template var
+sed -i -e "s/{VAULT-TOKEN}/${vault_token}/g" /nomad/config/agent.hcl
+
+# Update the {VAULT-ALLOW-UNAUTHENTICATED} ad-hoc template var
+sed -i -e "s/{VAULT-ALLOW-UNAUTHENTICATED}/${vault_allow_unauthenticated}/g" /nomad/config/agent.hcl
