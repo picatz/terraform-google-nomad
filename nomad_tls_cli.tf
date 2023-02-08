@@ -4,7 +4,6 @@ resource "tls_private_key" "nomad-cli" {
 }
 
 resource "tls_cert_request" "nomad-cli" {
-  key_algorithm   = tls_private_key.nomad-cli.algorithm
   private_key_pem = tls_private_key.nomad-cli.private_key_pem
 
   // ip_addresses = [
@@ -21,7 +20,6 @@ resource "tls_cert_request" "nomad-cli" {
 resource "tls_locally_signed_cert" "nomad-cli" {
   cert_request_pem = tls_cert_request.nomad-cli.cert_request_pem
 
-  ca_key_algorithm   = tls_private_key.nomad-ca.algorithm
   ca_private_key_pem = tls_private_key.nomad-ca.private_key_pem
   ca_cert_pem        = tls_self_signed_cert.nomad-ca.cert_pem
 

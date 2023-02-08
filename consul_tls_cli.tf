@@ -4,7 +4,6 @@ resource "tls_private_key" "consul-cli" {
 }
 
 resource "tls_cert_request" "consul-cli" {
-  key_algorithm   = tls_private_key.consul-cli.algorithm
   private_key_pem = tls_private_key.consul-cli.private_key_pem
 
   ip_addresses = [
@@ -26,7 +25,6 @@ resource "tls_cert_request" "consul-cli" {
 resource "tls_locally_signed_cert" "consul-cli" {
   cert_request_pem = tls_cert_request.consul-cli.cert_request_pem
 
-  ca_key_algorithm   = tls_private_key.consul-ca.algorithm
   ca_private_key_pem = tls_private_key.consul-ca.private_key_pem
   ca_cert_pem        = tls_self_signed_cert.consul-ca.cert_pem
 
