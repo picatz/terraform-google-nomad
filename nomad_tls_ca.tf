@@ -7,7 +7,6 @@ resource "tls_self_signed_cert" "nomad-ca" {
   is_ca_certificate     = true
   validity_period_hours = 87600
 
-  key_algorithm   = tls_private_key.nomad-ca.algorithm
   private_key_pem = tls_private_key.nomad-ca.private_key_pem
 
   subject {
