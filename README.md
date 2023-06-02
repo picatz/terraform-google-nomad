@@ -1,6 +1,6 @@
 # Nomad Cluster
 
-[![Nomad Version](https://img.shields.io/badge/Nomad%20Version-1.5.6-00bc7f.svg)](https://www.nomadproject.io/downloads) [![Consul Version](https://img.shields.io/badge/Consul%20Version-1.15.2-ca2171.svg)](https://www.consul.io/downloads)
+[![Nomad Version](https://img.shields.io/badge/Nomad%20Version-1.5.6-00bc7f.svg)](https://www.nomadproject.io/downloads) [![Consul Version](https://img.shields.io/badge/Consul%20Version-1.15.3-ca2171.svg)](https://www.consul.io/downloads)
 
 [Terraform](https://www.terraform.io/) Module for [Nomad](https://nomadproject.io/) clusters with [Consul](https://www.consul.io/) on [GCP](https://cloud.google.com/).
 
@@ -147,19 +147,19 @@ When using the SSH bastion, you can use the `ssh-mtls-terminating-proxy.go` help
 
 ```console
 $ make ssh/proxy/mtls
-2021/04/11.15.28:28 getting terraform output
-2021/04/11.15.28:29 Bastion IP: "34.73.106.60"
-2021/04/11.15.28:29 Server IP: "1.5.668.2.8"
-2021/04/11.15.28:29 Setting up SSH agent
-2021/04/11.15.28:29 connecting to the bastion
-2021/04/11.15.28:29 connecting to the server through the bastion
-2021/04/11.15.28:30 wrapping the server connection with SSH through the bastion
-2021/04/11.15.28:30 tunneling a new connection for Consul to the server with SSH through the bastion
-2021/04/11.15.28:30 loading Consul TLS data
-2021/04/11.15.28:30 tunneling a new connection for somad to the server with ssh through the bastion
-2021/04/11.15.28:30 loading Nomad TLS data
-2021/04/11.15.28:30 starting Consul local listener on localhost:8500
-2021/04/11.15.28:30 starting Nomad local listener on localhost:4646
+2021/04/11.15.38:28 getting terraform output
+2021/04/11.15.38:29 Bastion IP: "34.73.106.60"
+2021/04/11.15.38:29 Server IP: "1.5.668.2.8"
+2021/04/11.15.38:29 Setting up SSH agent
+2021/04/11.15.38:29 connecting to the bastion
+2021/04/11.15.38:29 connecting to the server through the bastion
+2021/04/11.15.38:30 wrapping the server connection with SSH through the bastion
+2021/04/11.15.38:30 tunneling a new connection for Consul to the server with SSH through the bastion
+2021/04/11.15.38:30 loading Consul TLS data
+2021/04/11.15.38:30 tunneling a new connection for somad to the server with ssh through the bastion
+2021/04/11.15.38:30 loading Nomad TLS data
+2021/04/11.15.38:30 starting Consul local listener on localhost:8500
+2021/04/11.15.38:30 starting Nomad local listener on localhost:4646
 ...
 ```
 
