@@ -20,53 +20,10 @@ For a full interactive tutorial to get started using this module:
 
 [![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.svg)](https://ssh.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fpicatz%2Fterraform-google-nomad&cloudshell_print=cloud-shell%2Fprint.txt&cloudshell_tutorial=cloud-shell%2Fsteps.md&shellonly=true)
 
-<details><summary>Manual Steps for Development</summary>
-<p>
-
-## Bootstrap a brand new GCP project using [`gcloud`](https://cloud.google.com/sdk/gcloud)
-
-Bootstrap a new GCP using the `setup_gcp.sh` shell script:
-
-```console
-$ bash setup_gcp.sh $YOUR_PROJECT_NAME
-...
-```
-
-It will automatically create, link the billing account, and enable the compute API in GCP.
-
-### Set Environment Variables
-
-Using your GCP project name and new created `account.json` Terraform service account file from the previous step:
-
-```console
-$ export GOOGLE_APPLICATION_CREDENTIALS=$(realpath account.json)
-$ export GOOGLE_PROJECT="$YOUR_PROJECT_NAME"
-```
-
-## Build the Bastion/Server/Client Images with Packer
-
-```console
-$ cd packer
-$ packer build template.json
-...
-```
-
-## Build Infrastructure
-
-```console
-$ terraform plan -var="project=$GOOGLE_PROJECT" -var="credentials=$GOOGLE_APPLICATION_CREDENTIALS"
-...
-$ terraform apply -var="project=$GOOGLE_PROJECT" -var="credentials=$GOOGLE_APPLICATION_CREDENTIALS"
-...
-```
-
-</p>
-</details>
-
 ## Infrastructure Diagram
 
 <p align="center">
-    <img alt="Infrastructure Diagram" src="https://raw.githubusercontent.com/picatz/terraform-google-nomad/master/diagram.png" height="700"/>
+    <img alt="Infrastructure Diagram" src="./diagrams/readme.svg" height="900"/>
 </p>
 
 ## Logs

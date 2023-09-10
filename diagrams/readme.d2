@@ -1,0 +1,141 @@
+admin -> deploy -> cloud
+
+cloud.org.project.vpc.lb -> cloud.org.project.vpc.subnet.cluster
+
+admin: "Administrator" {
+  style: {
+    fill: "#ffffff"
+    stroke: grey
+    border-radius: 4
+  }
+  terraform: "" {
+    shape: image
+    icon: https://www.svgrepo.com/show/408174/woman-technologist-medium-dark-skin-tone.svg
+  }
+}
+
+deploy: "Deploy" {
+  style: {
+    fill: "#ffffff"
+    stroke: grey
+    border-radius: 4
+  }
+  terraform: "" {
+    shape: image
+    icon: https://www.svgrepo.com/show/376353/terraform.svg
+  }
+}
+
+cloud: "Google Cloud Platform" {
+  direction: down
+  icon: https://www.svgrepo.com/show/353805/google-cloud.svg
+  icon.near: top-right
+  style: {
+    fill: "#ffffff"
+    stroke: grey
+    border-radius: 4
+  }
+  org: "Organization" {
+    project: "Project" {
+      vpc: "VPC" {
+        lb: "Load Balancer"
+        subnet: "Subnet" {
+          cluster: "Nomad Cluster" {
+            label.near: top-center
+            icon: https://www.svgrepo.com/show/448241/nomad.svg
+            icon.near: top-right
+
+            servers: "Servers" {
+              a: "Server A" {
+                agent: "" {
+                  shape: image
+                  width: 100
+                  icon: https://www.svgrepo.com/show/448241/nomad.svg
+                }
+                icon: https://www.svgrepo.com/show/448216/consul.svg
+                icon.near: bottom-right
+              }
+              b: "Server B" {
+                agent: "" {
+                  shape: image
+                  width: 100
+                  icon: https://www.svgrepo.com/show/448241/nomad.svg
+                }
+                icon: https://www.svgrepo.com/show/448216/consul.svg
+                icon.near: bottom-right
+              }
+              c: "Server C" {
+                agent: "" {
+                  shape: image
+                  width: 100
+                  icon: https://www.svgrepo.com/show/448241/nomad.svg
+                }
+                icon: https://www.svgrepo.com/show/448216/consul.svg
+                icon.near: bottom-right
+              }
+              direction: right
+            }
+            clients: "Clients" {
+              a: "Client A" {
+                agent: "" {
+                  shape: image
+                  width: 100
+                  icon: https://www.svgrepo.com/show/448241/nomad.svg
+                }
+                icon: https://www.svgrepo.com/show/448216/consul.svg
+                icon.near: bottom-right
+              }
+              b: "Client B" {
+                agent: "" {
+                  shape: image
+                  width: 100
+                  icon: https://www.svgrepo.com/show/448241/nomad.svg
+                }
+                icon: https://www.svgrepo.com/show/448216/consul.svg
+                icon.near: bottom-right
+              }
+              c: "Client C" {
+                agent: "" {
+                  shape: image
+                  width: 100
+                  icon: https://www.svgrepo.com/show/448241/nomad.svg
+                }
+                icon: https://www.svgrepo.com/show/448216/consul.svg
+                icon.near: bottom-right
+              }
+              d: "Client D" {
+                agent: "" {
+                  shape: image
+                  width: 100
+                  icon: https://www.svgrepo.com/show/448241/nomad.svg
+                }
+                icon: https://www.svgrepo.com/show/448216/consul.svg
+                icon.near: bottom-right
+              }
+              e: "Client E" {
+                agent: "" {
+                  shape: image
+                  width: 100
+                  icon: https://www.svgrepo.com/show/448241/nomad.svg
+                }
+                icon: https://www.svgrepo.com/show/448216/consul.svg
+                icon.near: bottom-right
+              }
+              e: "Client F" {
+                agent: "" {
+                  shape: image
+                  width: 100
+                  icon: https://www.svgrepo.com/show/448241/nomad.svg
+                }
+                icon: https://www.svgrepo.com/show/448216/consul.svg
+                icon.near: bottom-right
+              }
+            }
+
+            servers <-> clients
+          }
+        }
+      }
+    }
+  }
+}

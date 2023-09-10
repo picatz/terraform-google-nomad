@@ -1,6 +1,6 @@
 datacenter = "dc1"
 bind_addr = "0.0.0.0"
-data_dir = "/consul/data"
+data_dir = "/etc/consul.d/data"
 primary_datacenter = "dc1"
 
 advertise_addr = "{PRIVATE-IPV4}"
@@ -11,10 +11,11 @@ addresses {
 }
 
 ports {
-  dns   = 8600
-  http  = 8500
-  https = 8501
-  grpc  = 8502
+  dns       = 8600
+  http      = 8500
+  https     = 8501
+  grpc      = 8502
+  grpc_tls  = 8503
 }
 
 log_level = "DEBUG"
@@ -52,13 +53,20 @@ encrypt = "{GOSSIP-KEY}"
 encrypt_verify_incoming = true
 encrypt_verify_outgoing = true
 
-verify_outgoing         = true
-verify_incoming         = true
-verify_server_hostname  = true
+tls {
+  defaults {
+    ca_file = "/etc/consul.d/consul-ca.pem"
+    cert_file = "/etc/consul.d/server.pem"
+    key_file = "/etc/consul.d/server-key.pem"
 
-ca_file   = "/consul/config/consul-ca.pem"
-cert_file = "/consul/config/server.pem"
-key_file  = "/consul/config/server-key.pem"
+    verify_incoming = true
+    verify_outgoing = true
+  }
+
+  internal_rpc {
+    verify_server_hostname = true
+  }
+}
 
 auto_encrypt {
   allow_tls = true

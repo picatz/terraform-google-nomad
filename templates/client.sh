@@ -6,47 +6,47 @@
 cat > /tmp/consul-ca.pem << EOF
 ${consul_ca_cert}
 EOF
-sudo mv /tmp/consul-ca.pem /consul/config/consul-ca.pem
+sudo mv /tmp/consul-ca.pem /etc/consul.d/consul-ca.pem
 
 # Add the Consul Client PEM
 cat > /tmp/client.pem << EOF
 ${consul_client_cert}
 EOF
-sudo mv /tmp/client.pem /consul/config/client.pem
+sudo mv /tmp/client.pem /etc/consul.d/client.pem
 
 # Add the Consul Client Private Key PEM
 cat > /tmp/client-key.pem << EOF
 ${consul_client_private_key}
 EOF
-sudo mv /tmp/client-key.pem /consul/config/client-key.pem
+sudo mv /tmp/client-key.pem /etc/consul.d/client-key.pem
 
 # Update the {ACLs-ENABLED} ad-hoc template var
-sed -i -e "s/{ACLs-ENABLED}/${consul_acls_enabled}/g" /consul/config/agent.hcl
+sed -i -e "s/{ACLs-ENABLED}/${consul_acls_enabled}/g" /etc/consul.d/consul.hcl
 
 # Update the {ACLs-DEFAULT-POLICY} ad-hoc template var
-sed -i -e "s/{ACLs-DEFAULT-POLICY}/${consul_acls_default_policy}/g" /consul/config/agent.hcl
+sed -i -e "s/{ACLs-DEFAULT-POLICY}/${consul_acls_default_policy}/g" /etc/consul.d/consul.hcl
 
 # Update the {ACLs-ENABLED} ad-hoc template var
-sed -i -e "s/{CONSUL-TOKEN}/${consul_master_token}/g" /consul/config/agent.hcl
+sed -i -e "s/{CONSUL-TOKEN}/${consul_master_token}/g" /etc/consul.d/consul.hcl
 
 # Set ACL master token if ACLs are enabled
 if [ "${consul_acls_enabled}" = "true" ]; then
-    sed -i -e "s/{CONSUL-TOKEN}/${consul_master_token}/g" /nomad/config/agent.hcl
-    sed -i -e "s/{CONSUL-TOKEN}/${consul_master_token}/g" /consul/config/agent.hcl
+    sed -i -e "s/{CONSUL-TOKEN}/${consul_master_token}/g" /etc/nomad.d/nomad.hcl
+    sed -i -e "s/{CONSUL-TOKEN}/${consul_master_token}/g" /etc/consul.d/consul.hcl
 else
-    sed -i -e "s/{CONSUL-TOKEN}//g" /nomad/config/agent.hcl
-    sed -i -e "s/{CONSUL-TOKEN}//g" /consul/config/agent.hcl
+    sed -i -e "s/{CONSUL-TOKEN}//g" /etc/nomad.d/nomad.hcl
+    sed -i -e "s/{CONSUL-TOKEN}//g" /etc/consul.d/consul.hcl
 fi
 
 # Update the {PROJECT-NAME} ad-hoc template var
-sed -i -e "s/{PROJECT-NAME}/${project}/g" /consul/config/agent.hcl
+sed -i -e "s/{PROJECT-NAME}/${project}/g" /etc/consul.d/consul.hcl
 
 # Update the {PRIVATE-IPV4} ad-hoc template var
 IP=$(curl -H "Metadata-Flavor: Google" http://metadata/computeMetadata/v1/instance/network-interfaces/0/ip)
-sed -i -e "s/{PRIVATE-IPV4}/$${IP}/g" /consul/config/agent.hcl
+sed -i -e "s/{PRIVATE-IPV4}/$${IP}/g" /etc/consul.d/consul.hcl
 
 # Update the {GOSSIP-SECRET-KEY} ad-hoc template var
-sed -i -e "s/{GOSSIP-KEY}/${consul_gossip_secret_key}/g" /consul/config/agent.hcl
+sed -i -e "s/{GOSSIP-KEY}/${consul_gossip_secret_key}/g" /etc/consul.d/consul.hcl
 
 # Start and enable Consul
 systemctl start consul
@@ -58,25 +58,25 @@ systemctl enable consul
 cat > /tmp/nomad-ca.pem << EOF
 ${nomad_ca_cert}
 EOF
-sudo mv /tmp/nomad-ca.pem /nomad/config/nomad-ca.pem
+sudo mv /tmp/nomad-ca.pem /etc/nomad.d/nomad-ca.pem
 
 # Add the Nomad Client PEM
 cat > /tmp/client.pem << EOF
 ${nomad_client_cert}
 EOF
-sudo mv /tmp/client.pem /nomad/config/client.pem
+sudo mv /tmp/client.pem /etc/nomad.d/client.pem
 
 # Add the Nomad Client Private Key PEM
 cat > /tmp/client-key.pem << EOF
 ${nomad_client_private_key}
 EOF
-sudo mv /tmp/client-key.pem /nomad/config/client-key.pem
+sudo mv /tmp/client-key.pem /etc/nomad.d/client-key.pem
 
 # Update the {ACLs-ENABLED} ad-hoc template var
-sed -i -e "s/{ACLs-ENABLED}/${nomad_acls_enabled}/g" /nomad/config/agent.hcl
+sed -i -e "s/{ACLs-ENABLED}/${nomad_acls_enabled}/g" /etc/nomad.d/nomad.hcl
 
 # Update the {PROJECT-NAME} ad-hoc template var
-sed -i -e "s/{PROJECT-NAME}/${project}/g" /nomad/config/agent.hcl
+sed -i -e "s/{PROJECT-NAME}/${project}/g" /etc/nomad.d/nomad.hcl
 
 # Configure the Docker Daemon
 cat > /tmp/daemon.json << EOF

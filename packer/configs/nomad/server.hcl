@@ -1,6 +1,6 @@
 datacenter = "dc1"
 bind_addr = "0.0.0.0"
-data_dir = "/nomad/data"
+data_dir = "/etc/nomad.d/data"
 
 leave_on_terminate = true
 
@@ -34,9 +34,9 @@ tls {
   http = true
   rpc  = true
 
-  ca_file   = "/nomad/config/nomad-ca.pem"
-  cert_file = "/nomad/config/server.pem"
-  key_file  = "/nomad/config/server-key.pem"
+  ca_file   = "/etc/nomad.d/nomad-ca.pem"
+  cert_file = "/etc/nomad.d/server.pem"
+  key_file  = "/etc/nomad.d/server-key.pem"
 
   verify_server_hostname = true
   verify_https_client    = true
@@ -46,9 +46,9 @@ consul {
   ssl        = true
   verify_ssl = true
   address    = "127.0.0.1:8501"
-  ca_file    = "/consul/config/consul-ca.pem"
-  cert_file  = "/consul/config/server.pem"
-  key_file   = "/consul/config/server-key.pem"
+  ca_file    = "/etc/consul.d/consul-ca.pem"
+  cert_file  = "/etc/consul.d/server.pem"
+  key_file   = "/etc/consul.d/server-key.pem"
   token      = "{CONSUL-TOKEN}"
 }
 

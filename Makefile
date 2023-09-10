@@ -23,16 +23,20 @@ help:
 	@echo 'Targets:'
 	@egrep '^(.+)\:\ ##\ (.+)' $(MAKEFILE_LIST) | column -t -c 2 -s ':#'
 
+.PHONY: packer/init
+packer/init: ## Initializes the Packer config
+	@cd packer && packer init template.pkr.hcl
+
 .PHONY: packer/validate
 packer/validate: ## Validates the Packer config
-	@cd packer && packer validate template.json
+	@cd packer && packer validate template.pkr.hcl
 
 .PHONY: packer/build
 packer/build: ## Forces a build with Packer
 	@cd packer && time packer build \
 		-force \
 		-timestamp-ui \
-		template.json
+		template.pkr.hcl
 
 .PHONY: terraform/validate
 terraform/validate: ## Validates the Terraform config

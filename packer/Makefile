@@ -1,2 +1,2 @@
 build:
-	packer build -force template.json
+	packer build -force template.pkr.hcl

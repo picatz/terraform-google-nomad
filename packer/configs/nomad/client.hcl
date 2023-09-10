@@ -1,6 +1,6 @@
 datacenter = "dc1"
 log_level = "DEBUG"
-data_dir = "/nomad/data"
+data_dir = "/etc/nomad.d/data"
 
 client {
   enabled = true
@@ -15,7 +15,7 @@ client {
     "driver.docker.enable" = "1"
     "driver.whitelist"     = "docker"
     "user.blacklist"       = "root,ubuntu"
-    // "docker.auth.config"   = "/nomad/config/docker_auth_config.json"
+    // "docker.auth.config"   = "/etc/nomad.d/docker_auth_config.json"
     // "docker.auth.helper"   = "gcr"
   }
 
@@ -24,7 +24,7 @@ client {
   }
 
   host_volume "nomad" {
-    path = "/nomad/data"
+    path = "/etc/nomad.d/data"
   }
 }
 
@@ -36,9 +36,9 @@ tls {
   http = true
   rpc  = true
 
-  ca_file   = "/nomad/config/nomad-ca.pem"
-  cert_file = "/nomad/config/client.pem"
-  key_file  = "/nomad/config/client-key.pem"
+  ca_file   = "/etc/nomad.d/nomad-ca.pem"
+  cert_file = "/etc/nomad.d/client.pem"
+  key_file  = "/etc/nomad.d/client-key.pem"
 
   verify_server_hostname = true
   verify_https_client    = true
@@ -48,9 +48,9 @@ consul {
   ssl        = true
   verify_ssl = true
   address    = "127.0.0.1:8501"
-  ca_file    = "/consul/config/consul-ca.pem"
-  cert_file  = "/consul/config/client.pem"
-  key_file   = "/consul/config/client-key.pem"
+  ca_file    = "/etc/consul.d/consul-ca.pem"
+  cert_file  = "/etc/consul.d/client.pem"
+  key_file   = "/etc/consul.d/client-key.pem"
   token      = "{CONSUL-TOKEN}"
 }
 
@@ -71,7 +71,7 @@ plugin "docker" {
     allow_privileged = false
 
     // auth {
-    //   config = "/nomad/config/docker_auth_config.json"
+    //   config = "/etc/nomad.d/docker_auth_config.json"
     //   helper = "gcr"
     // }
 
