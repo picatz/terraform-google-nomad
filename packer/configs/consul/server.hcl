@@ -14,8 +14,6 @@ ports {
   dns       = 8600
   http      = 8500
   https     = 8501
-  grpc      = 8502
-  grpc_tls  = 8503
 }
 
 log_level = "DEBUG"

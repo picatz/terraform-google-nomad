@@ -28,10 +28,6 @@ retry_join = ["provider=gce project_name={PROJECT-NAME} tag_value=server"]
 
 server = false
 
-connect {
-  enabled = true
-}
-
 acl {
   enabled        = {ACLs-ENABLED}
   default_policy = "{ACLs-DEFAULT-POLICY}"
